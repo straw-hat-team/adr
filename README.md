@@ -1,1 +1,1 @@
-# adr
+# Architecture decision record (ADR)
