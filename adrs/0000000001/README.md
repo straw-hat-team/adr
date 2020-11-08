@@ -54,7 +54,8 @@ ADRs **should** then begin with the metadata information about the ADR
 * **Replaced by:** the link to the ADR that was replaced by.
 * **Created:** when the ADR was created following the **YYYY-MM-DD** format.
 
-Below is an example ADR:
+Followed by the content of the ADR. Below is an example ADR shell that uses
+each major section:
 
 ```md
 # The title of the ADR
@@ -62,12 +63,7 @@ Below is an example ADR:
 * State: Replaced
 * Replaced by: [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
 * Created: 2020-11-08
-```
 
-Followed by the content of the ADR. Below is an example ADR shell that uses
-each major section:
-
-```md
 <!--
 Technical Story: [description | ticket/issue URL]
 -->
