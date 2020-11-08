@@ -1,10 +1,9 @@
 ---
 name: ADR Proposal
 about: Suggest an ADR for this project
-title: ''
-labels: ''
-assignees: ''
-
+title: 'ADR Proposal'
+labels:
+  - 'Status: Draft'
 ---
 
 # [short title of solved problem and solution]
