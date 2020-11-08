@@ -1,5 +1,8 @@
 # Genesis ADR
 
+* State: Approved
+* Created: 2020-11-8
+
 ## Purpose
 
 Provide consistent documentation for software development design guidance. Help
@@ -22,7 +25,7 @@ and these programmers will be approvers for each ADR in the general scope.
 
 The list of ADR editors is currently:
 
-- Yordis Prieto ([@yordis](https://github.com/yordis))
+* Yordis Prieto ([@yordis](https://github.com/yordis))
 
 The editors are also responsible for the administrative and editorial aspects of
 shepherding ADRs and managing the ADR pipeline and workflow. They approve PRs to

@@ -1,5 +1,8 @@
 # ADR Style guide
 
+* State: Approved
+* Created: 2020-11-8
+
 ADRs are most useful when they are clear and concise, and cover a single topic
 or inquiry well. In the same way that ADRs describe consistent patterns and
 style for use in APIs, they also follow consistent patterns and style.
@@ -33,3 +36,92 @@ ADR if appropriate.
 > ADR links must use the relative path to the file in the repository, this
 > ensures that the link works both on the ADR site, when viewing the Markdown
 > file on GitHub, using the local development server, or a branch.
+
+## File structure
+
+ADRs **must** be written in Markdown, and the directory **must** be named using
+their ten-digit number (example: 3870009043), with a `README.md` file in it, for
+example: `adrs/3870009043/README.md`.
+
+ADRs **may** have other supporting files in the ADR directory.
+
+## Document structure
+
+ADRs **must** begin with a top-level heading with the ADR's title (# Title).
+ADRs **should** then begin with the metadata information about the ADR
+
+* **State:** the estate of the ADR.
+* **Replaced by:** the link to the ADR that was replaced by.
+* **Created:** when the ADR was created following the **YYYY-MM-DD** format.
+
+Below is an example ADR:
+
+```md
+# The title of the ADR
+
+* State: Replaced
+* Replaced by: [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
+* Created: 2020-11-08
+```
+
+Followed by the content of the ADR. Below is an example ADR shell that uses
+each major section:
+
+```md
+<!--
+Technical Story: [description | ticket/issue URL]
+-->
+
+## Context and Problem Statement
+
+<!--
+Describe the context and problem statement, e.g., in free form using two to
+three sentences. You may want to articulate the problem in form of a question.
+-->
+
+## Decision Drivers
+
+<!--
+* [driver 1, e.g., a force, facing concern, …]
+* [driver 2, e.g., a force, facing concern, …]
+* … numbers of drivers can vary
+-->
+
+## Considered Options
+
+### Option [1]
+
+[example | description | pointer to more information | …]
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … numbers of consequences
+
+## Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which
+meets k.o. criterion decision driver | which resolves force force | … | comes
+out best (see below)].
+
+### Advantages
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions
+  required, …]
+* …
+
+### Disadvantages
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+## Links
+
+<!--
+* [link name](the link)
+* … numbers of links can vary
+-->
+```
+
+ADRs **should** attempt to follow this overall format if possible, but ADRs
+**may** deviate from it if necessary.
