@@ -42,9 +42,9 @@ proposal before moving forward.
 Once an approved ADR has been agreed upon, it enters "approved" state and is
 considered "best current practice".
 
-> As a formal matter, two ADR approvers (other than the author) must provide
+> As a formal matter, two ADR approvers (other than the author) **must** provide
 > formal signoff to advance an ADR to the approved state. Additionally, there
-> must not be formal objections ("changes requested" on the GitHub PR) from
+> **must** not be formal objections ("changes requested" on the GitHub PR) from
 > other approvers.
 
 ### Withdrawn
@@ -92,3 +92,47 @@ submit the PR with the ADR in the "Reviewing" state. The editors may reject an
 ADR outright if they have an obvious reason to do so (e.g. the proposal was
 already discussed and rejected in another ADR or is fundamentally unsound), in
 which case the PR is not merged.
+
+### Discussing an ADR
+
+Once the PR is merged, the ADR author is responsible for championing the ADR on
+a follow-up approval pull request. This means that the author is responsible for
+pushing towards consensus around the proposal. This may involve a discussion at
+the regularly scheduled meetings for the API Governance team.
+
+The ADR author may modify the ADR over the course of discussion by submitting
+follow-up commits to the PR.
+
+### Accepting an ADR
+
+The editors will work together to ensure that qualified proposals do not linger
+in review.
+
+To gain final approval, an ADR **must** be approved by, at minimum, the TL with
+responsibility over the domain covered by the ADR (either design or infrastructure)
+and at least one other editor, with no editors actively requesting changes.
+
+> If an ADR editor is the primary author of an ADR, then at least two other
+> editors **must** approve it.
+
+Once the ADR is approved, the editors will update the state of the ADR to reflect
+this and submit the PR.
+
+### Withdrawing or Rejecting an ADR
+
+The author of an ADR may decide, after further consideration, that an ADR should
+not advance. If so, the author may withdraw the ADR by updating the PR adding a
+notice of withdrawal with an explanation of the rationale. Additionally, the
+author may be unable to get consensus among the group and the ADR editors may
+elect to reject the ADR. In this situation, the ADR editors shall amend the PR
+adding a notice of rejection with an explanation of the rationale. In both cases,
+the ADR editors update the state accordingly and submit the PR.
+
+### Replacing an ADR
+
+In rare cases, it may be necessary to replace an ADR with another one. This is
+not general practice: minor edits to approved ADRs are acceptable, and will be
+the common way to tweak guidance. However, if new guidance fundamentally alters
+the old guidance in some way, then the ADR editors shall create a new ADR that,
+once approved, will replace the old one. The old one then enters "Replaced"
+state, and will link to the new, current ADR.
