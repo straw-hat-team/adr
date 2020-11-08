@@ -2,7 +2,7 @@
 name: ADR Proposal
 about: Suggest an ADR for this project
 title: "[Proposal] "
-labels: "State: Draft"
+labels: "State: Draft, Type: ADR"
 ---
 
 # [short title of solved problem and solution]
