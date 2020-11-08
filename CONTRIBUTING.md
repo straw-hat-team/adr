@@ -20,8 +20,10 @@ We'd love to accept your patches and contributions to this project.
 
 ### Proposing a new ADR?
 
-Make sure you have read the genesis [ADR#0000000000](./adrs/0000000000/README.md)
-is the genesis ADR.
+Make sure you have read the following ADRs:
+
+- [ADR#0000000000](./adrs/0000000000/README.md)
+- [ADR#0000000001](./adrs/0000000001/README.md)
 
 Use the following command to get started
 
