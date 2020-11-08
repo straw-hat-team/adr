@@ -2,13 +2,32 @@
 
 TODO: add purpose
 
+## Editors
+
+The editors are the set of people who make decisions on ADRs. The general goal
+is that the ADR process is collaborative and that we largely work on the basis
+of consensus. However, a limited number of designated approvers is necessary,
+and these programmers will be approvers for each ADR in the general scope.
+
+The list of ADR editors is currently:
+
+- Yordis Prieto ([@yordis](https://github.com/yordis))
+
+The editors are also responsible for the administrative and editorial aspects of
+shepherding ADRs and managing the ADR pipeline and workflow. They approve PRs to
+ADRs, assign proposal numbers, manage the agenda, set ADR states, and so forth.
+They also ensure that ADRs are readable (proper spelling, grammar, sentence
+structure, markup, etc.).
+
+ADR editorship is by invitation of the current editors.
+
 ## Domain-specific ADRs
 
 Some ADRs may be specific to a particular domain (for example, only to APIs
 within a certain programming language, or even a certain team). In this
 situation, the group will be given a particular block of ADRs to use in
-accordance with [ADR#2](../2/README.md), and the applicable ADRs will clearly
-indicate their scope.
+accordance with [ADR#0000000002](../0000000002/README.md), and the applicable
+ADRs will clearly indicate their scope.
 
 ## States
 
@@ -136,3 +155,17 @@ the common way to tweak guidance. However, if new guidance fundamentally alters
 the old guidance in some way, then the ADR editors shall create a new ADR that,
 once approved, will replace the old one. The old one then enters "Replaced"
 state, and will link to the new, current ADR.
+
+## Assigning ADR Numbers
+
+The ADR editors are responsible for assigning a number to each ADR when it is
+accepted as a draft for review. Importantly, all ADRs have numbers, not just
+approved ones. The ADR Index clearly delineates which ADRs are approved and
+binding and which are under discussion.
+
+Beyond this, ADR numbers are assigned arbitrarily using `nanoid` with a limit
+of `10` character and only numeric character. Use `make generate_id` to generate
+a ADR number.
+
+In general, the editors will generate the next ADR number to assign to a draft
+ADR.

@@ -16,8 +16,6 @@ We'd love to accept your patches and contributions to this project.
   git checkout -b [my branch name]
   ```
 
-- Find the section where you consider appropriate to add your ADR.
-
 - Submit a pull request in GitHub.
 
 ## Code reviews
