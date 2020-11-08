@@ -14,14 +14,14 @@ on software development guidance.
 
 ### New to ADR?
 
-If you're new to ADRs, check out the [Frequently Asked Questions](./faq.md)
+If you're new to ADRs, check out the [Frequently Asked Questions](./FAQ.md)
 which answer some common questions about how ADRs work and what you need to
 know.
 
 ### Have an idea for an ADR?
 
 If you have an idea for an ARD that isn't written yet (yes, there are plenty!)
-check out [Contributing to the project](./contributing.md) to see how you can
+check out [Contributing to the project](./CONTRIBUTING.md) to see how you can
 write ADRs for others to follow.
 
 ## License
@@ -31,3 +31,5 @@ Except as otherwise noted, the content of this repository is licensed under the
 and code samples are licensed under the MIT License.
 
 For the full text of each license, see [LICENSE](./LICENSE).
+
+git mv -f OldFileNameCase newfilenamecase
