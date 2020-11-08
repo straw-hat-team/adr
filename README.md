@@ -32,6 +32,4 @@ write ADRs for others to follow.
 
 Except as otherwise noted, the content of this repository is licensed under the
 [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/),
-and code samples are licensed under the MIT License.
-
-For the full text of each license, see [LICENSE](./LICENSE).
+and code samples are licensed under the [MIT License](./LICENSE).
