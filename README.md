@@ -31,5 +31,3 @@ Except as otherwise noted, the content of this repository is licensed under the
 and code samples are licensed under the MIT License.
 
 For the full text of each license, see [LICENSE](./LICENSE).
-
-git mv -f OldFileNameCase newfilenamecase
