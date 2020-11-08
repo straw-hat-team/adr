@@ -85,7 +85,7 @@ to circulate the fundamental idea for initial feedback. It should generally be
 possible to describe the idea in a couple of pages.
 
 Once ready, create a PR with a new file in the ADR directory using a file titled
-`adrs/new.md`. Ensure that the PR is editable by maintainers.
+`adrs/draft/README.md`. Ensure that the PR is editable by maintainers.
 
 In most circumstances, the editors will assign the proposal an ADR number and
 submit the PR with the ADR in the "Reviewing" state. The editors may reject an
