@@ -21,14 +21,6 @@ structure, markup, etc.).
 
 ADR editorship is by invitation of the current editors.
 
-## Domain-specific ADRs
-
-Some ADRs may be specific to a particular domain (for example, only to APIs
-within a certain programming language, or even a certain team). In this
-situation, the group will be given a particular block of ADRs to use in
-accordance with [ADR#0000000002](../0000000002/README.md), and the applicable
-ADRs will clearly indicate their scope.
-
 ## States
 
 At any given time, ADRs may exist in a variety of states as they work their way
