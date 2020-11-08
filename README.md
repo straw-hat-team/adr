@@ -18,6 +18,10 @@ If you're new to ADRs, check out the [Frequently Asked Questions](./FAQ.md)
 which answer some common questions about how ADRs work and what you need to
 know.
 
+### Genesis ADR
+
+[ADR#0000000000](./adrs/0000000000/README.md) is the genesis ADR.
+
 ### Have an idea for an ADR?
 
 If you have an idea for an ARD that isn't written yet (yes, there are plenty!)
