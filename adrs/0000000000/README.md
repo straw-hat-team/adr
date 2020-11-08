@@ -1,6 +1,17 @@
-# ADR Purpose and Guidelines
+# Genesis ADR
 
-TODO: add purpose
+## Purpose
+
+Provide consistent documentation for software development design guidance. Help
+to align people around software development and come to consensus.
+
+## What is an ADR?
+
+ADR stands for Architecture decision record, which is a design document
+providing high-level, concise documentation for software development. The goal
+is for these documents to serve as the source of truth for software-related
+documentation at Straw Hat Team and the way teams discuss and come to consensus
+on software development guidance.
 
 ## Editors
 
