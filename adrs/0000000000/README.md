@@ -1,7 +1,8 @@
 # Genesis ADR
 
-* State: Approved
-* Created: 2020-11-8
+* **State:** Approved
+* **Created:** 2020-11-8
+* **Tags:** genesis
 
 ## Purpose
 

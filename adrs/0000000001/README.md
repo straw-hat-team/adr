@@ -1,7 +1,8 @@
 # ADR Style guide
 
-* State: Approved
-* Created: 2020-11-8
+* **State:** Approved
+* **Created:** 2020-11-8
+* **Tags:** genesis
 
 ADRs are most useful when they are clear and concise, and cover a single topic
 or inquiry well. In the same way that ADRs describe consistent patterns and
@@ -66,6 +67,7 @@ ADRs **should** then begin with the metadata information about the ADR
 * **State:** the estate of the ADR.
 * **Replaced by:** the link to the ADR that was replaced by.
 * **Created:** when the ADR was created following the **YYYY-MM-DD** format.
+* **Tags:** the tags separated by comma, and the tags **must** be lowercase.
 
 Followed by the content of the ADR. Below is an example ADR shell that uses
 each major section:
@@ -73,9 +75,10 @@ each major section:
 ```md
 # The title of the ADR
 
-* State: Replaced
-* Replaced by: [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
-* Created: 2020-11-08
+* **State:** Replaced
+* **Replaced by:** [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
+* **Created:** 2020-11-08
+* **Tags:** genesis
 
 <!--
 Technical Story: [description | ticket/issue URL]
