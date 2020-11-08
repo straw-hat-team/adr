@@ -26,6 +26,19 @@ ADRs **should** use the following requirement level keywords: "MUST", "MUST NOT"
 When using these terms in ADRs, they **must** be lower-case and **bold**. These
 terms should not be used in other ways.
 
+## Assigning ADR Numbers
+
+The ADR editors are responsible for assigning a number to each ADR when it is
+accepted as a draft for review. Importantly, all ADRs have numbers, not just
+approved ones. The ADR Index clearly delineates which ADRs are approved and
+binding and which are under discussion.
+
+Beyond this, ADR numbers are assigned arbitrarily using `nanoid`
+`limited to 10 character` and `only 0123456789 characters`.
+
+In general, the editors will generate the next ADR number to assign to a draft
+ADR.
+
 ## Referencing ADRs
 
 When ADRs reference other ADRs, the prosaic text must use the format

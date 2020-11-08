@@ -161,16 +161,3 @@ the common way to tweak guidance. However, if new guidance fundamentally alters
 the old guidance in some way, then the ADR editors shall create a new ADR that,
 once approved, will replace the old one. The old one then enters "Replaced"
 state, and will link to the new, current ADR.
-
-## Assigning ADR Numbers
-
-The ADR editors are responsible for assigning a number to each ADR when it is
-accepted as a draft for review. Importantly, all ADRs have numbers, not just
-approved ones. The ADR Index clearly delineates which ADRs are approved and
-binding and which are under discussion.
-
-Beyond this, ADR numbers are assigned arbitrarily using `nanoid`
-`limited to 10 character` and `only 0123456789 characters`.
-
-In general, the editors will generate the next ADR number to assign to a draft
-ADR.
