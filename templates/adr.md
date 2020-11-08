@@ -1,6 +1,6 @@
 # [short title of solved problem and solution]
 
-* Status: <!--  Draft|Reviewing|Approved|Rejected|Deferred|Withdrawn | Replaced -->
+* State: <!--  Draft|Reviewing|Approved|Rejected|Deferred|Withdrawn | Replaced -->
 * Replaced by: <!-- [ADR#0000000000](../ards/../adrs/0000000000/README.md) -->
 * Deciders:
   <!--

@@ -2,9 +2,9 @@ daysUntilStale: 90
 daysUntilClose: 30
 
 exemptLabels:
-  - "Status: Deferred"
+  - "State: Deferred"
 
-staleLabel: "Status: Withdrawn"
+staleLabel: "State: Withdrawn"
 
 issues:
   markComment: >
