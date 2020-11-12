@@ -18,7 +18,7 @@ labels: "State: Draft, Type: ADR"
 Describe the context and problem statement.
 -->
 
-## Decision Outcome
+## Resolution
 
 Chosen option: "[option 1]", because [justification. e.g., only option, which
 meets k.o. criterion decision driver | which resolves force force | … | comes
