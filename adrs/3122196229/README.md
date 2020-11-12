@@ -38,7 +38,7 @@ Also, does that means that if we refactor the code, and we move the React
 component out of a file, that file name must change?
 
 That would introduce more potential refactoring like renaming file paths,
-adding more unnecessary line of code changes.
+adding more unnecessary line of code changes, and extra work in code reviews.
 
 As well as issues in `CI` environments, where it may be the case that `git`
 didn't rename the file due to case-insensitive file systems, and you must use
