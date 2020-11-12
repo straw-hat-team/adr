@@ -21,8 +21,8 @@ matters, also have created conventions that introduce problems such:
 The `camelCase`, and/or `PascalCase` for naming convention, although this seems
 a good solution there are some caveats.
 
-What happen for the following cases `httpClient` vs. `HTTPClient` vs.
-`HttpClient`?
+What happen for the following cases `httpClient.ts` vs. `HTTPClient.ts` vs.
+`HttpClient.ts`?
 
 * Which one is the more appropriate choice here without getting into
   disagreement and use the phrase "it depends"?
