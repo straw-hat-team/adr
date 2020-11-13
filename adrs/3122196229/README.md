@@ -19,9 +19,9 @@ matters, also have created conventions that introduce problems such:
 * Format mismatching around separating English words.
 
 The `camelCase`, and/or `PascalCase` for naming convention, although this seems
-a good solution there are some caveats.
+the right solution, there are some caveats.
 
-What happen for the following cases `httpClient.ts` vs. `HTTPClient.ts` vs.
+What happens for the following cases `httpClient.ts` vs. `HTTPClient.ts` vs.
 `HttpClient.ts`?
 
 * Which one is the more appropriate choice here without getting into
@@ -30,15 +30,15 @@ What happen for the following cases `httpClient.ts` vs. `HTTPClient.ts` vs.
 In some cases, the file `PascalCase` is used if the file is a class or
 a React component, otherwise follow `camelCase` is used.
 
-* What happen when the file contains more than a class or a React component? How
+* What happens when the file contains more than a class or a React component? How
   do we take the appropriate decision about it without getting into
   disagreement and use the phrase "it depends"?
 
-Also, does that means that if we refactor the code, and we move the React
+Also, does that means that if we refactor the code and we move the React
 component out of a file, that file name must change?
 
 That would introduce more potential refactoring like renaming file paths,
-adding more unnecessary line of code changes, and extra work in code reviews.
+adding more unnecessary lines of code changes and extra work in code reviews.
 
 As well as issues in `CI` environments, where it may be the case that `git`
 didn't rename the file due to case-insensitive file systems, and you must use
@@ -50,6 +50,6 @@ File or directory names:
 
 * Should not contain any leading or trailing spaces
 * Must be lowercase i.e., no uppercase or mixed case names are allowed
-* Should separate what constitute a English word by `-`
+* Should separate what constitutes an English word by `-`
 * Should not contain any of the following characters: `~)('!*`
 * Should not start with `.` or `_`
