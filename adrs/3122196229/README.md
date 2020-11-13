@@ -12,7 +12,7 @@ conversions in NodeJS projects.
 That has caused misalignment, shifting the focus away from more important
 matters, also have created conventions that introduce problems such:
 
-* Disagreement around English language, making it even more difficult for the
+* Disagreement around the English language, making it even more difficult for the
   non-English speaker to figure out the right decision.
 * Case sensitive vs. case insensitive file systems, causing issues in different
   environments such as your local computer vs. CI/CD computers.
