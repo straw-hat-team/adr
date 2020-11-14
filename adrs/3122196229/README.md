@@ -1,6 +1,6 @@
 # NodeJS files and directories names conversion
 
-* **State:** Reviewing
+* **State:** Approved
 * **Created:** 2020-11-10
 * **Tags:** nodejs
 
