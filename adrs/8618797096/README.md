@@ -9,7 +9,7 @@
 Today we have a way to specify fragments in our React, Preact codebase or
 any other library that adopts such technology.
 
-1. Using `Fragment` from React import:
+* Using `Fragment` from React import:
 
     ```tsx
     import { Fragment } from 'react';
@@ -20,7 +20,7 @@ any other library that adopts such technology.
     }
     ```
 
-2. Or importing everything under a scope:
+* Importing everything under a scope:
 
     ```tsx
     import * as React from 'react';
@@ -31,7 +31,7 @@ any other library that adopts such technology.
     }
     ```
 
-3. Using JSX fragment short syntax:
+* Using JSX fragment short syntax:
 
     ```tsx
     function MyApp() {
