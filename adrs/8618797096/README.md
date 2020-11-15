@@ -44,17 +44,21 @@ any other library that adopts such technology.
 There are no rules about this introducing inconsistency in the codebase, or in
 some cases, refactoring of the import style is demanded.
 
-Also, as mentioned before, since React introduced JSX to our toolkit, multiple
+As mentioned before, since React introduced JSX to our toolkit, multiple
 libraries have adopted JSX, for example, a really popular alternative to React:
 [Preact](https://preactjs.com/).
 
-Even TypeScript [introduced a way to specify the Fragment factory](https://github.com/microsoft/TypeScript/pull/38720)
+TypeScript [introduced a way to specify the Fragment factory](https://github.com/microsoft/TypeScript/pull/38720)
 to allow people to have more control over the compiled JSX code.
 
 Using `React.Fragment` couples the JSX to React, although most of your code will
 probably never move to another library like Preact, the usage of
 `React.Fragment` introduces more fragmentation in the ecosystem with little
 benefits from it.
+
+React team [introduced a new JSX Transform](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html)
+that doesn't require React to be imported in the file, allowing JSX to be more
+agnostic of the library.
 
 ## Resolution
 
