@@ -20,7 +20,7 @@ any other library that adopts such technology.
     }
     ```
 
-2. Or importing everything:
+2. Or importing everything under a scope:
 
     ```tsx
     import * as React from 'react';
