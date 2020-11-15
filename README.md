@@ -1,4 +1,4 @@
-# Architecture decision record (ADR)
+# Architecture Decision Record (ADR)
 
 TL;DR: ADRs are lots of documentation on how Straw Hat Team works.
 
