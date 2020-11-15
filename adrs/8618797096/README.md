@@ -41,7 +41,8 @@ any other library that adopts such technology.
     }
    ```
 
-There is no rules about this introducing inconsistency in the code base.
+There is no rules about this introducing inconsistency in the code base, or in
+some cases refactoring of the import style is needed.
 
 Also, as mentioned before, since React introduced JSX to our toolkit, multiple
 libraries have adopted JSX, for example a really popular alternative to React:
