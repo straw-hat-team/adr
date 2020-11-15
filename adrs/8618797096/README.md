@@ -30,12 +30,20 @@ Today we have a way to specify fragments in our React code base.
     }
    ```
 
-Since React introduced JSX to our toolkit, multiple libraries have adopted JSX,
-for example a really popular alternative to React: [Preact](https://preactjs.com/).
+There is no rules to use one over another `React.Fragment`, introducing
+inconsistency in the code base.
+
+Also, since React introduced JSX to our toolkit, multiple libraries have adopted
+JSX, for example a really popular alternative to React: [Preact](https://preactjs.com/).
 
 Even TypeScript [introduced a way to specify the Fragment factory](https://github.com/microsoft/TypeScript/pull/38720)
 to allow people to have more control over the compiled JSX code.
 
+Using `React.Fragment` couples the JSX to React, although most of your code will
+probably never move to another library like Preact, the usage of
+`React.Fragment` introduces more fragmentation in the ecosystem with little
+benefits.
+
 ## Resolution
 
-You `must` use JSX fragment short syntax `<></>`.
+* You `must` use JSX fragment short syntax `<></>`.
