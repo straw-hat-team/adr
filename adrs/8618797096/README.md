@@ -6,7 +6,7 @@
 
 ## Context
 
-Today we have a way to specify fragments in our React, Preact code base or
+Today we have a way to specify fragments in our React, Preact codebase or
 any other library that adopts such technology.
 
 1. Using `Fragment` from React import:
@@ -41,11 +41,11 @@ any other library that adopts such technology.
     }
    ```
 
-There is no rules about this introducing inconsistency in the code base, or in
-some cases refactoring of the import style is needed.
+There are no rules about this introducing inconsistency in the codebase, or in
+some cases, refactoring of the import style is demanded.
 
 Also, as mentioned before, since React introduced JSX to our toolkit, multiple
-libraries have adopted JSX, for example a really popular alternative to React:
+libraries have adopted JSX, for example, a really popular alternative to React:
 [Preact](https://preactjs.com/).
 
 Even TypeScript [introduced a way to specify the Fragment factory](https://github.com/microsoft/TypeScript/pull/38720)
