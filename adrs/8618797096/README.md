@@ -59,3 +59,17 @@ benefits from it.
 ## Resolution
 
 * You `must` use JSX fragment short syntax `<></>`.
+
+## Links
+
+* [react/jsx-fragments](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-fragments.md)
+  ESLint rule about JSX short syntax. We suggest to enable the rule with the
+  following config:
+
+    ```json
+    {
+      "rules": {
+        "react/jsx-fragments": ["error", "syntax"]
+      }
+    }
+    ```
