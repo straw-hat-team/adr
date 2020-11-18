@@ -1,6 +1,6 @@
 # Usage of JSX Fragment
 
-* **State:** Reviewing
+* **State:** Approved
 * **Created:** 2020-11-15
 * **Tags:** jsx
 
