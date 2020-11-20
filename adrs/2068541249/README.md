@@ -2,7 +2,7 @@
 
 * **State:** Draft
 * **Created:** 2020-11-18
-* **Tags:** tsconfig,jsconfig,application
+* **Tags:** import aliases,application
 
 ## Context
 
