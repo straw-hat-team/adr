@@ -1,4 +1,4 @@
-# Configuration of baseUrl and paths of jsconfig/tsconfig files in applications
+# Configuration of import aliases in Javascript applications
 
 * **State:** Draft
 * **Created:** 2020-11-18
@@ -11,16 +11,17 @@ First, let's define the meaning of `application` in this context:
 **Applications:** a deployable project that is not used as a library of another
 project.
 
-Current, most JavaScript tools use `<rootDir>/tsconfig.json`, or
-`<rootDir>/jsconfig.json` to help the IDEs or tools to resolve the file locations
-use the following two configurations:
+Some tools allow you to create aliases for your absolute imports, avoiding
+having to use relative path to import a module.
+
+For example, `<rootDir>/tsconfig.json`, or `<rootDir>/jsconfig.json`:
 
 * **compilerOptions.baseUrl:** Base directory to resolve non-relative module
   names.
 * **compilerOptions.paths:** Specify path mapping to be computed relative to
   baseUrl option.
 
-For example:
+Here is an example of such file:
 
 ```json
 {
@@ -32,6 +33,13 @@ For example:
   }
 }
 ```
+
+In some cases the tools use `tsconfig.json` or `jsconfig.json` files
+to configure their aliases, in other cases you will have to configure yourself,
+it dependents of your toolkit.
+
+We will be using `tsconfig.json` configuration to demonstrate the issues around
+adding aliases, or registering `src` as a root for imports.
 
 Let's assume the following directory structure as a reference for the examples:
 
@@ -130,23 +138,68 @@ module.
 
 ## Resolution
 
-Since `@/` is not a valid NPM package, it is popular among other projects as
-well.
+Since `@/` is not a valid NPM package,
 
-* You **must** never change `baseUrl` from the root of the project.
-* You **must** use the following configuration to resolve files relative to the
-  root of the project:
+* You **must not** configure tools to resolve absolute imports from `src`
+  directory directly.
+* You **must not** configure tools with aliases that are valid NPM package names
+  unless the alias point to a valid NPM package.
+* You **must** use `@` alias to resolve imports relative to the root of the
+  project.
 
-    ```jsonc
-    {
-      "compilerOptions": {
-        "baseUrl": ".", // The baseUrl is at the root of the project
-        "paths": {
-          "@/*": ["./src/*"]
-        }
-      }
+## Extra
+
+These are examples of valid configurations:
+
+For `tsconfig.json` or `jsconfig.json` files:
+
+```jsonc
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
     }
-    ```
+  }
+}
+```
+
+Jest configuration:
+
+```jsonc
+{
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  }
+}
+```
+
+Webpack aliases:
+
+```jsonc
+{
+  "resolve": {
+    "alias": {
+      "@": "path/to/rootDir/src",
+    }
+  }
+};
+```
+
+Rollup alias:
+
+```js
+import alias from '@rollup/plugin-alias';
+
+module.exports = {
+  plugins: [
+    alias({
+      entries: [
+        { find: '@', replacement: 'path/to/rootDir/src' },
+      ]
+    })
+  ]
+};
+```
 
 ## Links
 
