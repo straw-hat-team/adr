@@ -1,6 +1,6 @@
 # Configuration of import aliases in Javascript applications
 
-* **State:** Draft
+* **State:** Reviewing
 * **Created:** 2020-11-18
 * **Tags:** import aliases,application
 
