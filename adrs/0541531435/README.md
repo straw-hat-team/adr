@@ -18,7 +18,7 @@ that know the unspoken/undocumented rule.
 
 In other completely valid cases, like putting everything at the root of the
 project, don't take into consideration caveats like having so many metadata such
-as `.gitginore`, `.prettierrc`, `.eslintrc`, `.markdownlint.json`,
+as `.gitignore`, `.prettierrc`, `.eslintrc`, `.markdownlint.json`,
 `tsconfig.json` files and many other files and directories.
 
 Subjectively speaking, they add noise and hard to navigate or concentrate when
