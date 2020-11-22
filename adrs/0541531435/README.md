@@ -100,9 +100,9 @@ websites (internal or public as an example), and how to manage them.
 * You **must** place `storybook` documentation under `./docs`.
 * In the `./docs` directory, you **must** separate documentation based on the
   underline tool or context (for example, **internal** or **public**).
-* `./src` **must** required compilation step in order, and you **must** compile
-  the source code into `./dist` directory.
-* `./dist` **must** required to compile `./src` directory in order to generate
+* `./src` **must** required compilation step, and you **must** compile the
+  source code into `./dist` directory.
+* `./dist` **must** required to compile `./src` directory to generate
   the source code, or any other compilation step in required cases.
 
 ### About files and directories
