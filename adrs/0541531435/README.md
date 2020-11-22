@@ -32,7 +32,7 @@ Y directories?
 * How to structure the project when I have multiple testing frameworks, or
 multiple documentation tools?
 
-This ADR is an attend to follow the steps of other ecosystems like Elixir,
+This ADR is an attempt to follow the steps of other ecosystems like Elixir,
 Ruby or Rust came to a consensus about this topic.
 
 ### About compilations
