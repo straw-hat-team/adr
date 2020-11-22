@@ -26,10 +26,10 @@ put all your files at the root of the project.
 
 Furthermore,
 
-Where do I suppose to put my test files? What are the differences between X and
+* Where do I suppose to put my test files? What are the differences between X and
 Y directories?
 
-How to structure the project when I have multiple testing frameworks, or
+* How to structure the project when I have multiple testing frameworks, or
 multiple documentation tools?
 
 This ADR is an attend to follow the steps of other ecosystems like Elixir,
@@ -37,40 +37,38 @@ Ruby or Rust came to a consensus about this topic.
 
 ### About compilations
 
-We should be able to tell what requires compilation in the project, that is
-extremely useful in library's projects since you should be aware of such detail
-in order to consume the project.
+We should tell what requires compilation in the project, which is extremely
+useful in library projects since you should be aware of such detail to consume
+the project. Or in cases that you would like to run the project in production.
 
-Also in cases that you would like to run the project in production.
-
-Having a directory that reflects such information is crucial in order to mitigate
-mistakes in application deployments, or misused of libraries.
+Having a directory that reflects such information is crucial to mitigate mistakes
+in application deployments, or misuse of libraries.
 
 ### About test frameworks
 
 Sometimes you may have multiple test frameworks for your project, most likely
-for `end-to-end`, `integration`, or `unit` tests, but no limited to those
+for `end-to-end`, `integration`, or `unit` tests, but not limited to those
 concepts. Therefore, people have tried to come up with `./tests/integration`,
 `./tests/unit`, `./tests/end-to-end`.
 
-Although that may be a clean way to structure your tests, the problem arrive
+Although that may be a clean way to structure your tests, the problems arrive
 when you try to articulate the differences between those categories without
-getting into a deep conversation about X vs. Y, and end up with unclear
-boundaries, relying too much in programmer's experience in order to articulate
-the most optimal definition or decision.
+getting into an in-depth conversation about X vs. Y and end up with unclear
+boundaries, relying too much on the programmer's experiences to articulate the
+most optimal definition or decision.
 
 Additionally, if you try to migrate your project to another testing tool that
-may be used in one of those possible categories, you will mingle tests that are
-run differently depending of the underline tool, and that may be really
+falls into one of those possible categories, you will mingle tests that are
+run differently depending on the underline tool, and that may be really
 important in some cases.
 
 ### About documentation
 
-Documentation tools are amazingly diverse in the ecosystem, such tools require
+Documentation tools are amazingly diverse in the ecosystem; such tools require
 different configurations and code structure, therefore mingle tools may cause
 incompatible situations, or confusing documentation source code.
 
-Also, it is unclear today, what should I do if I have multiple documentation
+Also, it is unclear today what should I do if I have multiple documentation
 websites (internal or public as an example), and how to manage them.
 
 ## Resolution
@@ -85,6 +83,7 @@ websites (internal or public as an example), and how to manage them.
   ├── docs
   │   ├── storybook
   │   └── website
+  │   └── website-next
   │   └── [another website or tool]
   ├── examples
   ├── lib
