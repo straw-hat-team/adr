@@ -19,23 +19,28 @@ pattern recognition. Enabling engineers to perform their tasks.
 ## Resolution
 
 * You **must** follow [NodeJS files and directories names conversion](./../3122196229/README.md)
+* You **must** use `<rootDir>/src/@types/*` to store reusable TypeScript
+  definition files.
 * You **must** use `<rootDir>/src/pages` for [NextJS pages](https://nextjs.org/docs/basic-features/pages)
   directory.
 * You **must** use `<rootDir>/src/routes` for managing the entry point of a
   particular URL routing, or screen routing.
-* You **must** use `<rootDir>/src/services/[service name]/*` to store anything
+
+### Part of fractal pattern
+
+* You **must** use `<rootDir>/src/services` to store anything
   related to any communication with [external services](#external-services).
-* You **must** use `<rootDir>/src/components/*` to store reusable React
+* You **must** use external service brand name as a subdirectory in
+  `<rootDir>/src/services/[service name]`.
+* You **must** use `<rootDir>/src/components` to store reusable React
   components.
-* You **must** use `<rootDir>/src/hooks/*` to store reusable React
+* You **must** use `<rootDir>/src/hooks` to store reusable React
   hooks.
-* You **must** use `<rootDir>/src/types/*` to store reusable TypeScript types.
-* You **must** use `<rootDir>/src/@types/*` to store reusable TypeScript
-  definition files.
-* You **must** use `<rootDir>/src/styles/*` to store components styles such as
+* You **must** use `<rootDir>/src/types` to store reusable TypeScript types.
+* You **must** use `<rootDir>/src/styles` to store components styles such as
   CSS or Stylesheets.
-* You **must** use `<rootDir>/src/constants/*` to store constants variables.
-* You **must** use `<rootDir>/src/helpers/*` to store anything that does not
+* You **must** use `<rootDir>/src/constants` to store constants variables.
+* You **must** use `<rootDir>/src/helpers` to store anything that does not
   fall into any of the other directories.
 
 ### Example
@@ -68,6 +73,8 @@ What about adding:
   * src/helpers/dates/formatter
 * src/helpers/numbers
   * src/helpers/numbers/formatter
+* src/helpers/currency
+  * src/helpers/currency/formatter
 
 * src/helpers/http-client
 * src/helpers/socket-client
