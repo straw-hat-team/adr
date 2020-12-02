@@ -1,6 +1,6 @@
 # NodeJS source code directory structure
 
-* **State:** Revewing
+* **State:** Approved
 * **Created:** 2020-11-21
 * **Tags:** nodejs,directory
 
