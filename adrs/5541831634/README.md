@@ -19,9 +19,8 @@ pattern recognition. Enabling engineers to perform their tasks.
 ## Resolution
 
 * You **must** follow [NodeJS files and directories names conversion](./../3122196229/README.md)
-* You **must** use `<rootDir>/src/@types/*` to store reusable TypeScript
-  definition files.
-* You **must** use `<rootDir>/src/pages` for [NextJS pages](https://nextjs.org/docs/basic-features/pages)
+* You **must** use `<rootDir>/src/@types/*` to store TypeScript definition files.
+* You **must** use `<rootDir>/src/pages` for [NextJS Pages](https://nextjs.org/docs/basic-features/pages)
   directory.
 * You **must** use `<rootDir>/src/routes` for managing the entry point of a
   particular URL routing, or screen routing.
@@ -66,9 +65,8 @@ What about adding:
 
 * src/providers/
 
-* src/schemas/
-  * yup
-  * joi
+* src/helpers/yup/
+* src/helpers/joi/
 * src/helpers/dates
   * src/helpers/dates/formatter
 * src/helpers/numbers
