@@ -1,6 +1,6 @@
 # JSX files extension
 
-* **State:** Reviewing
+* **State:** Approved
 * **Created:** 2020-12-01
 * **Tags:** jsx
 
