@@ -14,7 +14,7 @@ matters.
 
 Although there is no silver bullet for this topic, it helps create some
 conventions that aim to reduce cognitive load based on patterns that trigger
-pattern recognition. Enabling engineers to perform their tasks.
+pattern recognition.
 
 ## Resolution
 
