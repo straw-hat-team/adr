@@ -81,7 +81,67 @@ or `<rootDir>/src/routes/`.
 * You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
   Yup schemas. You may use **joi** or **yup** as subdirectories.
 
+## Routes directory structure
+
+### Web
+
+* `<rootDir>/src/routes/index.{extension}` **must** be used as the root path
+  of the URL.
+
+  ```text
+  URL: http://acme.io/
+  <rootDir>
+  └── src
+      └── routes
+          └── index.ts
+  ```
+
+* URL subpath **must** must match a subdirectory inside `<fractalDir>/routes`.
+
+  ```text
+  URL: http://acme.io/authors/articles
+  <rootDir>
+  └── src
+      └── routes
+          ├── authors
+          │   ├── index.ts
+          │   └── routes
+          │       └── articles
+          │           └── index.ts
+          └── index.ts
+  ```
+
+* Dynamic URL subpath **must** must match a subdirectory inside
+  `<fractalDir>/routes` using `[the dynamic section identifier]` syntax. In case
+  you use NextJS, you must use the same name as the dynamic NextJS route
+  directory.
+
+  ```text
+  URL: http://acme.io/authors/articles/:articleId/
+  <rootDir>
+  └── src
+      └── routes
+          ├── authors
+          │   ├── index.ts
+          │   └── routes
+          │       └── articles
+          │           ├── index.ts
+          │           └── routes
+          │               └── [articleId]
+          │                   └── index.ts
+          └── index.ts
+  ```
+
+#### Dynamic Routes
+
 ## Terminology
+
+### Route
+
+In the context of React DOM, Route is a path, or subpath of URL that the user
+is visiting.
+
+In the context of React Native, it is a screen.
 
 ### External services
 
