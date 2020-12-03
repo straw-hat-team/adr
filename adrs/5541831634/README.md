@@ -30,7 +30,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/components`
 or `<rootDir>/src/routes/`.
 
 * You **must** use `<fractalDir>/routes` for managing the entry point of a
-  particular URL routing, or screen routing.
+  route.
 * You **must** use `<fractalDir>/services` to store anything
   related to any communication with [external services](#external-services).
 * You **must** use external service brand name as a subdirectory in
