@@ -19,28 +19,33 @@ pattern recognition. Enabling engineers to perform their tasks.
 ## Resolution
 
 * You **must** follow [NodeJS files and directories names conversion](./../3122196229/README.md)
-* You **must** use `<rootDir>/src/@types/*` to store TypeScript definition files.
+* You **must** use `<rootDir>/src/@types` to store TypeScript definition files.
 * You **must** use `<rootDir>/src/pages` for [NextJS Pages](https://nextjs.org/docs/basic-features/pages)
   directory.
-* You **must** use `<rootDir>/src/routes` for managing the entry point of a
+
+### Fractal pattern directories and files
+
+A fractal pattern is a pattern that you could repeat in each nested level
+directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/components`
+or `<rootDir>/src/routes/`.
+
+* You **must** use `<fractalDir>/routes` for managing the entry point of a
   particular URL routing, or screen routing.
-
-### Part of fractal pattern
-
-* You **must** use `<rootDir>/src/services` to store anything
+* You **must** use `<fractalDir>/src/services` to store anything
   related to any communication with [external services](#external-services).
 * You **must** use external service brand name as a subdirectory in
-  `<rootDir>/src/services/[service name]`.
-* You **must** use `<rootDir>/src/components` to store reusable React
+  `<fractalDir>/services/[service name]`.
+* You **must** use `<fractalDir>/components` to store reusable React
   components.
-* You **must** use `<rootDir>/src/hooks` to store reusable React
+* You **must** use `<fractalDir>/hooks` to store reusable React
   hooks.
-* You **must** use `<rootDir>/src/types` to store reusable TypeScript types.
-* You **must** use `<rootDir>/src/styles` to store components styles such as
+* You **must** use `<rootDir>/types` to store reusable TypeScript types.
+* You **must** use `<rootDir>/styles` to store components styles such as
   CSS or Stylesheets.
-* You **must** use `<rootDir>/src/constants` to store constants variables.
-* You **must** use `<rootDir>/src/helpers` to store anything that does not
+* You **must** use `<rootDir>/constants` to store constants variables.
+* You **must** use `<rootDir>/helpers` to store anything that does not
   fall into any of the other directories.
+
 
 ### Example
 
@@ -53,7 +58,7 @@ pattern recognition. Enabling engineers to perform their tasks.
 ### External services
 
 Any piece of software external to your application that requires some network
-boundary such as APIs, 3rd party tools (Google Analytics, Sentry).
+boundary such as APIs, 3rd party tools (Google Analytics, Sentry), and so on.
 
 ## Links
 
