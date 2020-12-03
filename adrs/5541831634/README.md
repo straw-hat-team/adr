@@ -74,8 +74,8 @@ or `<rootDir>/src/routes/`.
   device.You **may** use `local`, `session`, `cookies`, `websql`, and
   `indexeddb` as subdirectories.
 * You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
-  Yup schemas or any alike package. You **may** use **joi**, **yup** or package
-  name as subdirectories.
+  Yup schemas or any similar package. You **may** use **joi**, **yup** or
+  package name as subdirectories.
 
 ## Routes directory structure
 
@@ -132,7 +132,7 @@ or `<rootDir>/src/routes/`.
 
 ### Route
 
-In the context of React DOM, Route is a path, or subpath of URL that the user
+In the context of React DOM, Route is a path or subpath of URL that the user
 is visiting.
 
 In the context of React Native, it is a screen.
