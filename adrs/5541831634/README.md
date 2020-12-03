@@ -63,7 +63,7 @@ or `<rootDir>/src/routes/`.
   to currency. Except formatters, use `<fractalDir>/i18n/numbers`
   instead.
 * You **must** use `<fractalDir>/helpers` to store anything that does not
-  fall into any of the other helper directory category.
+  fall into any of the other helper directory categories.
 * You **must** use `<fractalDir>/transports/http` to store anything
   related to HTTP transport clients.
 * You **must** use `<fractalDir>/transports/web-socket` to store
@@ -72,9 +72,9 @@ or `<rootDir>/src/routes/`.
   anything related to GraphQL transport clients.
 * You **must** use `<fractalDir>/transports/graphql` to store
   anything related to GraphQL transport clients.
-* You **must** use `<fractalDir>/storages` to store anything related to device.
-  You **may** use `local`, `session`, `cookies`, `websql`, and `indexeddb`
-  as subdirectories.
+* You **must** use `<fractalDir>/storages` to store anything related to the
+  device.You **may** use `local`, `session`, `cookies`, `websql`, and
+  `indexeddb` as subdirectories.
 * You **must** use `<fractalDir>/queries` to store anything related to
   React Queries.
   as subdirectories.
