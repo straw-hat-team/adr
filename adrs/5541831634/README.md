@@ -87,8 +87,8 @@ or `<rootDir>/src/routes/`.
 * You **must** use `<fractalDir>/storages` to store anything related to the
   device. You **may** use `local`, `session`, `cookies`, `websql`, and
   `indexeddb` as subdirectories.
-* You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
-  Yup schemas or any similar package. You **may** use **joi**, **yup** or
+* You **must** use `<fractalDir>/schemas` to store anything related to Joi, Yup
+  schemas or any similar package. You **may** use **joi**, **yup** or
   package name as subdirectories.
 
 ## Routes directory structure
