@@ -44,8 +44,8 @@ or `<rootDir>/src/routes/`.
   CSS or Stylesheets.
 * You **must** use `<fractalDir>/constants` to store constants variables.
 * You **must** use `<fractalDir>/contexts` to store React contexts definitions.
-* You **must** use i18n to store anything related to
-  Internationalization (i18n).
+* You **must** use `<fractalDir>/i18n` to store anything 
+  related to Internationalization.
 * You **must** use `<fractalDir>/i18n/datetime` to store i18n date
   and time formatting.
 * You **must** use `<fractalDir>/i18n/list` to store i18n sensitive
@@ -71,7 +71,7 @@ or `<rootDir>/src/routes/`.
 * You **must** use `<fractalDir>/transports/graphql` to store
   anything related to GraphQL transport clients.
 * You **must** use `<fractalDir>/storages` to store anything related to the
-  device.You **may** use `local`, `session`, `cookies`, `websql`, and
+  device. You **may** use `local`, `session`, `cookies`, `websql`, and
   `indexeddb` as subdirectories.
 * You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
   Yup schemas or any similar package. You **may** use **joi**, **yup** or
@@ -139,5 +139,5 @@ In the context of React Native, it is a screen.
 
 ### External services
 
-Any piece of software external to your application that requires some network
+Any piece of software external to your application that crosses some network
 boundary such as APIs, 3rd party tools (Google Analytics, Sentry), and so on.
