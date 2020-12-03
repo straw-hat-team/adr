@@ -132,8 +132,6 @@ or `<rootDir>/src/routes/`.
           └── index.ts
   ```
 
-#### Dynamic Routes
-
 ## Terminology
 
 ### Route
