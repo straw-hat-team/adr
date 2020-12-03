@@ -9,8 +9,8 @@
 Across the ecosystem, we can find all sorts of files and directory naming
 conventions in React projects.
 
-The variety of conventions causes misalignment and shifts focus away from more important
-matters.
+The variety of conventions causes misalignment and shifts focus away from more
+important matters.
 
 Although there is no silver bullet for this topic, it helps create some
 conventions that aim to reduce cognitive load based on patterns that trigger
@@ -20,8 +20,21 @@ pattern recognition.
 
 * You **must** follow [NodeJS files and directories names conversion](./../3122196229/README.md)
 * You **must** use `<rootDir>/src/@types` to store TypeScript definition files.
+* You **must** use `<rootDir>/src/app.tsx` to be your application root
+  component.
+
+### NextJS
+
+Some resolutions are related to NextJS projects.
+
 * You **must** use `<rootDir>/src/pages` for [NextJS Pages](https://nextjs.org/docs/basic-features/pages)
   directory.
+* In NextJS project, you **must** re-export a NextJS app from
+  `<rootDir>/src/app.tsx` in `<rootDir>/src/pages/_app.tsx`
+* In NextJS project, you **must** re-export a NextJS Documents from
+  `<rootDir>/src/document.tsx` in `<rootDir>/src/pages/_document.tsx`
+* In NextJS project, you **must** re-export a NextJS Documents from
+  `<rootDir>/src/error.tsx` in `<rootDir>/src/pages/_error.tsx`
 
 ### Fractal pattern directories and files
 
