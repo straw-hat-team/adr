@@ -6,10 +6,10 @@
 
 ## Context
 
-Across the ecosystem, we can find all sort of files and directories naming
-conversions in React projects.
+Across the ecosystem, we can find all sorts of files and directory naming
+conventions in React projects.
 
-That has caused misalignment, shifting the focus away from more important
+The variety of conventions causes misalignment and shifts focus away from more important
 matters.
 
 Although there is no silver bullet for this topic, it helps create some
