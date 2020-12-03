@@ -139,5 +139,5 @@ In the context of React Native, it is a screen.
 
 ### External services
 
-Any piece of software external to your application that requires some network
+Any piece of software external to your application that crosses some network
 boundary such as APIs, 3rd party tools (Google Analytics, Sentry), and so on.
