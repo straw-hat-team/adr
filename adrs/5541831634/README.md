@@ -12,9 +12,9 @@ conventions in React projects.
 The variety of conventions causes misalignment and shifts focus away from more
 important matters.
 
-Although there is no silver bullet for this topic, it helps create some
-conventions that aim to reduce cognitive load based on patterns that trigger
-pattern recognition.
+Although there are no silver bullets for this topic, committing to a convention
+will reduce cognitive load by triggering pattern recognition, enabling engineers
+to focus their brainpower on their tasks.
 
 ## Resolution
 
