@@ -39,19 +39,47 @@ or `<rootDir>/src/routes/`.
   components.
 * You **must** use `<fractalDir>/hooks` to store reusable React
   hooks.
-* You **must** use `<rootDir>/types` to store reusable TypeScript types.
-* You **must** use `<rootDir>/styles` to store components styles such as
+* You **must** use `<fractalDir>/types` to store reusable TypeScript types.
+* You **must** use `<fractalDir>/styles` to store components styles such as
   CSS or Stylesheets.
-* You **must** use `<rootDir>/constants` to store constants variables.
-* You **must** use `<rootDir>/helpers` to store anything that does not
-  fall into any of the other directories.
-
-
-### Example
-
-```text
-
-```
+* You **must** use `<fractalDir>/constants` to store constants variables.
+* You **must** use `<fractalDir>/contexts` to store React contexts definitions.
+* You **must** use i18n to store anything related to
+  Internationalization (i18n).
+* You **must** use `<fractalDir>/i18n/datetime` to store i18n date
+  and time formatting.
+* You **must** use `<fractalDir>/i18n/list` to store i18n sensitive
+  list formatting. Read more about the intent at [Intl.ListFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat).
+* You **must** use `<fractalDir>/i18n/numbers` to store i18n number
+  formatting. Read more about the intent at [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat).
+* You **must** use `<fractalDir>/i18n/plural` to store i18n
+  pluralization formatting. Read more about the intent at [Intl.PluralRules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules).
+* You **must** use `<fractalDir>/i18n/relative-time` to store i18n
+  relative-time formatting. Read more about the intent at [Intl.RelativeTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat).
+* You **must** use `<fractalDir>/helpers/datetime` to store anything related
+  to Dates or Times. Except formatters, use `<fractalDir>/i18n/datetime`
+  instead.
+* You **must** use `<fractalDir>/helpers/currency` to store anything related
+  to currency. Except formatters, use `<fractalDir>/i18n/numbers`
+  instead.
+* You **must** use `<fractalDir>/helpers` to store anything that does not
+  fall into any of the other helper directory category.
+* You **must** use `<fractalDir>/transports/http` to store anything
+  related to HTTP transport clients.
+* You **must** use `<fractalDir>/transports/web-socket` to store
+  anything related to Web Socket transport clients.
+* You **must** use `<fractalDir>/transports/graphql` to store
+  anything related to GraphQL transport clients.
+* You **must** use `<fractalDir>/transports/graphql` to store
+  anything related to GraphQL transport clients.
+* You **must** use `<fractalDir>/storages` to store anything related to device.
+  You **may** use `local`, `session`, `cookies`, `websql`, and `indexeddb`
+  as subdirectories.
+* You **must** use `<fractalDir>/queries` to store anything related to
+  React Queries.
+  as subdirectories.
+* You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
+  Yup schemas. You may use **joi** or **yup** as subdirectories.
 
 ## Terminology
 
@@ -59,36 +87,3 @@ or `<rootDir>/src/routes/`.
 
 Any piece of software external to your application that requires some network
 boundary such as APIs, 3rd party tools (Google Analytics, Sentry), and so on.
-
-## Links
-
-## NOTES
-
-Add info about fractal patterns for most of these directories
-
-What about adding:
-
-* src/providers/
-
-* src/helpers/yup/
-* src/helpers/joi/
-* src/helpers/dates
-  * src/helpers/dates/formatter
-* src/helpers/numbers
-  * src/helpers/numbers/formatter
-* src/helpers/currency
-  * src/helpers/currency/formatter
-
-* src/helpers/http-client
-* src/helpers/socket-client
-* src/helpers/apollo-client
-
-* src/helpers/react-router
-* src/helpers/react-queries/
-* src/helpers/redux/
-* src/helpers/localstorage
-* src/helpers/i18n
-* src/helpers/logger
-
-How should we manage React Context since it contains potential hooks, and
-components. (Share pattern used across react admin tool).
