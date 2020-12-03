@@ -31,7 +31,7 @@ or `<rootDir>/src/routes/`.
 
 * You **must** use `<fractalDir>/routes` for managing the entry point of a
   particular URL routing, or screen routing.
-* You **must** use `<fractalDir>/src/services` to store anything
+* You **must** use `<fractalDir>/services` to store anything
   related to any communication with [external services](#external-services).
 * You **must** use external service brand name as a subdirectory in
   `<fractalDir>/services/[service name]`.
@@ -70,22 +70,18 @@ or `<rootDir>/src/routes/`.
   anything related to Web Socket transport clients.
 * You **must** use `<fractalDir>/transports/graphql` to store
   anything related to GraphQL transport clients.
-* You **must** use `<fractalDir>/transports/graphql` to store
-  anything related to GraphQL transport clients.
 * You **must** use `<fractalDir>/storages` to store anything related to the
   device.You **may** use `local`, `session`, `cookies`, `websql`, and
   `indexeddb` as subdirectories.
-* You **must** use `<fractalDir>/queries` to store anything related to
-  React Queries.
-  as subdirectories.
 * You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
-  Yup schemas. You may use **joi** or **yup** as subdirectories.
+  Yup schemas or any alike package. You **may** use **joi**, **yup** or package
+  name as subdirectories.
 
 ## Routes directory structure
 
 ### Web
 
-* `<rootDir>/src/routes/index.{extension}` **must** be used as the root path
+* `<rootDir>/src/routes/index.tsx` **must** be used as the root path
   of the URL.
 
   ```text
@@ -93,7 +89,7 @@ or `<rootDir>/src/routes/`.
   <rootDir>
   └── src
       └── routes
-          └── index.ts
+          └── index.tsx
   ```
 
 * URL subpath **must** must match a subdirectory inside `<fractalDir>/routes`.
@@ -104,11 +100,11 @@ or `<rootDir>/src/routes/`.
   └── src
       └── routes
           ├── authors
-          │   ├── index.ts
+          │   ├── index.tsx
           │   └── routes
           │       └── articles
-          │           └── index.ts
-          └── index.ts
+          │           └── index.tsx
+          └── index.tsx
   ```
 
 * Dynamic URL subpath **must** must match a subdirectory inside
@@ -122,14 +118,14 @@ or `<rootDir>/src/routes/`.
   └── src
       └── routes
           ├── authors
-          │   ├── index.ts
+          │   ├── index.tsx
           │   └── routes
           │       └── articles
-          │           ├── index.ts
+          │           ├── index.tsx
           │           └── routes
           │               └── [articleId]
-          │                   └── index.ts
-          └── index.ts
+          │                   └── index.tsx
+          └── index.tsx
   ```
 
 ## Terminology
