@@ -44,8 +44,8 @@ or `<rootDir>/src/routes/`.
   CSS or Stylesheets.
 * You **must** use `<fractalDir>/constants` to store constants variables.
 * You **must** use `<fractalDir>/contexts` to store React contexts definitions.
-* You **must** use i18n to store anything related to
-  Internationalization (i18n).
+* You **must** use `<fractalDir>/i18n` to store anything 
+  related to Internationalization.
 * You **must** use `<fractalDir>/i18n/datetime` to store i18n date
   and time formatting.
 * You **must** use `<fractalDir>/i18n/list` to store i18n sensitive
