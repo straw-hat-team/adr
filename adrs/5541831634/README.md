@@ -44,7 +44,7 @@ or `<rootDir>/src/routes/`.
   CSS or Stylesheets.
 * You **must** use `<fractalDir>/constants` to store constants variables.
 * You **must** use `<fractalDir>/contexts` to store React contexts definitions.
-* You **must** use `<fractalDir>/i18n` to store anything 
+* You **must** use `<fractalDir>/i18n` to store anything
   related to Internationalization.
 * You **must** use `<fractalDir>/i18n/datetime` to store i18n date
   and time formatting.
@@ -63,7 +63,8 @@ or `<rootDir>/src/routes/`.
   to currency. Except formatters, use `<fractalDir>/i18n/numbers`
   instead.
 * You **must** use `<fractalDir>/helpers` to store anything that does not
-  fall into any of the other helper directory categories.
+  fall into any of the other helper directory categories. You **may** create
+  your own files and directories based on your context.
 * You **must** use `<fractalDir>/transports/http` to store anything
   related to HTTP transport clients.
 * You **must** use `<fractalDir>/transports/web-socket` to store
