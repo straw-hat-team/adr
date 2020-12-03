@@ -71,7 +71,7 @@ or `<rootDir>/src/routes/`.
 * You **must** use `<fractalDir>/transports/graphql` to store
   anything related to GraphQL transport clients.
 * You **must** use `<fractalDir>/storages` to store anything related to the
-  device.You **may** use `local`, `session`, `cookies`, `websql`, and
+  device. You **may** use `local`, `session`, `cookies`, `websql`, and
   `indexeddb` as subdirectories.
 * You **must** use `<fractalDir>/schemas` to store anything related to Joi, or
   Yup schemas or any alike package. You **may** use **joi**, **yup** or package
