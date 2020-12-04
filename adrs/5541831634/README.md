@@ -19,7 +19,8 @@ to focus their brainpower on their tasks.
 ## Resolution
 
 * You **must** follow [NodeJS files and directories names conversion](./../3122196229/README.md)
-* You **must** use `<rootDir>/src/@types` to store TypeScript definition files.
+* You **must** use `<rootDir>/src/@types` to store TypeScript definition files
+  (`*.d.ts`).
 * You **must** use `<rootDir>/src/app.tsx` to be your application root
   component.
 
