@@ -40,8 +40,8 @@ Some resolutions are related to NextJS projects.
 ### Fractal pattern directories and files
 
 A fractal pattern is a pattern that you could repeat in each nested level
-directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/components`
-or `<rootDir>/src/routes/`.
+directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
+`<rootDir>/src/components/[component name]`.
 
 * You **must** use `<fractalDir>/routes` for managing the entry point of a
   route.
@@ -50,7 +50,8 @@ or `<rootDir>/src/routes/`.
 * You **must** use external service brand name as a subdirectory in
   `<fractalDir>/services/[service name]`.
 * You **must** use `<fractalDir>/components` to store reusable React
-  components.
+  components. You may create a directory to scope the fractal directories to
+  a component, otherwise use use a file.
 * You **must** use `<fractalDir>/hooks` to store reusable React
   hooks.
 * You **must** use `<fractalDir>/types` to store reusable TypeScript types.
