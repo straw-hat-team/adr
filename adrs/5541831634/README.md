@@ -23,6 +23,7 @@ to focus their brainpower on their tasks.
   (`*.d.ts`).
 * You **must** use `<rootDir>/src/app.tsx` to be your application root
   component.
+* You **must** use `<rootDir>/src/polyfills` to store polyfills.
 
 ### NextJS
 
