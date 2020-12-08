@@ -24,6 +24,7 @@ to focus their brainpower on their tasks.
 * You **must** use `<rootDir>/src/app.tsx` to be your application root
   component.
 * You **must** use `<rootDir>/src/polyfills` to store polyfills.
+* You **must** use `<rootDir>/public` to store static files.
 
 ### NextJS
 
