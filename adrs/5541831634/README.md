@@ -1,6 +1,6 @@
 # React project files and directories names convention
 
-* **State:** Draft
+* **State:** Reviewing
 * **Created:** 2020-12-01
 * **Tags:** react
 
