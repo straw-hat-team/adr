@@ -59,6 +59,8 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 * You **must** use `<fractalDir>/types` to store reusable TypeScript types.
 * You **must** use `<fractalDir>/styles` to store components styles such as
   CSS or Stylesheets.
+* You **must** use `<fractalDir>/assets` to store files such as images, fonts,
+  and any other files that are not stylesheets or JavaScript files.
 * You **must** use `<fractalDir>/constants` to store constants variables.
 * You **must** use `<fractalDir>/contexts` to store React contexts definitions.
 * You **must** use `<fractalDir>/i18n` to store anything
