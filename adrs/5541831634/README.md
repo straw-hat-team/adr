@@ -59,6 +59,9 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 * You **must** use `<fractalDir>/types` to store reusable TypeScript types.
 * You **may** use `<fractalDir>/styles` to store components styles such as
   CSS or Stylesheets.
+* You **may** colocate CSS Module component's styles nex to the the component
+  file by using `[component name].module.[extension]`. We recommend create
+  a directory for the component definition in cases you follow this pattern.
 * You **must** use `<fractalDir>/assets` to store files such as images, fonts,
   and any other files that are not stylesheets or JavaScript files.
 * You **must** use `<fractalDir>/constants` to store constants variables.
