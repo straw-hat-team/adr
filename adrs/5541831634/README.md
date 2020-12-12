@@ -53,17 +53,17 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
   `<fractalDir>/services/[service name]`.
 * You **must** use `<fractalDir>/components` to store reusable React
   components. You may create a directory to scope the fractal directories to
-  a component, otherwise use use a file.
+  a component, otherwise use a file.
 * You **must** use `<fractalDir>/hooks` to store reusable React
   hooks.
 * You **must** use `<fractalDir>/types` to store reusable TypeScript types.
 * You **may** use `<fractalDir>/styles` to store components styles such as
   CSS or Stylesheets.
-* You **may** colocate CSS Module component's styles nex to the the component
-  file by using `[component name].module.[extension]`. We recommend create
+* You **may** colocate CSS Module component's styles next to the component
+  file by using `[component name].module.[extension]`. We recommend creating
   a directory for the component definition in cases you follow this pattern.
 * You **must** use `<fractalDir>/assets` to store files such as images, fonts,
-  and any other files that are not stylesheets or JavaScript files.
+  and any other files that are no stylesheets or JavaScript files.
 * You **must** use `<fractalDir>/constants` to store constants variables.
 * You **must** use `<fractalDir>/contexts` to store React contexts definitions.
 * You **must** use `<fractalDir>/i18n` to store anything
