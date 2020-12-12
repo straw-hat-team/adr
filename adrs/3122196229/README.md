@@ -1,4 +1,4 @@
-# NodeJS files and directories names conversion
+# NodeJS files and directories names convention
 
 * **State:** Approved
 * **Created:** 2020-11-10
@@ -7,7 +7,7 @@
 ## Context
 
 Across the ecosystem, we can find all sort of files and directories naming
-conversions in NodeJS projects.
+conventions in NodeJS projects.
 
 That has caused misalignment, shifting the focus away from more important
 matters, also have created conventions that introduce problems such:

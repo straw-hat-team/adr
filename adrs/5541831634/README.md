@@ -1,4 +1,4 @@
-# React project files and directories names conversion
+# React project files and directories names convention
 
 * **State:** Draft
 * **Created:** 2020-12-01
@@ -18,7 +18,7 @@ to focus their brainpower on their tasks.
 
 ## Resolution
 
-* You **must** follow [NodeJS files and directories names conversion](./../3122196229/README.md)
+* You **must** follow [NodeJS files and directories names convention](./../3122196229/README.md)
 * You **must** use `<rootDir>/src/@types` to store TypeScript definition files
   (`*.d.ts`).
 * You **must** use `<rootDir>/src/app.tsx` to be your application root
