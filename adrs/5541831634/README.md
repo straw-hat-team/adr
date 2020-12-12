@@ -43,7 +43,7 @@ Some resolutions are related to NextJS projects.
 
 A fractal pattern is a pattern that you could repeat in each nested level
 directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
-`<rootDir>/src/components/[component name]`.
+`<rootDir>/src/components/[component name]` directories.
 
 * You **must** use `<fractalDir>/routes` for managing the entry point of a
   route.
@@ -57,7 +57,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 * You **must** use `<fractalDir>/hooks` to store reusable React
   hooks.
 * You **must** use `<fractalDir>/types` to store reusable TypeScript types.
-* You **must** use `<fractalDir>/styles` to store components styles such as
+* You **may** use `<fractalDir>/styles` to store components styles such as
   CSS or Stylesheets.
 * You **must** use `<fractalDir>/assets` to store files such as images, fonts,
   and any other files that are not stylesheets or JavaScript files.
@@ -102,7 +102,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 ### Web
 
 * `<rootDir>/src/routes/index.tsx` **must** be used as the root path
-  of the URL.
+  of the URL, or the root path of your micro-frontend mounting path.
 
   ```text
   URL: http://acme.io/
@@ -112,7 +112,8 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
           └── index.tsx
   ```
 
-* URL subpath **must** must match a subdirectory inside `<fractalDir>/routes`.
+* URL subdirectories **must** must match a subdirectory inside
+  `<fractalDir>/routes`.
 
   ```text
   URL: http://acme.io/authors/articles
@@ -127,7 +128,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
           └── index.tsx
   ```
 
-* Dynamic URL subpath **must** must match a subdirectory inside
+* Dynamic URL subdirectories **must** must match a subdirectory inside
   `<fractalDir>/routes` using `[the dynamic section identifier]` syntax. In case
   you use NextJS, you must use the same name as the dynamic NextJS route
   directory.
@@ -152,8 +153,8 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 
 ### Route
 
-In the context of React DOM, Route is a path or subpath of URL that the user
-is visiting.
+In the context of React DOM, Route is a path or subdirectory of URL that the
+user is visiting.
 
 In the context of React Native, it is a screen.
 
