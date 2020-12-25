@@ -1,6 +1,6 @@
 # Slots reserved React property key
 
-* **State:** Reviewing
+* **State:** Approved
 * **Created:** 2020-12-14
 * **Tags:** react
 
