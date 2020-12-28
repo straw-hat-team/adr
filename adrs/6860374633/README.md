@@ -77,6 +77,8 @@ provide interoperability across services, platforms, and systems.
 - Constraints:
   - OPTIONAL
   - If present, MUST be an object
+  - If present, the object key MUST be an string
+  - If present, the object value MUST be an array of string or an string
 
 ## Example
 
