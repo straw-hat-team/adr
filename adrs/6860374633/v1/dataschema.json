@@ -3,9 +3,10 @@
   "title": "Error",
   "description": "A single error",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "errormessage": {
-      "description": "Human readable error message, intended to be used by developers",
+      "description": "Human-readable error message, intended to be used by developers",
       "type": "string"
     },
     "errorlink": {
@@ -14,8 +15,21 @@
       "pattern": "uri"
     },
     "metadata": {
-      "description": "A object containing metadata associated with the error",
-      "type": "object"
+      "description": "An object containing metadata associated with the error",
+      "type": "object",
+      "patternProperties": {
+        "^[A-Za-z][A-Za-z0-9_]*$": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }
