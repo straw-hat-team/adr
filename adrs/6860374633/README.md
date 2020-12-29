@@ -1,6 +1,6 @@
 # Error CloudEvents Adapter
 
-- **State:** Reviewing
+- **State:** Approved
 - **Created:** 2020-11-10
 - **Tags:** nodejs
 
