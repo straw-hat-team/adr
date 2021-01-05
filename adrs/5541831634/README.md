@@ -69,7 +69,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 * You **must** use `<fractalDir>/i18n` to store anything
   related to Internationalization.
 * You **must** use `<fractalDir>/i18n/datetime` to store i18n date
-  and time formatting.
+  and time formatting. Read more about the intent at [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
 * You **must** use `<fractalDir>/i18n/list` to store i18n sensitive
   list formatting. Read more about the intent at [Intl.ListFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat).
 * You **must** use `<fractalDir>/i18n/numbers` to store i18n number
