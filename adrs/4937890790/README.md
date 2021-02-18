@@ -12,7 +12,7 @@ across the JavaScript ecosystem.
 Although such concern is not a big concern for more Senior developers, there is
 some cognitive load when it comes to default exports over named exports.
 
-What is one of the most challenging things in computer science: naming.
+What is one of the most challenging things in computer science? Naming.
 
 Using default-exports over named-exports forces the user to think about the name
 of the import.
