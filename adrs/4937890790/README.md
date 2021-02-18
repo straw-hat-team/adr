@@ -26,12 +26,11 @@ import [name here] from 'base-button'
 What should be the right name for the import?
 
 * `Button`
-* `button`
 * `baseButton`
 * `BaseButton`
 * `MyButton` or any other name you would like it to be
 
-For a simple import, you have already at least four different variations to
+For a simple import, you have already at least three different variations to
 think about it, or combinations of any name for that matter.
 
 Besides that, in some cases, you even have to think about the context of the
@@ -137,6 +136,11 @@ happening in the code, although you are not 100% confident that `Btn` is the sam
 optimistic that it may be.
 There is an explicit remapping happening, helping the reader to understand that
 in this file, for whatever reason, `Button` must become `Btn`.
+
+Also, having explicit names allows IDEs to figure out what you are trying to
+accomplish and give you much better autocomplete, refactoring, and automation,
+since those named-exports are static and don't require compilation, they are
+able to index the source code easier.
 
 ## Resolution
 
