@@ -46,8 +46,9 @@ It is not a simple task; therefore, people rely on linters and code reviewers to
 improve the source code's quality.
 
 If you already thought about a name and knew the context, and gave it a name
-inside your module, don't force users to think about a new name; you can take
-advantage of named-exports.
+inside your module, don't force users to think about a new name every time
+they must import the component, most of the case the named you came up with is
+good enough; so you can take advantage of named-exports.
 
 Also, using default-exports makes it harder to understand the context of things
 across the codebase.
@@ -57,6 +58,7 @@ For example, take the following files:
 File #1:
 
 ```ts
+// Notice the import name
 import Button from "...";
 
 export function Something() {
@@ -72,6 +74,7 @@ export function Something() {
 File #2:
 
 ```ts
+// Notice the import name, it is different from the previous example
 import Btn from "...";
 
 export function SomethingElse() {
@@ -88,7 +91,9 @@ How confident could you be that those two imports are part of the same context
 without the cognitive load of reading the imports to create such mapping in your
 brain?
 
-* How is this different from named-exports?
+Answer: probably close to none.
+
+* You may argue, How is this any different from named-exports?
 
 Take the following files:
 
@@ -97,7 +102,7 @@ File #1:
 ```ts
 import { Button } from "...";
 
-export function SomethingElse() {
+export function Something() {
   return (
     <>
       ...
@@ -128,7 +133,7 @@ Answer: somewhat confident.
 
 Because in the worst case, you can see the mapping from `Button` to `Btn`
 happening in the code, although you are not 100% confident that `Btn` is the same
-button context, because you still need to know the import, you are somehow
+`Button` context, because you still need to know the import, you are somehow
 optimistic that it may be.
 There is an explicit remapping happening, helping the reader to understand that
 in this file, for whatever reason, `Button` must become `Btn`.
