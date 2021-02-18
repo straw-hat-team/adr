@@ -6,7 +6,7 @@
 
 ## Context
 
-We don't have a consistent way to export the modules' functions and variables
+We don't have a consistent way to export a module's functions and variables
 across the JavaScript ecosystem.
 
 Although such concern is not a big concern for more Senior developers, there is
