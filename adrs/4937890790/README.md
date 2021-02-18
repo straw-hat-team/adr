@@ -31,8 +31,8 @@ What should be the right name for the import?
 * `BaseButton`
 * `MyButton` or any other name you would like it to be
 
-From a simple import, you have already at least four different variations to
-think about it, or combinations of any name for that matters.
+For a simple import, you have already at least four different variations to
+think about it, or combinations of any name for that matter.
 
 Besides that, in some cases, you even have to think about the context of the
 file.
