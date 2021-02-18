@@ -139,8 +139,9 @@ in this file, for whatever reason, `Button` must become `Btn`.
 
 Also, having explicit names allows IDEs to figure out what you are trying to
 accomplish and give you much better autocomplete, refactoring, and automation,
-since those named-exports are static and don't require compilation, they are
-able to index the source code easier.
+since those named-exports are static and don't require runtime to figure out
+the names, they are able to index the source code much easier and algorithms
+could take advantage of the explicitness and static nature of such habit.
 
 ## Resolution
 
