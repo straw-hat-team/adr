@@ -51,10 +51,13 @@ unless you inspect the file and understand the context of such default-export.
 It is not a simple task; therefore, people rely on linters and code reviewers to
 improve the source code's quality.
 
-If you already thought about a name and knew the context, and gave it a name
-inside your module, don't force users to think about a new name every time
-they must import the component, most of the case the named you came up with is
-good enough; so you can take advantage of named-exports.
+Naming is hard.  When you are authoring code, do not make the consumers of your
+code -- the importers of your exports --  figure out what names to use.  As an
+author, you have the advantage of having thought about its intent and purpose;
+you are aware of its context and limitations and most likely gave it a name
+inside your module. That name is good enough, and by using named exports, you
+are doing your consumers a favor, by freeing them from having to rediscover that
+name.
 
 Also, using default-exports makes it harder to understand the context of things
 across the codebase.
