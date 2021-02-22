@@ -7,10 +7,17 @@
 ## Context
 
 We don't have a consistent way to export a module's functions and variables
-across the JavaScript ecosystem.
+across the JavaScript ecosystem.  In the modern era of ES6 exports, there are
+generally 2 camps:
 
-Although such concern is not a big concern for more Senior developers, there is
-some cognitive load when it comes to default exports over named exports.
+1. Use `export default` for your "main" export.
+  This option forces a second choice for auxiliary exports, where you can either
+  use named exports or `Object.assign()` the default.
+
+2. Use named exports for everything.
+
+Teams that don't choose a camp are inflicting an unnecessary cognitive load
+on themselves.
 
 What is one of the most challenging things in computer science? Naming.
 
@@ -30,8 +37,8 @@ What should be the right name for the import?
 * `BaseButton`
 * `MyButton` or any other name you would like it to be
 
-For a simple default import, you already have at least three different variations to
-think about and combinations of any name for that matter.
+For a simple default import, you already have at least three different
+variations to think about and combinations of any name for that matter.
 
 Besides that, in some cases, you even have to think about the context of the
 file.
@@ -44,10 +51,13 @@ unless you inspect the file and understand the context of such default-export.
 It is not a simple task; therefore, people rely on linters and code reviewers to
 improve the source code's quality.
 
-If you already thought about a name and knew the context, and gave it a name
-inside your module, don't force users to think about a new name every time
-they must import the component, most of the case the named you came up with is
-good enough; so you can take advantage of named-exports.
+Naming is hard.  When you are authoring code, do not make the consumers of your
+code -- the importers of your exports --  figure out what names to use.  As an
+author, you have the advantage of having thought about its intent and purpose;
+you are aware of its context and limitations and most likely gave it a name
+inside your module. That name is good enough, and by using named exports, you
+are doing your consumers a favor, by freeing them from having to rediscover that
+name.
 
 Also, using default-exports makes it harder to understand the context of things
 across the codebase.
