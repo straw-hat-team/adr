@@ -7,10 +7,17 @@
 ## Context
 
 We don't have a consistent way to export a module's functions and variables
-across the JavaScript ecosystem.
+across the JavaScript ecosystem.  In the modern era of ES6 exports, there are
+generally 2 camps:
 
-Although such concern is not a big concern for more Senior developers, there is
-some cognitive load when it comes to default exports over named exports.
+1. Use `export default` for your "main" export.
+  This option forces a second choice for auxiliary exports, where you can either
+  use named exports or `Object.assign()` the default.
+
+2. Use named exports for everything.
+
+Teams that don't choose a camp are inflicting an unnecessary cognitive load
+on themselves.
 
 What is one of the most challenging things in computer science? Naming.
 
