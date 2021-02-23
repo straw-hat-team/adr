@@ -1,6 +1,6 @@
 # JavaScript Modules exports convention
 
-* **State:** Reviewing
+* **State:** Approved
 * **Created:** 2021-02-17
 * **Tags:** js,ts
 
