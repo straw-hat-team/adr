@@ -116,7 +116,7 @@ The following example shows a CloudEvent Error serialized as JSON:
     "subject" : "/payment/amount",
     "datacontenttype" : "application/json",
     "data" : "{
-      \"errormessage\":\"You can not transfer an amount greater than the current balance\",
+      \"errormessage\":\"Can not transfer an amount greater than the current balance\",
       \"errorlink\":\"https://github.com/straw-hat-team/payment/docs/errors/E0000001.md\",
       \"metadata\":{
         \"amount_requested\":\"500000\",
