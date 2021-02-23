@@ -1,23 +1,14 @@
 # JavaScript Modules exports convention
 
-* **State:** Draft
+* **State:** Reviewing
 * **Created:** 2021-02-17
 * **Tags:** js,ts
 
 ## Context
 
 We don't have a consistent way to export a module's functions and variables
-across the JavaScript ecosystem.  In the modern era of ES6 exports, there are
-generally 2 camps:
-
-1. Use `export default` for your "main" export.
-  This option forces a second choice for auxiliary exports, where you can either
-  use named exports or `Object.assign()` the default.
-
-2. Use named exports for everything.
-
-Teams that don't choose a camp are inflicting an unnecessary cognitive load
-on themselves.
+across the JavaScript ecosystem. Teams that don't choose a camp are inflicting
+an unnecessary cognitive load on themselves.
 
 What is one of the most challenging things in computer science? Naming.
 
@@ -51,8 +42,8 @@ unless you inspect the file and understand the context of such default-export.
 It is not a simple task; therefore, people rely on linters and code reviewers to
 improve the source code's quality.
 
-Naming is hard.  When you are authoring code, do not make the consumers of your
-code -- the importers of your exports --  figure out what names to use.  As an
+Naming is hard. When you are authoring code, do not make the consumers of your
+code -- the importers of your exports --  figure out what names to use. As an
 author, you have the advantage of having thought about its intent and purpose;
 you are aware of its context and limitations and most likely gave it a name
 inside your module. That name is good enough, and by using named exports, you
@@ -156,6 +147,7 @@ can take advantage of the explicitness and static nature of the names.
 ## Resolution
 
 * You **must** use named-exports over default-exports unless some limitation
-  is imposed
-* You **must** provide named-export and default-exports for React lazy
+  is imposed.
+* You **must** provide named-export and default-export for any case that
+  requires default-export due a limitation, for example, React lazy
   loadable components.
