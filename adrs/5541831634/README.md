@@ -154,7 +154,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 
 ### Native
 
-* `<rootDir>/src/routes/index.tsx`  **must** be used to define the
+* `<rootDir>/src/routes/index.tsx` **must** be used to define the
   `NavigationContainer` and top-level navigator.
 
   ```text
