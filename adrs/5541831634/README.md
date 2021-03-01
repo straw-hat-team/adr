@@ -152,6 +152,50 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
           └── index.tsx
   ```
 
+### Native
+
+* `<rootDir>/src/routes/index.tsx` **must** be used to define the
+  `NavigationContainer` and top-level navigator.
+
+  ```text
+  <rootDir>
+  └── src
+      └── routes
+          └── index.tsx
+  ```
+
+* Nested navigators and screens **must** must match a subdirectory
+  inside `<fractalDir>/routes`. For example, given the following navigators /
+  screens:
+
+  ```text
+  Stack.Navigator
+    Home (Tab.Navigator)
+      Feed (Screen)
+      Messages (Screen)
+    Profile (Screen)
+    Settings (Screen)
+  ```
+
+  The directory structure **must** be:
+
+  ```text
+  <rootDir>
+  └── src
+      └── routes
+          ├── home
+          │   └── routes
+          │       ├── feed
+          │       │   └── index.tsx
+          │       └── messages
+          │           └── index.tsx
+          ├── index.tsx
+          ├── profile
+          │   └── index.tsx
+          └── settings
+              └── index.tsx
+  ```
+
 ## Terminology
 
 ### Route
