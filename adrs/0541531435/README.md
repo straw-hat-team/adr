@@ -73,7 +73,7 @@ websites (internal or public as an example), and how to manage them.
 
 ## Resolution
 
-* You **must** follow the following directory structures:
+* You **MUST** follow the following directory structures:
 
   ```text
   .
@@ -95,14 +95,15 @@ websites (internal or public as an example), and how to manage them.
       └── [another testing tool]
   ```
 
-* In the `./tests` directory, you **must** use the tool's name to reflect the
+* In the `./tests` directory, you **MUST** use the tool's name to reflect the
   tool used to run the tests.
-* You **must** place `storybook` documentation under `./docs`.
-* In the `./docs` directory, you **must** separate documentation based on the
-  underline tool or context (for example, **internal** or **public**).
-* `./src` **must** required compilation step, and you **must** compile the
+* In the `./docs` directory, you **MUST** separate documentation based on the
+  underline tool or context (for example, **internal** or **public**) unless
+  you only have one documentation tool or context.
+* You **MUST** place `storybook` documentation under `./docs`.
+* `./src` **MUST** required compilation step, and you **MUST** compile the
   source code into `./dist` directory.
-* `./dist` **must** required to compile `./src` directory to generate
+* `./dist` **MUST** required to compile `./src` directory to generate
   the source code, or any other compilation step in required cases.
 
 ### About files and directories

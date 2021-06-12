@@ -146,8 +146,8 @@ can take advantage of the explicitness and static nature of the names.
 
 ## Resolution
 
-* You **must** use named-exports over default-exports unless some limitation
+* You **MUST** use named-exports over default-exports unless some limitation
   is imposed.
-* You **must** provide named-export and default-export for any case that
+* You **MUST** provide named-export and default-export for any case that
   requires default-export due a limitation, for example, React lazy
   loadable components.

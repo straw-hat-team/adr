@@ -140,11 +140,11 @@ module.
 
 Since `@/` is not a valid NPM package,
 
-* You **must not** configure tools to resolve absolute imports from `src`
+* You **MUST NOT** configure tools to resolve absolute imports from `src`
   directory directly.
-* You **must not** configure tools with aliases that are valid NPM package names
+* You **MUST NOT** configure tools with aliases that are valid NPM package names
   unless the alias point to a valid NPM package.
-* You **must** use `@` alias to resolve imports relative to the root of the
+* You **MUST** use `@` alias to resolve imports relative to the root of the
   project.
 
 ## Extra

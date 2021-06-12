@@ -20,11 +20,12 @@ printed pages.
 
 ## Requirement keywords
 
-ADRs **should** use the following requirement level keywords: "MUST", "MUST NOT",
+ADRs **SHOULD** use the following requirement level keywords: "MUST", "MUST NOT",
 "SHOULD", "SHOULD NOT", and "MAY", which are to be interpreted as described in
-[RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
+[RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) and
+[RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174).
 
-When using these terms in ADRs, they **must** be lower-case and **bold**. These
+When using these terms in ADRs, they **MUST** be upper-case and **bold**. These
 terms should not be used in other ways.
 
 ## Assigning ADR Numbers
@@ -53,21 +54,21 @@ ADR if appropriate.
 
 ## File structure
 
-ADRs **must** be written in Markdown, and the directory **must** be named using
+ADRs **MUST** be written in Markdown, and the directory **MUST** be named using
 their ten-digit number (example: 3870009043), with a `README.md` file in it, for
 example: `adrs/3870009043/README.md`.
 
-ADRs **may** have other supporting files in the ADR directory.
+ADRs **MAY** have other supporting files in the ADR directory.
 
 ## Document structure
 
-ADRs **must** begin with a top-level heading with the ADR's title (# Title).
-ADRs **should** then begin with the metadata information about the ADR
+ADRs **MUST** begin with a top-level heading with the ADR's title (# Title).
+ADRs **SHOULD** then begin with the metadata information about the ADR
 
 * **State:** the estate of the ADR.
 * **Replaced by:** the link to the ADR that was replaced by.
 * **Created:** when the ADR was created following the **YYYY-MM-DD** format.
-* **Tags:** the tags separated by comma, and the tags **must** be lowercase.
+* **Tags:** the tags separated by comma, and the tags **MUST** be lowercase.
 
 Followed by the content of the ADR. Below is an example ADR shell that uses
 each major section:
@@ -135,5 +136,5 @@ out best (see below)].
 -->
 ```
 
-ADRs **should** attempt to follow this overall format if possible, but ADRs
-**may** deviate from it if necessary.
+ADRs **SHOULD** attempt to follow this overall format if possible, but ADRs
+**MAY** deviate from it if necessary.

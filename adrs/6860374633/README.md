@@ -60,7 +60,7 @@ provide interoperability across services, platforms, and systems.
   message.
 - Constraints:
   - OPTIONAL
-  - If present, MUST be a non-empty string
+  - If present, **MUST** be a non-empty string
 
 ### errorlink
 
@@ -68,7 +68,7 @@ provide interoperability across services, platforms, and systems.
 - Description: URL to documentation related to the error.
 - Constraints:
   - OPTIONAL
-  - If present, MUST be a non-empty URI
+  - If present, **MUST** be a non-empty URI
 
 ### metadata
 
@@ -76,9 +76,9 @@ provide interoperability across services, platforms, and systems.
 - Description: The metadata associated to the error.
 - Constraints:
   - OPTIONAL
-  - If present, MUST be an object
-  - If present, the object key MUST be an string
-  - If present, the object value MUST be an array of string or an string
+  - If present, **MUST** be an object
+  - If present, the object key **MUST** be an string
+  - If present, the object value **MUST** be an array of string or an string
 
 ## Example
 

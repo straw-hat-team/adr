@@ -62,7 +62,7 @@ agnostic of the library.
 
 ## Resolution
 
-* You `must` use JSX fragment short syntax `<></>`.
+* You **MUST** use JSX fragment short syntax `<></>`.
 
 ## Links
 

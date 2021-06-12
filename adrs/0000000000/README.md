@@ -58,9 +58,9 @@ reached a general consensus on the proposal and the editors are now involved.
 At this stage the editors may request changes or suggest alternatives to the
 proposal before moving forward.
 
-> As a formal matter, one ADR approver (other than the author) **must** provide
+> As a formal matter, one ADR approver (other than the author) **MUST** provide
 > formal signoff to advance an ADR to the reviewing state. Additionally, there
-> **must not** be formal objections ("changes requested" on the GitHub PR) from
+> **MUST NOT** be formal objections ("changes requested" on the GitHub PR) from
 > other approvers.
 
 ### Approved
@@ -68,9 +68,9 @@ proposal before moving forward.
 Once an approved ADR has been agreed upon, it enters "approved" state and is
 considered "best current practice".
 
-> As a formal matter, two ADR approvers (other than the author) **must** provide
+> As a formal matter, two ADR approvers (other than the author) **MUST** provide
 > formal signoff to advance an ADR to the approved state. Additionally, there
-> **must** not be formal objections ("changes requested" on the GitHub PR) from
+> **MUST** not be formal objections ("changes requested" on the GitHub PR) from
 > other approvers.
 
 ### Withdrawn
@@ -134,12 +134,12 @@ follow-up commits to the PR.
 The editors will work together to ensure that qualified proposals do not linger
 in review.
 
-To gain final approval, an ADR **must** be approved by, at minimum, the TL with
+To gain final approval, an ADR **MUST** be approved by, at minimum, the TL with
 responsibility over the domain covered by the ADR (either design or infrastructure)
 and at least one other editor, with no editors actively requesting changes.
 
 > If an ADR editor is the primary author of an ADR, then at least two other
-> editors **must** approve it.
+> editors **MUST** approve it.
 
 Once the ADR is approved, the editors will update the state of the ADR to reflect
 this and submit the PR.

@@ -48,8 +48,8 @@ didn't rename the file due to case-insensitive file systems, and you must use
 
 File or directory names:
 
-* Should not contain any leading or trailing spaces
-* Must be lowercase i.e., no uppercase or mixed case names are allowed
-* Should separate what constitutes an English word by `-`
-* Should not contain any of the following characters: `~)('!*`
-* Should not start with `.` or `_`
+* **MUST NOT** contain any leading or trailing spaces
+* **MUST** be lowercase i.e., no uppercase or mixed case names are allowed
+* **MUST** separate what constitutes an English word by `-`
+* **MUST NOT** contain any of the following characters: `~)('!*`
+* **MUST NOT** start with `.` or `_`

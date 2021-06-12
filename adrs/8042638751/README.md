@@ -17,4 +17,4 @@ relying on extensions in order to swap the parsers.
 
 ## Resolution
 
-* You **must** use `.jsx` file extension when the file contains JSX.
+* You **MUST** use `.jsx` file extension when the file contains JSX.

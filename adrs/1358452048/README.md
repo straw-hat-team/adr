@@ -56,10 +56,10 @@ something else? Defining the TypeScript definitions and so on.
 
 ## Resolution
 
-* You **must** use `slots` key in React props to pass custom components.
-* The `slots` **must** be an object.
-* The `slots` object key **must** a valid component name.
-* The `slots` object value **must** a React component.
+* You **MUST** use `slots` key in React props to pass custom components.
+* The `slots` **MUST** be an object.
+* The `slots` object key **MUST** a valid component name.
+* The `slots` object value **MUST** a React component.
 
 ## Example
 
