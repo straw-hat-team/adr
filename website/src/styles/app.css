@@ -5,3 +5,8 @@
 #__next {
   display: contents;
 }
+
+::selection {
+  @apply bg-purple-500;
+  @apply text-white;
+}

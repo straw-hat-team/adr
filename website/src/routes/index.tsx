@@ -19,12 +19,12 @@ export function IndexRoute() {
         </p>
         <div className="flex flex-wrap space-y-4 sm:space-y-0 sm:space-x-4 text-center">
           <NextLink href="/adrs" passHref>
-            <a className="w-full sm:w-auto flex-none bg-gray-900 hover:bg-gray-700 text-white dark:bg-gray-200 dark:hover:bg-gray-300 dark:text-gray-700 text-lg leading-6 font-semibold py-6 px-12 border border-transparent rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200">
+            <a className="text-center w-full sm:w-auto flex-none bg-gray-900 hover:bg-gray-700 text-white dark:bg-gray-200 dark:hover:bg-gray-300 dark:text-gray-700 text-lg leading-6 font-semibold py-6 px-12 border border-transparent rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200">
               Explore the ADRs
             </a>
           </NextLink>
           <NextLink href={`/adrs/${GENESIS_ADR}`} passHref>
-            <a className="w-full sm:w-auto flex-none bg-gray-900 hover:bg-gray-700 text-white dark:bg-gray-200 dark:hover:bg-gray-300 dark:text-gray-700 text-lg leading-6 font-semibold py-6 px-12 border border-transparent rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200">
+            <a className="text-center w-full sm:w-auto flex-none bg-gray-900 hover:bg-gray-700 text-white dark:bg-gray-200 dark:hover:bg-gray-300 dark:text-gray-700 text-lg leading-6 font-semibold py-6 px-12 border border-transparent rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200">
               Learn how it works
             </a>
           </NextLink>
