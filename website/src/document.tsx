@@ -3,11 +3,11 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 export class WebsiteDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html lang="en">
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
         </Head>
-        <body>
+        <body className="bg-white dark:bg-black text-white dark:text-black">
           <Main />
           <NextScript />
         </body>

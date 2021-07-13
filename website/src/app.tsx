@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
+import { ThemeProvider } from 'next-themes';
 
 export async function reportWebVitals(_metric: NextWebVitalsMetric) {
   // TODO: Send metrics to backends
@@ -11,11 +12,11 @@ export function App(props: AppProps) {
   console.log('Check this amazing material: https://bit.ly/3se7YYw');
 
   return (
-    <React.Fragment>
+    <ThemeProvider attribute="class">
       <Head>
         <title>Website</title>
       </Head>
       <props.Component {...props.pageProps} />
-    </React.Fragment>
+    </ThemeProvider>
   );
 }
