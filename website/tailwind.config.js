@@ -8,6 +8,10 @@ module.exports = {
   },
   theme: {
     extend: {
+      spacing: {
+        ...defaultTheme.spacing,
+        text: '1em',
+      },
       fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },

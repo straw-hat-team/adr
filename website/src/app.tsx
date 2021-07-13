@@ -3,6 +3,7 @@ import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider } from 'next-themes';
 import { Header } from "@/components/header";
+import { LegalFooter } from "@/components/legal-footer";
 
 export async function reportWebVitals(_metric: NextWebVitalsMetric) {
   // TODO: Send metrics to backends
@@ -19,6 +20,7 @@ export function App(props: AppProps) {
       </Head>
       <Header/>
       <props.Component {...props.pageProps} />
+      <LegalFooter/>
     </ThemeProvider>
   );
 }

@@ -14,7 +14,7 @@ export class WebsiteDocument extends Document {
             crossOrigin="anonymous"
           />
         </Head>
-        <body className="bg-white dark:bg-black text-white dark:text-black">
+        <body className="text-base font-sans bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
           <Main />
           <NextScript />
         </body>
