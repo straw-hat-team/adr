@@ -54,7 +54,7 @@ export function IndexRoute() {
             Contribute by proposing new guidance, commenting on existing ADRs, or fixing typos. All contributions are
             welcome!
           </p>
-          <NextLink href="/adrs" passHref>
+          <NextLink href="/contributing" passHref>
             <a className="inline-flex items-center text-gray-700 dark:text-gray-300 border-2 border-gray-700 hover:border-gray-500 text-lg leading-6 font-semibold py-3 px-6 border border-transparent rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200">
               Contribute to the project
               <ArrowRightIcon className="w-text w-text ml-4" role="img" aria-hidden="true" />
