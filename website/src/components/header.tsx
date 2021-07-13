@@ -17,16 +17,16 @@ function NavLink(props: NavLinkProps) {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-10 backdrop-blur-xl backdrop-saturate-150 bg-white dark:bg-gray-800 bg-opacity-60">
-      <nav className="flex items-center justify-between w-full max-w-screen-lg xl:max-w-screen-xl py-8 px-4 mx-auto my-0 text-gray-900 md:my-8 dark:text-gray-100">
-        <div>
+    <header className="mb-8 shadow-sm sticky top-0 z-10 backdrop-filter backdrop-blur-lg backdrop-saturate-150 bg-white dark:bg-gray-800 bg-opacity-80">
+      <div className="flex items-center justify-between w-full max-w-screen-lg xl:max-w-screen-xl py-8 px-4 mx-auto text-gray-900 dark:text-gray-100">
+        <nav>
           <NavLink href="/">Home</NavLink>
           <NavLink href="/adrs">ADRs</NavLink>
-          <NavLink href="/faq">FAQ</NavLink>
           <NavLink href="/contributing">Contributing</NavLink>
-        </div>
+          <NavLink href="/faq">FAQ</NavLink>
+        </nav>
         <ThemeToggler />
-      </nav>
+      </div>
     </header>
   );
 }
