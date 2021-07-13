@@ -13,7 +13,7 @@ export function IndexRoute() {
         </p>
         <p className="text-lg sm:text-2xl sm:leading-10 mb-10">
           The goal is for these documents to serve as the source of truth for software-related documentation at{' '}
-          {COMPANY_NAME} and the way teams discuss and come to consensus on software development guidance.
+          {COMPANY_NAME} and the means by which teams discuss and come to consensus on software development guidance.
         </p>
         <div className="flex flex-wrap space-y-4 sm:space-y-0 sm:space-x-4 text-center">
           <Link href="/adrs" passHref>
