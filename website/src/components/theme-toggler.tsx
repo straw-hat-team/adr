@@ -1,5 +1,5 @@
 import { useTheme } from 'next-themes';
-import { SunIcon, MoonIcon } from '@heroicons/react/outline';
+import { SunIcon, MoonIcon } from '@heroicons/react/solid';
 
 import { useMounted } from '@/hooks/use-mounted';
 
@@ -16,9 +16,9 @@ function useThemeToggler() {
 
 function ThemeIcon(props) {
   return props.theme === 'dark' ? (
-    <SunIcon className="w-4 h-4" fill="currentColor" role="img" aria-hidden="true" />
+    <SunIcon className="w-4 h-4" role="img" aria-hidden="true" />
   ) : (
-    <MoonIcon className="w-4 h-4" fill="currentColor" role="img" aria-hidden="true" />
+    <MoonIcon className="w-4 h-4" role="img" aria-hidden="true" />
   );
 }
 
