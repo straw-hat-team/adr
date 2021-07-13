@@ -1,0 +1,10 @@
+@tailwind base;
+
+#__next {
+  display: contents;
+}
+
+@tailwind components;
+@tailwind utilities;
+
+
