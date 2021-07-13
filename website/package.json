@@ -15,9 +15,12 @@
     "@mdx-js/loader": "1.6.22",
     "@mdx-js/react": "1.6.22",
     "@next/mdx": "11.0.1",
+    "@straw-hat/prettier-config": "2.0.0",
     "@types/react": "17.0.14",
     "postcss": "8.3.5",
     "postcss-preset-env": "6.7.0",
+    "prettier": "2.3.2",
+    "sass": "1.35.2",
     "typescript": "4.3.5"
   }
 }
