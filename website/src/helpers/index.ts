@@ -1,3 +1,3 @@
 export function adrFormat(adr: string) {
-  return `ADR#${adr}`
+  return `ADR#${adr}`;
 }

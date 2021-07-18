@@ -67,10 +67,8 @@ export function IndexRoute() {
           </h2>
           <p>
             Free free to take a look at the&nbsp;
-            <Link href="/faq">
-              frequently asked questions
-            </Link>
-            . If you don't find an answer there, create a new discussion on our GitHub Discussions.
+            <Link href="/faq">frequently asked questions</Link>. If you don't find an answer there, create a new
+            discussion on our GitHub Discussions.
           </p>
           <a
             target="_blank"

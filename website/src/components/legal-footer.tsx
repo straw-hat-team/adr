@@ -10,8 +10,7 @@ export function LegalFooter() {
         Creative Commons Attribution 4.0 License
       </ExternalLink>
       , and code samples are licensed under the&nbsp;
-      <ExternalLink href="https://opensource.org/licenses/MIT">MIT</ExternalLink>.
-      For details, see&nbsp;
+      <ExternalLink href="https://opensource.org/licenses/MIT">MIT</ExternalLink>. For details, see&nbsp;
       <RouterLink href="/licensing" passHref>
         <Link>content licensing</Link>
       </RouterLink>
