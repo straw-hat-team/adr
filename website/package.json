@@ -22,6 +22,7 @@
     "@mdx-js/react": "1.6.22",
     "@next/mdx": "11.0.1",
     "@straw-hat/prettier-config": "2.0.0",
+    "@straw-hat/types": "0.0.1",
     "@tailwindcss/typography": "0.4.1",
     "@types/react": "17.0.14",
     "gray-matter": "4.0.3",

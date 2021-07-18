@@ -389,6 +389,11 @@
   resolved "https://registry.yarnpkg.com/@straw-hat/prettier-config/-/prettier-config-2.0.0.tgz#22efaf571026cfa0ed5274b9c308ca64483750a2"
   integrity sha512-1WX6fK9rcBHSgLnR5vEBwaxU+GnumOobt1ewUHMPXtNvS3o6dgxo6vBuCvvhQEv1mZVPwtTlitC6VSwrRiCC1Q==
 
+"@straw-hat/types@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@straw-hat/types/-/types-0.0.1.tgz#9a02ffdb86623cbb78c43b9c499015f062266cca"
+  integrity sha512-E+tqwjVpKx19xg5s8mVBLVE36/sF2VOKK6cb7dxN29ykgC4S9+BG8355C2wupca0EXeIs2s6zUsrCcmFA71Fpg==
+
 "@tailwindcss/typography@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@tailwindcss/typography/-/typography-0.4.1.tgz#51ddbceea6a0ee9902c649dbe58871c81a831212"
