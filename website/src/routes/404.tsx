@@ -1,12 +1,10 @@
-import Head from 'next/head';
 import NextLink from 'next/link';
+import { PageTitle } from "@/components/page-title";
 
 export function NotFound() {
   return (
     <>
-      <Head>
-        <title>404</title>
-      </Head>
+      <PageTitle>404 - Not Found</PageTitle>
       <div className="space-y-8 px-4 max-w-screen-lg xl:max-w-screen-xl mx-auto flex flex-col justify-center items-start mb-16">
         <h1 className="font-bold text-3xl md:text-5xl tracking-tight text-black dark:text-white">
           404 – Page Not Found
