@@ -1,6 +1,13 @@
-export const COMPONENTS = {
-  pre: (props) => <div {...props} />,
-  code: (props) => <pre style={{ color: 'tomato' }} {...props} />,
+import React, { useMemo } from 'react';
+import { getMDXComponent } from 'mdx-bundler/client';
+import { ComponentMap } from 'mdx-bundler/dist/client';
+
+type MDXProps = {
+  source: string;
+  slots?: ComponentMap;
 };
 
-// import MDXDocument, {metadata} from 'posts/post.mdx'
+export function MDX(props: MDXProps) {
+  const Component = useMemo(() => getMDXComponent(props.source), [props.source]);
+  return <Component components={props.slots} />;
+}
