@@ -13,7 +13,7 @@ export type SlugProps = {
 
 function Badge(props: PropsWithChildren<{}>) {
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+    <span className="items-center px-3 py-0.5 rounded-full text-base font-medium bg-yellow-100 text-yellow-800">
       {props.children}
     </span>
   );
