@@ -1,12 +1,16 @@
-// import matter from 'gray-matter'
-import * as Content from './contributing.mdx';
+import { MDX } from '@/components/mdx';
+import { MdxFile } from '@/helpers/mdx';
 
-console.log(Content);
-export function Contributing() {
+export type Frontmatter = {};
+
+export type ContributingProps = {
+  post: MdxFile<Frontmatter>;
+};
+
+export function Contributing(props: ContributingProps) {
   return (
-    <div>
-      <h1>Hello,world</h1>
-      <Content.default/>
-    </div>
+    <main className="px-4 max-w-screen-lg xl:max-w-screen-xl mx-auto space-y-10 lg:space-y-20 prose lg:prose-xl">
+      <MDX source={props.post.code} />
+    </main>
   );
 }
