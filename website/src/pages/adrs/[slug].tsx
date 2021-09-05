@@ -1,10 +1,10 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { fileNameFromMdxFileRouteToSlugParams, readMdxFilesOfRoute, readMdxFile } from '@/helpers/mdx';
-import { RouteParam, SlugProps } from '@/routes/adrs/[slug]';
+import { readMdxFilesOfRoute, readMdxFile, MdxFileRoute } from "@/helpers/mdx";
+import { Slug, RouteParam, SlugProps } from '@/routes/adrs/[slug]';
 import { SRC_DIR } from '@/constants';
 import { Frontmatter } from '@/routes/contributing';
 
-export { Slug as default } from '@/routes/adrs/[slug]';
+export default Slug;
 
 export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (props) => {
   const post = await readMdxFile<Frontmatter>(`@/routes/adrs/[slug]/routes/${props.params!.slug}/index.mdx`);
@@ -17,7 +17,11 @@ export const getStaticPaths: GetStaticPaths<RouteParam> = async (_props) => {
   });
 
   return {
-    paths: routes.map(fileNameFromMdxFileRouteToSlugParams),
-    fallback: false,
+    paths: routes.map(getPaths),
+    fallback: true,
   };
 };
+
+function getPaths(fileRoute: MdxFileRoute) {
+  return { params: { slug: fileRoute.routeDir.dirent.name } };
+}

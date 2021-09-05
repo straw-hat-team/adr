@@ -4,13 +4,12 @@ import { SRC_DIR } from '@/constants';
 import { BundleMDXOptions } from 'mdx-bundler/dist/types';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Frontmatter } from '@/routes/contributing';
 import grayMatter from 'gray-matter';
 
 type RouteDirEntry = { path: string; dirent: fs.Dirent };
 
-type MdxFileRoute = {
-  mdxFile: MdxFile;
+export type MdxFileRoute<FM = unknown> = {
+  mdxFile: MdxFile<FM>;
   routeDir: RouteDirEntry;
 };
 
@@ -35,10 +34,10 @@ function isMdxRoute(route: RouteDirEntry) {
   return fs.existsSync(getRouteMdxIndex(route.path));
 }
 
-function readMdxForRoute(config: ReadMdxFileConfig) {
+function readMdxForRoute<FM>(config: ReadMdxFileConfig) {
   return async (routeDir: RouteDirEntry) => {
     const filePath = path.join(routeDir.path, 'index.mdx');
-    const mdxFile = await readMdxFile<Frontmatter>(path.join(filePath), config);
+    const mdxFile = await readMdxFile<FM>(path.join(filePath), config);
 
     return {
       mdxFile,
@@ -73,14 +72,10 @@ function readFile(pathSegment: string, config: ReadFileConfig) {
   });
 }
 
-export function fileNameFromMdxFileRouteToSlugParams(fileRoute: MdxFileRoute) {
-  return { params: { slug: fileRoute.routeDir.dirent.name } };
-}
-
-export function readMdxFilesOfRoute(pathSegment: string, config: ReadMdxFileConfig) {
+export function readMdxFilesOfRoute<FM = unknown>(pathSegment: string, config: ReadMdxFileConfig) {
   const mdxFiles = readSubRouteOfRoute(pathSegment, { atRootDir: config.atRootDir ?? SRC_DIR })
     .filter(isMdxRoute)
-    .map(readMdxForRoute(config));
+    .map(readMdxForRoute<FM>(config));
 
   return Promise.all(mdxFiles);
 }
