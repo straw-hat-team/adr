@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react';
+import * as React from 'react';
 import { getMDXComponent } from 'mdx-bundler/client';
-import { ComponentMap } from 'mdx-bundler/dist/client';
 
 type MDXProps = {
   source: string;
-  slots?: ComponentMap;
+  slots?: {
+    a?: React.ComponentType<React.PropsWithChildren<{ href: string }>>;
+  };
 };
 
 export function MDX(props: MDXProps) {
-  const Component = useMemo(() => getMDXComponent(props.source), [props.source]);
+  const Component = React.useMemo(() => getMDXComponent(props.source), [props.source]);
+  // @ts-ignore TODO: https://github.com/kentcdodds/mdx-bundler/issues/91
   return <Component components={props.slots} />;
 }
