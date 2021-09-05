@@ -1,8 +1,11 @@
-# ADR Style guide
+---
+state: APPROVED
+created_at: 2020/11/08
+tags:
+  - genesis
+---
 
-- **State:** Approved
-- **Created:** 2020-11-8
-- **Tags:** genesis
+# ADR Style guide
 
 ADRs are most useful when they are clear and concise, and cover a single topic
 or inquiry well. In the same way that ADRs describe consistent patterns and
@@ -22,8 +25,7 @@ printed pages.
 
 ADRs **SHOULD** use the following requirement level keywords: "MUST", "MUST NOT",
 "SHOULD", "SHOULD NOT", and "MAY", which are to be interpreted as described in
-[RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) and
-[RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174).
+[RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) and [RFC 8174](https://www.ietf.org/rfc/rfc8174.txt).
 
 When using these terms in ADRs, they **MUST** be upper-case and **bold**. These
 terms should not be used in other ways.
@@ -74,12 +76,16 @@ Followed by the content of the ADR. Below is an example ADR shell that uses
 each major section:
 
 ```md
-# The title of the ADR
+---
+state: APPROVED
+created_at: 2020/11/21
+replaced_by: 0000000000
+tags:
+  - nodejs
+  - directory structure
+---
 
-- **State:** Replaced
-- **Replaced by:** [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
-- **Created:** 2020-11-08
-- **Tags:** genesis
+# The title of the ADR
 
 <!--
 Technical Story: [description | ticket/issue URL]

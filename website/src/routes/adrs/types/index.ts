@@ -3,4 +3,5 @@ export type AdrStatus = 'DRAFT' | 'REVIEWING' | 'APPROVED' | 'WITHDRAWN' | 'REJE
 export type AdrFrontmatter = {
   status: AdrStatus;
   tags: string[];
+  created_at: string;
 };
