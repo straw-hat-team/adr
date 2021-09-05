@@ -1,6 +1,6 @@
 import { MDX } from '@/components/mdx';
-import { MdxFile } from "@/helpers/mdx";
-import { Frontmatter } from "@/routes/contributing";
+import { MdxFile } from '@/helpers/mdx';
+import { Frontmatter } from '@/routes/contributing';
 
 export type RouteParam = {
   slug: string;

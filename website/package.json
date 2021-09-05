@@ -4,7 +4,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --write '**/*'"
+    "format": "prettier --write */** --ignore-unknown --no-error-on-unmatched-pattern"
   },
   "dependencies": {
     "@headlessui/react": "1.3.0",

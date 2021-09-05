@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { PAGE_TITLE_PREFIX } from "@/constants";
+import { PAGE_TITLE_PREFIX } from '@/constants';
 
 type PageTitleProps = {
   suffix?: string;
