@@ -17,7 +17,7 @@ which answer some common questions about how ADRs work and what you need to know
 
 ### Genesis ADR
 
-[ADR#0000000000](./adrs/0000000000/README.md) is the genesis ADR.
+[ADR#0000000000](website/src/routes/adrs/%5Bslug%5D/routes/0000000000/index.mdx) is the genesis ADR.
 
 ### Have an idea for an ADR?
 
