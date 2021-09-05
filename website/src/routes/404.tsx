@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { PageTitle } from "@/components/page-title";
+import { PageTitle } from '@/components/page-title';
 
 export function NotFound() {
   return (
