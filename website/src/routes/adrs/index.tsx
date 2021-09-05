@@ -1,12 +1,6 @@
 import Link from 'next/link';
 import { adrFormat } from '@/helpers';
-
-type AdrStatus = 'Draft' | 'Reviewing' | 'Approved' | 'Withdrawn' | 'Rejected' | 'Deferred' | 'Replaced';
-
-export type AdrFrontmatter = {
-  status: AdrStatus;
-  tags: string[];
-};
+import { AdrFrontmatter } from '@/routes/adrs/types';
 
 type Adr = {
   slug: string;

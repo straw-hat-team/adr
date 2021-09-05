@@ -1,7 +1,8 @@
 import { GetStaticProps } from 'next';
 import { MdxFileRoute, readMdxFilesOfRoute } from '@/helpers/mdx';
 import { SRC_DIR } from '@/constants';
-import { AdrFrontmatter, Adrs, AdrsProps } from '@/routes/adrs';
+import { Adrs, AdrsProps } from '@/routes/adrs';
+import { AdrFrontmatter } from "@/routes/adrs/types";
 
 export default Adrs;
 

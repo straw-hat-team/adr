@@ -1,6 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { readMdxFilesOfRoute, readMdxFile, MdxFileRoute } from "@/helpers/mdx";
-import { Slug, RouteParam, SlugProps } from '@/routes/adrs/[slug]';
+import { Slug, RouteParam, SlugProps } from '@/routes/adrs/routes/[slug]';
 import { SRC_DIR } from '@/constants';
 import { Frontmatter } from '@/routes/contributing';
 
