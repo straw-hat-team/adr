@@ -1,67 +1,104 @@
-import fs from 'fs';
-import matter from 'gray-matter';
-import path from 'path';
-import readingTime from 'reading-time';
-import { serialize } from 'next-mdx-remote/serialize';
-import mdxPrism from 'mdx-prism';
+// import readingTime from 'reading-time';
+import { bundleMDX } from 'mdx-bundler';
+import { SRC_DIR } from '@/constants';
+import { BundleMDXOptions } from 'mdx-bundler/dist/types';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Frontmatter } from '@/routes/contributing';
+import grayMatter from 'gray-matter';
 
-const root = process.cwd();
+type RouteDirEntry = { path: string; dirent: fs.Dirent };
 
-export async function getFiles(type) {
-  return fs.readdirSync(path.join(root, 'data', type));
+type MdxFileRoute = {
+  mdxFile: MdxFile;
+  routeDir: RouteDirEntry;
+};
+
+export type ReadFileSyncConfig = { atRootDir: string };
+
+export type ReadMdxFileConfig = Exclude<BundleMDXOptions, 'cwd'> & Partial<ReadFileSyncConfig>;
+
+export type MdxFile<FM = unknown> = {
+  code: string;
+  frontmatter: FM;
+  matter: grayMatter.GrayMatterFile<any>;
+};
+
+function getRouteMdxIndex(filePath: string) {
+  return path.join(filePath, 'index.mdx');
 }
 
-export async function getFileBySlug(type, slug) {
-  const source = slug
-    ? fs.readFileSync(path.join(root, 'data', type, `${slug}.mdx`), 'utf8')
-    : fs.readFileSync(path.join(root, 'data', `${type}.mdx`), 'utf8');
+function isMdxRoute(route: RouteDirEntry) {
+  return fs.existsSync(getRouteMdxIndex(route.path));
+}
 
-  const { data, content } = matter(source);
-  const mdxSource = await serialize(content, {
-    mdxOptions: {
-      remarkPlugins: [
-        require('remark-slug'),
-        [
-          require('remark-autolink-headings'),
-          {
-            linkProperties: {
-              className: ['anchor'],
-            },
-          },
-        ],
-        require('remark-code-titles'),
-      ],
-      rehypePlugins: [mdxPrism],
-    },
-  });
-  const tweetMatches = content.match(/<StaticTweet\sid="[0-9]+"\s\/>/g);
-  const tweetIDs = tweetMatches?.map((tweet) => tweet.match(/[0-9]+/g)[0]);
+function readMdxForRoute(config: ReadMdxFileConfig) {
+  return async (routeDir: RouteDirEntry) => {
+    const filePath = path.join(routeDir.path, 'index.mdx');
+    const mdxFile = await readMdxFile<Frontmatter>(path.join(filePath), config);
 
-  return {
-    mdxSource,
-    tweetIDs: tweetIDs || [],
-    frontMatter: {
-      wordCount: content.split(/\s+/gu).length,
-      readingTime: readingTime(content),
-      slug: slug || null,
-      ...data,
-    },
+    return {
+      mdxFile,
+      routeDir,
+    };
   };
 }
 
-export async function getAllFilesFrontMatter(type) {
-  const files = fs.readdirSync(path.join(root, 'data', type));
+export function readAllMdxUnderRoute(pathSegment: string, config: ReadMdxFileConfig) {
+  const mdxFiles = readSubRouteOfRoute(pathSegment, { atRootDir: config.atRootDir ?? SRC_DIR })
+    .filter(isMdxRoute)
+    .map(readMdxForRoute(config));
 
-  return files.reduce((allPosts, postSlug) => {
-    const source = fs.readFileSync(path.join(root, 'data', type, postSlug), 'utf8');
-    const { data } = matter(source);
+  return Promise.all(mdxFiles);
+}
 
-    return [
-      {
-        ...data,
-        slug: postSlug.replace('.mdx', ''),
-      },
-      ...allPosts,
-    ];
-  }, []);
+export async function readMdxFile<FM = unknown>(
+  pathSegment: string,
+  config: ReadMdxFileConfig = {}
+): Promise<MdxFile<FM>> {
+  const { atRootDir = SRC_DIR, ...mdxConfig } = config;
+  const source = readFileSync(pathSegment, {
+    atRootDir: atRootDir,
+  });
+
+  const compiled = await bundleMDX(source, {
+    ...mdxConfig,
+    cwd: SRC_DIR,
+  });
+
+  return {
+    code: compiled.code,
+    frontmatter: compiled.frontmatter as FM,
+    matter: compiled.matter,
+  };
+}
+
+function normalizePath(pathSegment: string, config: ReadFileSyncConfig) {
+  return pathSegment.replace(/^@/, config.atRootDir);
+}
+
+function isDirectory(dirent: fs.Dirent) {
+  return dirent.isDirectory();
+}
+
+function withFilePath(routesDir: string) {
+  return (dirent: fs.Dirent): RouteDirEntry => ({
+    path: path.join(routesDir, dirent.name),
+    dirent,
+  });
+}
+
+export function readSubRouteOfRoute(pathSegment: string, config: ReadFileSyncConfig) {
+  const routesDir = path.join(normalizePath(pathSegment, config), 'routes');
+  return fs.readdirSync(routesDir, { withFileTypes: true }).filter(isDirectory).map(withFilePath(routesDir));
+}
+
+export function readFileSync(pathSegment: string, config: ReadFileSyncConfig) {
+  return fs.readFileSync(normalizePath(pathSegment, config), {
+    encoding: 'utf8',
+  });
+}
+
+export function fileNameFromMdxFileRouteToSlugParams(fileRoute: MdxFileRoute) {
+  return { params: { slug: fileRoute.routeDir.dirent.name } };
 }
