@@ -17,6 +17,7 @@
     "next-themes": "0.0.15",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "remark-extract-toc": "1.1.0",
     "tailwindcss": "2.2.4"
   },
   "devDependencies": {
