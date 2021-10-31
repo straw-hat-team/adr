@@ -6,9 +6,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeToc from 'rehype-toc';
 import rehypeCodeTitle from 'rehype-code-title';
 import rehypeExtractToc from '@stefanprobst/rehype-extract-toc';
-// TODO: Add Prism
-// https://github.com/timlrx/rehype-prism-plus/issues/16
-// import rehypePrismPlus from 'rehype-prism-plus';
+import rehypePrismPlus from 'rehype-prism-plus';
 
 import readingTime from 'reading-time';
 
@@ -27,13 +25,11 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
         options.rehypePlugins = [
           ...(options.rehypePlugins ?? []),
           rehypeSlug,
-          rehypeCodeTitle,
           // TODO: Extract TOC
           // https://github.com/AgustinBrst/personal-site/blob/3dd5607b86eca85b6324a135290fac1374dddf71/lib/articles.ts#L34
           rehypeExtractToc,
-          // TODO: Add Prism
-          // https://github.com/timlrx/rehype-prism-plus/issues/16
-          // rehypePrismPlus,
+          rehypePrismPlus,
+          rehypeCodeTitle,
           [
             rehypeAutolinkHeadings,
             {
