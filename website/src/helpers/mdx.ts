@@ -1,10 +1,10 @@
-// import readingTime from 'reading-time';
 import { bundleMDX } from 'mdx-bundler';
-import { SRC_DIR } from '@/constants';
 import { BundleMDXOptions } from 'mdx-bundler/dist/types';
 import * as fs from 'fs';
 import * as path from 'path';
 import grayMatter from 'gray-matter';
+
+import { SRC_DIR } from '@/constants';
 
 type RouteDirEntry = { path: string; dirent: fs.Dirent };
 
@@ -23,6 +23,9 @@ export type ReadMdxFileConfig = {
 export type MdxFile<FM = unknown> = {
   code: string;
   frontmatter: FM;
+};
+
+export type FullMdxFile<FM = unknown> = MdxFile<FM> & {
   matter: grayMatter.GrayMatterFile<any>;
 };
 
@@ -83,7 +86,7 @@ export function readMdxFilesOfRoute<FM = unknown>(pathSegment: string, config: R
 export async function readMdxFile<FM = unknown>(
   pathSegment: string,
   config: ReadMdxFileConfig = {}
-): Promise<MdxFile<FM>> {
+): Promise<FullMdxFile<FM>> {
   const source = await readFile(pathSegment, {
     atRootDir: config.atRootDir ?? SRC_DIR,
   });
@@ -92,8 +95,6 @@ export async function readMdxFile<FM = unknown>(
     ...config.mdxOptions,
     cwd: SRC_DIR,
   });
-
-  // TODO: Handle `compiled.errors` from `esbuild`
 
   return {
     code: compiled.code,

@@ -17,7 +17,11 @@
     "next-themes": "0.0.15",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "reading-time": "2.0.0-1",
+    "remark-autolink-headings": "7.0.1",
     "remark-extract-toc": "1.1.0",
+    "remark-gfm": "3.0.0",
+    "remark-slug": "7.0.1",
     "tailwindcss": "2.2.19"
   },
   "devDependencies": {

@@ -1,13 +1,16 @@
+import { PropsWithChildren } from 'react';
+import type { ReadingTimeResult } from 'reading-time';
+
 import { MDX } from '@/components/mdx';
 import { MdxFile } from '@/helpers/mdx';
 import { AdrFrontmatter } from '@/routes/adrs/types';
-import { PropsWithChildren } from 'react';
 
 export type RouteParam = {
   slug: string;
 };
 
 export type SlugProps = {
+  readingTime: ReadingTimeResult;
   post: MdxFile<AdrFrontmatter>;
 };
 
