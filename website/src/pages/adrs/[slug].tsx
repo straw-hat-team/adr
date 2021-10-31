@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
-import remarkSlug from 'remark-slug';
-import remarkAutolinkHeadings from 'remark-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeToc from 'rehype-toc';
 import remarkGfm from 'remark-gfm';
 import readingTime from 'reading-time';
 
@@ -15,11 +16,12 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
   const post = await readMdxFile<AdrFrontmatter>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
     mdxOptions: {
       xdmOptions(options) {
-        options.remarkPlugins = [
-          ...(options.remarkPlugins ?? []),
-          remarkSlug,
-          [remarkAutolinkHeadings, { behavior: 'wrap' }],
-          remarkGfm,
+        options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+        options.rehypePlugins = [
+          ...(options.rehypePlugins ?? []),
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+          rehypeToc,
         ];
         return options;
       },
