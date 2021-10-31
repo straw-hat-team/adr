@@ -8,10 +8,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /**
  * @type {import('next').NextConfig}
  **/
-const nextConfig = withPlugins([withBundleAnalyzer], {
+const nextConfig = {
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'mdx'],
-});
+  swcMinify: true,
+};
 
-module.exports = nextConfig;
+module.exports = withPlugins([withBundleAnalyzer], nextConfig);
