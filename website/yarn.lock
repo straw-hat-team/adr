@@ -2283,6 +2283,11 @@ hast-util-to-parse5@^6.0.0:
     xtend "^4.0.0"
     zwitch "^1.0.0"
 
+hast-util-to-string@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/hast-util-to-string/-/hast-util-to-string-1.0.4.tgz#9b24c114866bdb9478927d7e9c36a485ac728378"
+  integrity sha512-eK0MxRX47AV2eZ+Lyr18DCpQgodvaS3fAQO2+b9Two9F5HEoRPhiUMNzoXArMJfZi2yieFzUBMRl3HNJ3Jus3w==
+
 hast-util-to-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/hast-util-to-string/-/hast-util-to-string-2.0.0.tgz#b008b0a4ea472bf34dd390b7eea1018726ae152a"
@@ -4266,6 +4271,15 @@ rehype-code-title@1.0.0:
   integrity sha512-uwaUD6oLGTHCcE3ISg8kBvfJ1YZq/8qQL+24swUVRHctj2fwZLP16Hkw1EQ8Pw2TYP/RPPCuKRZhYKaMLEnTiA==
   dependencies:
     hastscript "^6.0.0"
+    unist-util-visit "^2.0.3"
+
+rehype-mdx-title@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rehype-mdx-title/-/rehype-mdx-title-1.0.0.tgz#292598b5ad8af2c2bd01b3674caea1a44bb60f63"
+  integrity sha512-5B/53Y+KQHm4/nrE6pIIPc9Ie2fbPMCLs8WwMGYWWHr+5g3TkmEijRkr8TGYHULtc+C7bOoPR8LIF5DpGROIDg==
+  dependencies:
+    estree-util-is-identifier-name "^1.1.0"
+    hast-util-to-string "^1.0.4"
     unist-util-visit "^2.0.3"
 
 rehype-parse@^8.0.2:

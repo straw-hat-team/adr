@@ -5,6 +5,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeToc from 'rehype-toc';
 import rehypeCodeTitle from 'rehype-code-title';
+import { rehypeMdxTitle } from 'rehype-mdx-title';
 import rehypeExtractToc from '@stefanprobst/rehype-extract-toc';
 import rehypePrismPlus from 'rehype-prism-plus';
 
@@ -25,6 +26,7 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
         options.rehypePlugins = [
           ...(options.rehypePlugins ?? []),
           rehypeSlug,
+          rehypeMdxTitle,
           // TODO: Extract TOC
           // https://github.com/AgustinBrst/personal-site/blob/3dd5607b86eca85b6324a135290fac1374dddf71/lib/articles.ts#L34
           rehypeExtractToc,
