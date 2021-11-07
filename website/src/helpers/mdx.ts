@@ -1,32 +1,34 @@
-import { bundleMDX } from 'mdx-bundler';
-import { BundleMDXOptions } from 'mdx-bundler/dist/types';
 import * as fs from 'fs';
 import * as path from 'path';
-import grayMatter from 'gray-matter';
+import type { VFileData } from 'vfile/lib';
+import * as mdx from '@mdx-js/mdx';
+import { CompileOptions } from '@mdx-js/mdx/lib/compile';
+import * as jsxRuntime from 'react/jsx-runtime';
 
 import { SRC_DIR } from '@/constants';
 
-type RouteDirEntry = { path: string; dirent: fs.Dirent };
+type RouteDirEntry = {
+  path: string;
+  dirent: fs.Dirent;
+};
 
-export type MdxFileRoute<FM = unknown> = {
-  mdxFile: MdxFile<FM>;
+export type MdxFileRoute<TData extends VFileData = {}> = {
+  mdxFile: MdxFile<TData>;
   routeDir: RouteDirEntry;
 };
 
-export type ReadFileConfig = { atRootDir: string };
+export type ReadFileConfig = {
+  atRootDir: string;
+};
 
 export type ReadMdxFileConfig = {
-  mdxOptions?: Exclude<BundleMDXOptions, 'cwd'>;
+  compileOptions?: Pick<CompileOptions, 'remarkPlugins' | 'rehypePlugins'>;
   atRootDir?: string;
 };
 
-export type MdxFile<FM = unknown> = {
+export type MdxFile<TData extends VFileData = {}> = {
   code: string;
-  frontmatter: FM;
-};
-
-export type FullMdxFile<FM = unknown> = MdxFile<FM> & {
-  matter: grayMatter.GrayMatterFile<any>;
+  data: TData;
 };
 
 function getRouteMdxIndex(filePath: string) {
@@ -37,10 +39,10 @@ function isMdxRoute(route: RouteDirEntry) {
   return fs.existsSync(getRouteMdxIndex(route.path));
 }
 
-function readMdxForRoute<FM>(config: ReadMdxFileConfig) {
+function compileMdxForRoute<TData extends VFileData>(config: ReadMdxFileConfig) {
   return async (routeDir: RouteDirEntry) => {
     const filePath = path.join(routeDir.path, 'index.mdx');
-    const mdxFile = await readMdxFile<FM>(path.join(filePath), config);
+    const mdxFile = await compileMdxFile<TData>(path.join(filePath), config);
 
     return {
       mdxFile,
@@ -75,30 +77,35 @@ function readFile(pathSegment: string, config: ReadFileConfig) {
   });
 }
 
-export function readMdxFilesOfRoute<FM = unknown>(pathSegment: string, config: ReadMdxFileConfig) {
+export function compileMdxFilesOfRoute<TData extends VFileData = {}>(pathSegment: string, config: ReadMdxFileConfig) {
   const mdxFiles = readSubRouteOfRoute(pathSegment, { atRootDir: config.atRootDir ?? SRC_DIR })
     .filter(isMdxRoute)
-    .map(readMdxForRoute<FM>(config));
+    .map(compileMdxForRoute<TData>(config));
 
   return Promise.all(mdxFiles);
 }
 
-export async function readMdxFile<FM = unknown>(
+export async function compileMdxFile<TData extends VFileData = {}>(
   pathSegment: string,
   config: ReadMdxFileConfig = {}
-): Promise<FullMdxFile<FM>> {
+): Promise<MdxFile<TData>> {
   const source = await readFile(pathSegment, {
     atRootDir: config.atRootDir ?? SRC_DIR,
   });
 
-  const compiled = await bundleMDX(source, {
-    ...config.mdxOptions,
-    cwd: SRC_DIR,
+  const compiled = await mdx.compile(source, {
+    ...config.compileOptions,
+    outputFormat: 'function-body',
   });
 
   return {
-    code: compiled.code,
-    frontmatter: compiled.frontmatter as FM,
-    matter: compiled.matter,
+    code: compiled.value as string,
+    data: compiled.data as TData,
   };
+}
+
+export function getMDXModule(functionBodyCode: string, globals?: Record<string, any>) {
+  const scope = { jsxRuntime, ...globals };
+  const fn = new Function(...Object.keys(scope), functionBodyCode);
+  return fn(...Object.values(scope));
 }
