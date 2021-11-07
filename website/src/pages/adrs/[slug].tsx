@@ -1,13 +1,16 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import remarkGfm from 'remark-gfm';
+import remarkFrontmatter from 'remark-frontmatter';
+import { remarkMdxFrontmatter } from 'remark-mdx-frontmatter';
+// import remarkReadingTime from 'remark-reading-time';
 
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeToc from 'rehype-toc';
 import rehypeCodeTitle from 'rehype-code-title';
 import { rehypeMdxTitle } from 'rehype-mdx-title';
+
 import rehypeExtractToc from '@stefanprobst/rehype-extract-toc';
-// @ts-ignore
+
 import rehypeExtractTocMdx from '@stefanprobst/rehype-extract-toc/mdx';
 import rehypePrismPlus from 'rehype-prism-plus';
 
@@ -16,15 +19,10 @@ import readingTime from 'reading-time';
 import { compileMdxFilesOfRoute, compileMdxFile, MdxFileRoute } from '@/helpers/mdx/mdx.server';
 import { Slug, RouteParam, SlugProps, AdrMdxData } from '@/routes/adrs/routes/[slug]';
 import { SRC_DIR } from '@/constants';
-import remarkFrontmatter from 'remark-frontmatter';
-import { remarkMdxFrontmatter } from 'remark-mdx-frontmatter';
 
 export default Slug;
 
 export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (props) => {
-  // const Pepeganism = await import(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`);
-  // console.log(Pepeganism);
-
   const post = await compileMdxFile<AdrMdxData>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
     compileOptions: {
       remarkPlugins: [
@@ -36,6 +34,7 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
             name: 'frontmatter',
           },
         ],
+        // remarkReadingTime, https://github.com/mattjennings/remark-reading-time/issues/1
       ],
       rehypePlugins: [
         rehypeSlug,
@@ -53,7 +52,6 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
             },
           },
         ],
-        rehypeToc,
       ],
     },
   });
@@ -61,7 +59,7 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
   return {
     props: {
       post: post.code,
-      readingTime: readingTime(post.code),
+      readingTime: readingTime(post.code), // TODO: Fix reading time since this is compiled code text
     },
   };
 };
