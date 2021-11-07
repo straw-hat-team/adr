@@ -1,10 +1,8 @@
 import Link from 'next/link';
 import { adrFormat } from '@/helpers';
-import { AdrFrontmatter } from '@/routes/adrs/types';
 
 type Adr = {
   slug: string;
-  frontmatter: AdrFrontmatter;
 };
 
 export type AdrsProps = {
