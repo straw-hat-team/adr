@@ -3,7 +3,6 @@ import * as path from 'path';
 import type { VFileData } from 'vfile/lib';
 import * as mdx from '@mdx-js/mdx';
 import { CompileOptions } from '@mdx-js/mdx/lib/compile';
-import * as jsxRuntime from 'react/jsx-runtime';
 
 import { SRC_DIR } from '@/constants';
 
@@ -102,10 +101,4 @@ export async function compileMdxFile<TData extends VFileData = {}>(
     code: compiled.value as string,
     data: compiled.data as TData,
   };
-}
-
-export function getMDXModule(functionBodyCode: string, globals?: Record<string, any>) {
-  const scope = { jsxRuntime, ...globals };
-  const fn = new Function(...Object.keys(scope), functionBodyCode);
-  return fn(...Object.values(scope));
 }
