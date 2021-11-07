@@ -7,60 +7,67 @@ import rehypeToc from 'rehype-toc';
 import rehypeCodeTitle from 'rehype-code-title';
 import { rehypeMdxTitle } from 'rehype-mdx-title';
 import rehypeExtractToc from '@stefanprobst/rehype-extract-toc';
+// @ts-ignore
+import rehypeExtractTocMdx from '@stefanprobst/rehype-extract-toc/mdx';
 import rehypePrismPlus from 'rehype-prism-plus';
 
 import readingTime from 'reading-time';
 
-import { readMdxFilesOfRoute, readMdxFile, MdxFileRoute } from '@/helpers/mdx';
-import { Slug, RouteParam, SlugProps } from '@/routes/adrs/routes/[slug]';
+import { compileMdxFilesOfRoute, compileMdxFile, MdxFileRoute } from '@/helpers/mdx/mdx.server';
+import { Slug, RouteParam, SlugProps, AdrMdxData } from '@/routes/adrs/routes/[slug]';
 import { SRC_DIR } from '@/constants';
-import { AdrFrontmatter } from '@/routes/adrs/types';
+import remarkFrontmatter from 'remark-frontmatter';
+import { remarkMdxFrontmatter } from 'remark-mdx-frontmatter';
 
 export default Slug;
 
 export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (props) => {
-  const post = await readMdxFile<AdrFrontmatter>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
-    mdxOptions: {
-      xdmOptions(options) {
-        options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
-        options.rehypePlugins = [
-          ...(options.rehypePlugins ?? []),
-          rehypeSlug,
-          rehypeMdxTitle,
-          // TODO: Extract TOC
-          // https://github.com/AgustinBrst/personal-site/blob/3dd5607b86eca85b6324a135290fac1374dddf71/lib/articles.ts#L34
-          rehypeExtractToc,
-          rehypePrismPlus,
-          rehypeCodeTitle,
-          [
-            rehypeAutolinkHeadings,
-            {
-              behavior: 'wrap',
-              properties: {
-                className: ['anchor'],
-              },
+  // const Pepeganism = await import(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`);
+  // console.log(Pepeganism);
+
+  const post = await compileMdxFile<AdrMdxData>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
+    compileOptions: {
+      remarkPlugins: [
+        remarkGfm,
+        remarkFrontmatter,
+        [
+          remarkMdxFrontmatter,
+          {
+            name: 'frontmatter',
+          },
+        ],
+      ],
+      rehypePlugins: [
+        rehypeSlug,
+        rehypePrismPlus,
+        rehypeCodeTitle,
+        rehypeExtractToc,
+        rehypeExtractTocMdx,
+        rehypeMdxTitle,
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: 'wrap',
+            properties: {
+              className: ['anchor'],
             },
-          ],
-          rehypeToc,
-        ];
-        return options;
-      },
+          },
+        ],
+        rehypeToc,
+      ],
     },
   });
 
   return {
     props: {
-      post: {
-        code: post.code,
-        frontmatter: post.frontmatter,
-      },
-      readingTime: readingTime(post.matter.content),
+      post: post.code,
+      readingTime: readingTime(post.code),
     },
   };
 };
 
 export const getStaticPaths: GetStaticPaths<RouteParam> = async (_props) => {
-  const routes = await readMdxFilesOfRoute('@/routes/adrs/routes/[slug]', {
+  const routes = await compileMdxFilesOfRoute('@/routes/adrs/routes/[slug]', {
     atRootDir: SRC_DIR,
   });
 
