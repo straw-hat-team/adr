@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getMDXModule } from '@/components/mdx';
+import { getMDXModule } from '@/helpers/mdx';
 import type { MDXComponents } from 'mdx/types';
 
 type MdxModule<TExports> = {
