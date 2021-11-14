@@ -1,19 +1,14 @@
 import { PropsWithChildren } from 'react';
-import type { ReadingTimeResult } from 'reading-time';
 
-import { AdrFrontmatter } from '@/routes/adrs/types';
+import { AdrMdxData } from '@/routes/adrs/types';
 import { useMdxModule } from '@/hooks/use-mdx-module';
+import { PageTitle } from '@/components/page-title';
 
 export type RouteParam = {
   slug: string;
 };
 
-export type AdrMdxData = {
-  frontmatter: AdrFrontmatter;
-};
-
 export type SlugProps = {
-  readingTime: ReadingTimeResult;
   post: string;
 };
 
@@ -31,16 +26,21 @@ function Badge(props: PropsWithChildren<{}>) {
 export function Slug(props: SlugProps) {
   const Module = useMdxModule<AdrMdxData>({ source: props.post });
 
+  console.log(Module);
+
   return (
-    <main className="px-4 max-w-screen-lg xl:max-w-screen-xl mx-auto space-y-10 lg:space-y-20 prose lg:prose-xl">
-      <header>
-        <div className="flex gap-4 items-center">
-          {Module.frontmatter.tags.map((tag) => (
-            <Badge key={tag}>{tag}</Badge>
-          ))}
-        </div>
-      </header>
-      <Module.default />
-    </main>
+    <>
+      <PageTitle>{Module.title}</PageTitle>
+      <main className="px-4 max-w-screen-lg xl:max-w-screen-xl mx-auto space-y-10 lg:space-y-20 prose lg:prose-xl">
+        <header>
+          <div className="flex gap-4 items-center">
+            {Module.frontmatter?.tags.map((tag) => (
+              <Badge key={tag}>{tag}</Badge>
+            ))}
+          </div>
+        </header>
+        <Module.default />
+      </main>
+    </>
   );
 }

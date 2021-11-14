@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import remarkGfm from 'remark-gfm';
 import remarkFrontmatter from 'remark-frontmatter';
 import { remarkMdxFrontmatter } from 'remark-mdx-frontmatter';
-// import remarkReadingTime from 'remark-reading-time';
+import remarkReadingTime from 'remark-reading-time';
 
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -17,25 +17,17 @@ import rehypePrismPlus from 'rehype-prism-plus';
 import readingTime from 'reading-time';
 
 import { compileMdxFilesOfRoute, compileMdxFile, MdxFileRoute } from '@/helpers/mdx/mdx.server';
-import { Slug, RouteParam, SlugProps, AdrMdxData } from '@/routes/adrs/routes/[slug]';
+import { Slug, RouteParam, SlugProps } from '@/routes/adrs/routes/[slug]';
 import { SRC_DIR } from '@/constants';
+import { remarkMdxReadingTime } from '@/helpers/remark';
+import { AdrMdxData } from '@/routes/adrs/types';
 
 export default Slug;
 
 export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (props) => {
   const post = await compileMdxFile<AdrMdxData>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
     compileOptions: {
-      remarkPlugins: [
-        remarkGfm,
-        remarkFrontmatter,
-        [
-          remarkMdxFrontmatter,
-          {
-            name: 'frontmatter',
-          },
-        ],
-        // remarkReadingTime, https://github.com/mattjennings/remark-reading-time/issues/1
-      ],
+      remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter, remarkReadingTime(), remarkMdxReadingTime],
       rehypePlugins: [
         rehypeSlug,
         rehypePrismPlus,

@@ -7,3 +7,13 @@ declare module 'rehype-code-title' {
 
   export default function rehypeCodeTitle(opts?: Options): Plugin;
 }
+
+declare module 'remark-reading-time' {
+  import type { Plugin } from 'unified';
+
+  export type Options = {
+    name?: string;
+  };
+
+  export default function rehypeCodeTitle(opts?: Options): Plugin;
+}
