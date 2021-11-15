@@ -1,33 +1,21 @@
-import { PropsWithChildren } from 'react';
-
-import { AdrMdxData } from '@/routes/adrs/types';
+import { AdrMdxModuleExports } from '@/routes/adrs/types';
 import { useMdxModule } from '@/hooks/use-mdx-module';
 import { PageTitle } from '@/components/page-title';
 import { pageAnchor } from '@/helpers';
 import { MdxProvider } from '@/components/mdx/components/mdx-provider';
 import { DEFAULT_COMPONENTS } from '@/components/mdx/constants';
+import { Badge } from '@/routes/adrs';
 
-export type RouteParam = {
+export type RouteQuery = {
   slug: string;
 };
 
 export type SlugProps = {
-  post: string;
+  adrCode: string;
 };
 
-function Badge(props: PropsWithChildren<{}>) {
-  return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-base font-medium bg-indigo-100 text-indigo-800">
-      <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
-        <circle cx="4" cy="4" r="3" />
-      </svg>
-      {props.children}
-    </span>
-  );
-}
-
 export function Slug(props: SlugProps) {
-  const Module = useMdxModule<AdrMdxData>({ source: props.post });
+  const Module = useMdxModule<AdrMdxModuleExports>({ source: props.adrCode });
 
   console.log(Module);
 

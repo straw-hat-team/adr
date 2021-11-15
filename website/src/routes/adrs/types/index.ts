@@ -9,7 +9,7 @@ export type AdrFrontmatter = {
   created_at: string;
 };
 
-export type AdrMdxData = {
+export type AdrMdxModuleExports = {
   readingTime: ReadTimeResults;
   frontmatter: AdrFrontmatter;
   tableOfContents: TocEntry[];

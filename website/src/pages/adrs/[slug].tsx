@@ -1,63 +1,29 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
-import remarkGfm from 'remark-gfm';
-import remarkFrontmatter from 'remark-frontmatter';
-import { remarkMdxFrontmatter } from 'remark-mdx-frontmatter';
-import remarkReadingTime from 'remark-reading-time';
-
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeCodeTitle from 'rehype-code-title';
-import { rehypeMdxTitle } from 'rehype-mdx-title';
-import rehypeExtractToc from '@stefanprobst/rehype-extract-toc';
-import rehypeExtractTocMdx from '@stefanprobst/rehype-extract-toc/mdx';
-import rehypePrismPlus from 'rehype-prism-plus';
 
 import { compileMdxFilesOfRoute, compileMdxFile, MdxFileRoute } from '@/helpers/mdx/mdx.server';
-import { Slug, RouteParam, SlugProps } from '@/routes/adrs/routes/[slug]';
+import { Slug, RouteQuery, SlugProps } from '@/routes/adrs/routes/[slug]';
 import { SRC_DIR } from '@/constants';
-import { remarkMdxReadingTime } from '@/helpers/remark';
-import { AdrMdxData } from '@/routes/adrs/types';
+import { AdrMdxModuleExports } from '@/routes/adrs/types';
+import { AdrCompilerOptions } from '@/helpers/mdx/adr';
 
 export default Slug;
 
-export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (props) => {
-  const post = await compileMdxFile<AdrMdxData>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
-    compileOptions: {
-      remarkPlugins: [
-        remarkGfm,
-        [remarkMdxFrontmatter, { name: 'frontmatter' }],
-        remarkFrontmatter,
-        remarkReadingTime(),
-        remarkMdxReadingTime,
-      ],
-      rehypePlugins: [
-        rehypeSlug,
-        rehypePrismPlus,
-        rehypeCodeTitle,
-        rehypeExtractToc,
-        rehypeExtractTocMdx,
-        rehypeMdxTitle,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: 'wrap',
-            properties: {
-              className: ['anchor'],
-            },
-          },
-        ],
-      ],
-    },
-  });
+export const getStaticProps: GetStaticProps<SlugProps, RouteQuery> = async (props) => {
+  const adr = await compileMdxFile<AdrMdxModuleExports>(
+    `@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`,
+    {
+      compileOptions: AdrCompilerOptions,
+    }
+  );
 
   return {
     props: {
-      post: post.code,
+      adrCode: adr.code,
     },
   };
 };
 
-export const getStaticPaths: GetStaticPaths<RouteParam> = async (_props) => {
+export const getStaticPaths: GetStaticPaths<RouteQuery> = async (_props) => {
   const routes = await compileMdxFilesOfRoute('@/routes/adrs/routes/[slug]', {
     atRootDir: SRC_DIR,
   });

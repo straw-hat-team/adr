@@ -107,7 +107,7 @@ the underline tool.
 You may also run into such issues by changing `compilerOptions.paths` instead,
 for example:
 
-```jsonc
+```json
 {
   "compilerOptions": {
     "baseUrl": ".",
@@ -156,7 +156,7 @@ These are examples of valid configurations:
 
 For `tsconfig.json` or `jsconfig.json` files:
 
-```jsonc
+```json
 {
   "compilerOptions": {
     "paths": {
@@ -168,7 +168,7 @@ For `tsconfig.json` or `jsconfig.json` files:
 
 Jest configuration:
 
-```jsonc
+```json
 {
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/src/$1"
@@ -178,14 +178,14 @@ Jest configuration:
 
 Webpack aliases:
 
-```jsonc
+```json
 {
   "resolve": {
     "alias": {
       "@": "path/to/rootDir/src",
     }
   }
-};
+}
 ```
 
 Rollup alias:
