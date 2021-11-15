@@ -12,6 +12,6 @@ export type AdrFrontmatter = {
 export type AdrMdxData = {
   readingTime: ReadTimeResults;
   frontmatter: AdrFrontmatter;
-  tableOfContents: TocEntry;
+  tableOfContents: TocEntry[];
   title: string;
 };

@@ -8,13 +8,9 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeCodeTitle from 'rehype-code-title';
 import { rehypeMdxTitle } from 'rehype-mdx-title';
-
 import rehypeExtractToc from '@stefanprobst/rehype-extract-toc';
-
 import rehypeExtractTocMdx from '@stefanprobst/rehype-extract-toc/mdx';
 import rehypePrismPlus from 'rehype-prism-plus';
-
-import readingTime from 'reading-time';
 
 import { compileMdxFilesOfRoute, compileMdxFile, MdxFileRoute } from '@/helpers/mdx/mdx.server';
 import { Slug, RouteParam, SlugProps } from '@/routes/adrs/routes/[slug]';
@@ -27,7 +23,13 @@ export default Slug;
 export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (props) => {
   const post = await compileMdxFile<AdrMdxData>(`@/routes/adrs/routes/[slug]/routes/${props.params!.slug}/index.mdx`, {
     compileOptions: {
-      remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter, remarkReadingTime(), remarkMdxReadingTime],
+      remarkPlugins: [
+        remarkGfm,
+        [remarkMdxFrontmatter, { name: 'frontmatter' }],
+        remarkFrontmatter,
+        remarkReadingTime(),
+        remarkMdxReadingTime,
+      ],
       rehypePlugins: [
         rehypeSlug,
         rehypePrismPlus,
@@ -51,7 +53,6 @@ export const getStaticProps: GetStaticProps<SlugProps, RouteParam> = async (prop
   return {
     props: {
       post: post.code,
-      readingTime: readingTime(post.code), // TODO: Fix reading time since this is compiled code text
     },
   };
 };
