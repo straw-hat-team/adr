@@ -8,6 +8,6 @@ type MdxModule<TExports> = {
   }>;
 } & TExports;
 
-export function useMdxModule<TExports = unknown>(props: { source: string; globals?: Record<string, any> }) {
-  return React.useMemo<MdxModule<TExports>>(() => getMDXModule(props.source, props.globals), [props.source]);
+export function useMdxModule<TExports = unknown>(props: { source: string }) {
+  return React.useMemo<MdxModule<TExports>>(() => getMDXModule(props.source), [props.source]);
 }

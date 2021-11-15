@@ -8,7 +8,10 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>((props, ref) 
     <a
       {...props}
       ref={ref}
-      className={clsx('hover:underline flex-inline justify-center text-blue-700 dark:text-blue-400', props.className)}
+      className={clsx(
+        'underline py-1 rounded-sm hover:bg-blue-200 flex-inline justify-center text-blue-700 dark:text-blue-400',
+        props.className
+      )}
     >
       {props.children}
     </a>
