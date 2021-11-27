@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider } from 'next-themes';
-import { DefaultLayout } from '@/components/default-layout';
 import { PAGE_TITLE_PREFIX } from '@/constants';
 
 export async function reportWebVitals(_metric: NextWebVitalsMetric) {
@@ -18,9 +17,7 @@ export function App(props: AppProps) {
       <Head>
         <title>{PAGE_TITLE_PREFIX}</title>
       </Head>
-      <DefaultLayout>
-        <props.Component {...props.pageProps} />
-      </DefaultLayout>
+      <props.Component {...props.pageProps} />
     </ThemeProvider>
   );
 }

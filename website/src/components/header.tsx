@@ -17,7 +17,7 @@ function NavLink(props: NavLinkProps) {
 
 export function Header() {
   return (
-    <header className="mb-8 shadow-sm sticky top-0 z-10 backdrop-filter backdrop-blur-lg backdrop-saturate-150 bg-white dark:bg-gray-800 bg-opacity-80">
+    <header className="shadow-sm backdrop-filter backdrop-blur-lg backdrop-saturate-150 bg-white dark:bg-gray-800 bg-opacity-80">
       <div className="flex items-center justify-between w-full max-w-screen-lg xl:max-w-screen-xl py-8 px-4 mx-auto text-gray-900 dark:text-gray-100">
         <nav className="flex text-center">
           <NavLink href="/">

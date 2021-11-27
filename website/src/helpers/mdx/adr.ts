@@ -20,7 +20,7 @@ export const AdrCompilerOptions: CompileOptions = {
     remarkGfm,
     [remarkMdxFrontmatter, { name: 'frontmatter' }],
     remarkFrontmatter,
-    remarkReadingTime(),
+    remarkReadingTime,
     remarkMdxReadingTime,
   ],
   rehypePlugins: [

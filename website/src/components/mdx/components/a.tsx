@@ -9,8 +9,6 @@ import { ExternalLink } from '@/components/external-link';
 export function A(props: PropsWithChildren<JSX.IntrinsicElements['a']>) {
   const adr = adrFromHref(props.href);
 
-  console.log(props.href);
-
   if (adr) {
     return (
       <NextLink href={{ pathname: PATH_ADRS_SLUG, query: { slug: adr } }} passHref>

@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 #__next {
-  display: contents;
+  @apply contents;
 }
 
 ::selection {

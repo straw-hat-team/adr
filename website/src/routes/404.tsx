@@ -5,7 +5,7 @@ export function NotFound() {
   return (
     <>
       <PageTitle>404 - Not Found</PageTitle>
-      <div className="space-y-8 px-4 max-w-screen-lg xl:max-w-screen-xl mx-auto flex flex-col justify-center items-start mb-16">
+      <div className="px-4 max-w-screen-lg xl:max-w-screen-xl mx-auto flex flex-col justify-center items-start gap-6">
         <h1 className="font-bold text-3xl md:text-5xl tracking-tight text-black dark:text-white">
           404 – Page Not Found
         </h1>
