@@ -14,6 +14,7 @@ const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx', 'md'],
   swcMinify: true,
   experimental: {
+    swcMinify: true,
     esmExternals: true,
   },
   webpack(config, options) {
