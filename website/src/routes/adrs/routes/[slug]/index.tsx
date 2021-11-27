@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { AdrMdxModuleExports } from '@/routes/adrs/types';
 import { useMdxModule } from '@/hooks/use-mdx-module';
 import { PageTitle } from '@/components/page-title';
@@ -6,9 +7,8 @@ import { MdxProvider } from '@/components/mdx/components/mdx-provider';
 import { DEFAULT_COMPONENTS } from '@/components/mdx/constants';
 import { Badge } from '@/routes/adrs';
 import { LegalFooter } from '@/components/legal-footer';
-import * as React from 'react';
 import { MultiColumnLayout, Panel } from '@/components/layouts/multi-column-layout';
-import { Header, MainMenuSideBar } from '@/components/example';
+import { Drawer, Header, MainMenuSideBar } from '@/components/example';
 
 export type RouteQuery = {
   slug: string;
@@ -19,10 +19,20 @@ export type SlugProps = {
 };
 
 export function Slug(props: SlugProps) {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const Module = useMdxModule<AdrMdxModuleExports>({ source: props.adrCode });
-
   return (
-    <MultiColumnLayout slots={{ MainMenu: MainMenuSideBar, Header: Header }}>
+    <MultiColumnLayout
+      slots={{
+        Drawer: () => (
+          <Drawer onOpen={() => setSidebarOpen(true)} onClose={() => setSidebarOpen(false)} show={sidebarOpen}>
+            <MainMenuSideBar />
+          </Drawer>
+        ),
+        MainMenu: () => <MainMenuSideBar className="hidden lg:flex" />,
+        Header: () => <Header onOpen={() => setSidebarOpen(true)} />,
+      }}
+    >
       <Panel className="order-1 xl:flex xl:flex-col flex-shrink-0">
         <LeftPanel />
       </Panel>

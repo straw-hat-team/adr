@@ -3,7 +3,7 @@ import { getMDXModule } from '@/helpers/mdx';
 import type { MDXComponents } from 'mdx/types';
 
 type MdxModule<TExports> = {
-  default: React.ComponentType<{
+  default: React.ElementType<{
     components?: MDXComponents;
   }>;
 } & TExports;
