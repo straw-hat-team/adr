@@ -68,9 +68,7 @@ export function MultiColumnLayout(
         </Dialog>
       </Transition.Root>
 
-      <div className="hidden lg:flex bg-red-600 flex-shrink-0">
-        <props.slots.MainMenu />
-      </div>
+      <props.slots.MainMenu />
 
       <div className="flex flex-col flex-1">
         {props.slots.Header && <props.slots.Header onOpen={setSidebarOpen} />}

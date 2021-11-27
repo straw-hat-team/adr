@@ -23,15 +23,15 @@ const longNavigation = [...navigation, ...navigation, ...navigation, ...navigati
 
 export function MainMenuSideBar() {
   return (
-    <div className="flex-1 justify-between flex flex-col pt-5 pb-4 border-r border-gray-200 bg-gray-100 overflow-y-auto shadow-lg gap-5 flex-nowrap">
-      <div className="px-4 bg-blue-200">
+    <div className="hidden lg:flex flex-shrink-0 justify-between flex flex-col border-r border-gray-200 bg-gray-100 overflow-y-auto shadow-lg gap-5 flex-nowrap">
+      <div className="px-4 py-4 border-b border-gray-200">
         <img
-          className="h-8"
+          className="h-8 w-auto"
           src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
           alt="Workflow"
         />
       </div>
-      <nav className="bg-yellow-700 flex-grow flex flex-col gap-1 overflow-scroll">
+      <nav className="flex-grow flex flex-col gap-1 overflow-scroll">
         {navigation.concat(longNavigation).map((item, index) => (
           <a
             key={index}
@@ -52,13 +52,6 @@ export function MainMenuSideBar() {
           </a>
         ))}
       </nav>
-      <div className="bg-blue-700 px-4">
-        <img
-          className="h-8"
-          src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
-          alt="Workflow"
-        />
-      </div>
     </div>
   );
 }
@@ -68,7 +61,7 @@ export function MainMenuSideBar() {
 
 export function Header(props: { onOpen: (value: boolean) => void }) {
   return (
-    <header className="flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-1.5">
+    <header className="flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-2">
       <div>
         <img
           className="h-8 w-auto"
