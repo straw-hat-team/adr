@@ -14,8 +14,10 @@ export function Panel(
 ) {
   const Component = props.as ?? 'aside';
   return (
-    <Component className={clsx('focus:outline-none relative', props.className)}>
-      <div className="flex-1 flex absolute inset-0 top-0 overflow-y-auto">{props.children}</div>
+    <Component tabIndex={-1} className={clsx('relative', props.className)}>
+      <div tabIndex={-1} className="flex-1 flex absolute inset-0 top-0 overflow-y-auto">
+        {props.children}
+      </div>
     </Component>
   );
 }

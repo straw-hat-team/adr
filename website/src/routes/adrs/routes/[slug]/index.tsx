@@ -8,7 +8,8 @@ import { DEFAULT_COMPONENTS } from '@/components/mdx/constants';
 import { Badge } from '@/routes/adrs';
 import { LegalFooter } from '@/components/legal-footer';
 import { MultiColumnLayout, Panel } from '@/components/layouts/multi-column-layout';
-import { Drawer, Header, MainMenuSideBar } from '@/components/example';
+import { Header, MainMenuSideBar } from '@/components/example';
+import MuiDrawer from '@mui/material/Drawer';
 
 export type RouteQuery = {
   slug: string;
@@ -23,9 +24,10 @@ export function Slug(props: SlugProps) {
   const Module = useMdxModule<AdrMdxModuleExports>({ source: props.adrCode });
   return (
     <MultiColumnLayout>
-      <Drawer onOpen={() => setSidebarOpen(true)} onClose={() => setSidebarOpen(false)} show={sidebarOpen}>
-        <MainMenuSideBar />
-      </Drawer>
+      <MuiDrawer anchor="left" open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
+        <MainMenuSideBar className="flex-1" />
+      </MuiDrawer>
+
       <MainMenuSideBar className="hidden lg:flex" />
 
       <div className="flex flex-col flex-1">
