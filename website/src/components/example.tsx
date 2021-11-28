@@ -43,7 +43,7 @@ export function MainMenuSideBar(props: { className?: string }) {
             href={item.href}
             className={clsx(
               item.current
-                ? 'bg-green-100 text-green-700 font-semibold bg-opacity-40'
+                ? 'bg-green-200 bg-opacity-20 text-green-700 font-semibold relative before:absolute before:top-0 before:bottom-0 before:right-0 before:rounded-tl before:rounded-bl before:bg-green-700 before:w-1'
                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-normal',
               'group flex items-center pl-12 pr-4  py-4 text-sm'
             )}
