@@ -21,13 +21,11 @@ const navigation = [
   { name: 'Office Map', href: '#', icon: MapIcon, current: false },
 ];
 
-const longNavigation = [...navigation, ...navigation, ...navigation, ...navigation, ...navigation];
-
 export function MainMenuSideBar(props: { className?: string }) {
   return (
     <div
       className={clsx(
-        'flex-shrink-0 justify-between flex flex-col border-r border-gray-200 bg-gray-100 overflow-y-auto shadow-lg gap-5 flex-nowrap',
+        'flex-shrink-0 justify-between flex flex-col border-r border-gray-200 bg-white overflow-y-auto flex-nowrap',
         props.className
       )}
     >
@@ -38,19 +36,21 @@ export function MainMenuSideBar(props: { className?: string }) {
           alt="Workflow"
         />
       </div>
-      <nav className="flex-grow flex flex-col gap-1 overflow-scroll">
-        {navigation.concat(longNavigation).map((item, index) => (
+      <nav className="flex-grow flex flex-col gap-1 overflow-scroll w-72">
+        {navigation.concat([]).map((item, index) => (
           <a
             key={index}
             href={item.href}
             className={clsx(
-              item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-              'group flex items-center px-10 py-2 text-sm font-medium rounded-md'
+              item.current
+                ? 'bg-green-100 text-green-700 font-semibold bg-opacity-40'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-normal',
+              'group flex items-center pl-12 pr-4  py-4 text-sm'
             )}
           >
             <item.icon
               className={clsx(
-                item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500',
+                item.current ? 'text-green-700' : 'text-gray-400 group-hover:text-gray-500',
                 'mr-3 h-6 w-6'
               )}
               aria-hidden="true"
