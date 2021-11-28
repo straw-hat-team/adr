@@ -37,7 +37,7 @@ export function MainMenuSideBar(props: { className?: string }) {
         />
       </div>
       <nav className="flex-grow flex flex-col gap-1 overflow-scroll w-72">
-        {navigation.concat([]).map((item, index) => (
+        {navigation.concat().map((item, index) => (
           <a
             key={index}
             href={item.href}
@@ -59,6 +59,13 @@ export function MainMenuSideBar(props: { className?: string }) {
           </a>
         ))}
       </nav>
+      <div className="px-4 py-4 border-t border-gray-200">
+        <img
+          className="h-8 w-auto"
+          src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
+          alt="Workflow"
+        />
+      </div>
     </div>
   );
 }
