@@ -24,7 +24,7 @@ export function Slug(props: SlugProps) {
   return (
     <MultiColumnLayout
       slots={{
-        Drawer: () => (
+        Drawer: (
           <Drawer onOpen={() => setSidebarOpen(true)} onClose={() => setSidebarOpen(false)} show={sidebarOpen}>
             <MainMenuSideBar />
           </Drawer>

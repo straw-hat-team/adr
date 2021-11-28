@@ -5,14 +5,14 @@ export function MultiColumnLayout(
   props: React.PropsWithChildren<{
     slots: {
       MainMenu: React.ElementType;
-      Drawer?: React.ElementType;
+      Drawer?: React.ReactChild;
       Header?: React.ElementType;
     };
   }>
 ) {
   return (
     <div className="flex h-screen">
-      {props.slots.Drawer && <props.slots.Drawer />}
+      {props.slots.Drawer}
       <props.slots.MainMenu />
       <div className="flex flex-col flex-1">
         {props.slots.Header && <props.slots.Header />}
