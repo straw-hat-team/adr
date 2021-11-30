@@ -75,7 +75,7 @@ export function MainMenuSideBar(props: { className?: string }) {
 
 export function Header(props: { onOpen: (value: boolean) => void }) {
   return (
-    <header className="flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-2">
+    <header className="flex items-center justify-between bg-white border-b border-gray-200 px-4 py-2">
       <div>
         <img
           className="h-8 w-auto"
