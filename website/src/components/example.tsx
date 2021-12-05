@@ -43,7 +43,6 @@ export function MainMenuSideBar(props: { className?: string }) {
           />
         </a>
       </RouterLink>
-      <ThemeToggler />
       <nav className="flex-grow flex flex-col gap-1 overflow-scroll w-72">
         {navigation.concat().map((item, index) => (
           <a
