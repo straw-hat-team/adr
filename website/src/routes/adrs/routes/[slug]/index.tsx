@@ -5,11 +5,11 @@ import { PageTitle } from '@/components/page-title';
 import { pageAnchor } from '@/helpers';
 import { MdxProvider } from '@/components/mdx/components/mdx-provider';
 import { DEFAULT_COMPONENTS } from '@/components/mdx/constants';
-import { Badge } from '@/routes/adrs';
 import { LegalFooter } from '@/components/legal-footer';
 import { MultiColumnLayout, Panel } from '@/components/layouts/multi-column-layout';
 import { Header, MainMenuSideBar } from '@/components/example';
 import MuiDrawer from '@mui/material/Drawer';
+import { Badge } from '@/routes/adrs/components/badge';
 
 export type RouteQuery = {
   slug: string;

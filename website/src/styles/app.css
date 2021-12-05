@@ -1,20 +1,23 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import "./prism.css";
 
 html {
-  text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
 }
 
 *, *::before, *::after {
-  box-sizing: inherit;
+    box-sizing: inherit;
 }
 
 #__next {
-  @apply contents;
+    @apply contents;
 }
 
 ::selection {
-  @apply bg-purple-500;
-  @apply text-white;
+    @apply bg-purple-500;
+    @apply text-white;
 }
+

@@ -30,5 +30,3 @@ export function Adrs(props: AdrsProps) {
     </main>
   );
 }
-
-export { Badge } from '@/routes/adrs/components/badge';

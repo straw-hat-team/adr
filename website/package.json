@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@code-hike/mdx": "0.3.0-next.13",
     "@emotion/cache": "11.6.0",
     "@emotion/react": "11.7.0",
     "@emotion/server": "11.4.0",
@@ -38,8 +39,10 @@
     "rehype-slug": "5.0.0",
     "remark-frontmatter": "4.0.1",
     "remark-gfm": "3.0.1",
+    "remark-math": "5.1.1",
     "remark-mdx-frontmatter": "1.1.1",
     "remark-reading-time": "2.0.1",
+    "shiki": "0.9.14",
     "tailwindcss": "2.2.19",
     "vfile": "5.2.0"
   },
