@@ -574,12 +574,12 @@
   resolved "https://registry.yarnpkg.com/@straw-hat/eslint-config-nextjs/-/eslint-config-nextjs-3.0.1.tgz#5a9ba12823c0eaac183ea988301943e8fa838cfc"
   integrity sha512-eaFI8Pwl3+Uk6N/op0aPmTajlisCgfCQWjjjiaR4uXPuq7PhS2b/dhxrFyykxDsT62YzyYMIaA2PwjfLEOLwWw==
 
-"@straw-hat/next-sdk@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@straw-hat/next-sdk/-/next-sdk-0.0.1.tgz#8c2fdadb479ebddcae8df14125aabb83f203275c"
-  integrity sha512-8Egbw32ywVh/17vzm++m5lnR1N7AQ45gXVjxf82H+1ajXWFxrztMbQMIBeguI4wU9Am+BV88w/xksi7Mogwvkw==
+"@straw-hat/next-sdk@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@straw-hat/next-sdk/-/next-sdk-0.3.0.tgz#b382c13664d6553482de27dec20e758f4ccecef5"
+  integrity sha512-QvtkZ4ENED4pB8FZ+bHI128v6JwqreZA+5UydwYmdViWMSvhgn6wWYtMBIgb4vJR02xKKW1bSE+mO7eoE7xudQ==
   dependencies:
-    "@straw-hat/types" "^0.1.0"
+    "@straw-hat/types" "^0.2.0"
 
 "@straw-hat/prettier-config@2.0.2":
   version "2.0.2"
@@ -591,15 +591,10 @@
   resolved "https://registry.yarnpkg.com/@straw-hat/tsconfig/-/tsconfig-3.0.0.tgz#60a903d5846d99e6430e6d900292c73c00c0e0e0"
   integrity sha512-zma6sdb9XumnZxjs0XMmWCXXyNrR6RTdxlGkUAgtBkZZ4SjUh/Jgk84N9ReounMvgVG53MGz7PiOBzHbTQJV8Q==
 
-"@straw-hat/types@0.2.0":
+"@straw-hat/types@0.2.0", "@straw-hat/types@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@straw-hat/types/-/types-0.2.0.tgz#abb259db11ffa4450efc7d83772da99f42b2a615"
   integrity sha512-8bvTTe2PHSZ3FI0G2Y1ZgaYqAfYdO3TgXFcHeTP/fbuj3oJ+VGDSCsNYeP/DQesWlryZYR6n+w1EYlyJFSHTZg==
-
-"@straw-hat/types@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@straw-hat/types/-/types-0.1.0.tgz#57c95f5c3bda60d552cc3290841eb4cc63b85bd0"
-  integrity sha512-98o9aoJuoeQ7NG5dNeTo7rLMnMO3zI8ZFscsrrltF6ZpoPiEghoa87UfZhWep5wsvfdgQoPihd8WVbg/pXZFRg==
 
 "@tailwindcss/typography@0.4.1":
   version "0.4.1"

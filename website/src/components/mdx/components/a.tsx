@@ -2,16 +2,16 @@ import { PropsWithChildren } from 'react';
 import { adrFormat, adrFromHref } from '@/helpers';
 import NextLink from 'next/link';
 import { Link } from '@/components/link';
-import { PATH_ADRS_SLUG } from '@/constants/routes';
 import { REGEX_HTTPS_HOST } from '@/constants';
 import { ExternalLink } from '@/components/external-link';
+import { routeAdrsAdr } from '@/helpers/routes';
 
 export function A(props: PropsWithChildren<JSX.IntrinsicElements['a']>) {
   const adr = adrFromHref(props.href);
 
   if (adr) {
     return (
-      <NextLink href={{ pathname: PATH_ADRS_SLUG, query: { slug: adr } }} passHref>
+      <NextLink href={routeAdrsAdr({ query: { slug: adr } })} passHref>
         <Link>{adrFormat(adr)}</Link>
       </NextLink>
     );
