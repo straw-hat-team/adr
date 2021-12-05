@@ -1,17 +1,29 @@
-import { HomeIcon, MenuIcon, UserGroupIcon, XIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import {
+  HomeIcon,
+  MenuIcon,
+  UserGroupIcon,
+  XIcon,
+  QuestionMarkCircleIcon,
+  NewspaperIcon,
+} from '@heroicons/react/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Image } from '@/components/image';
 import { RouterLink } from '@/components/router-link';
+import { useRouter } from 'next/router';
+import { PATH_ADRS, PATH_CONTRIBUTING, PATH_FAQ, PATH_INDEX } from '@/constants/routes';
 
 const navigation = [
-  { name: 'Home', href: '#', icon: HomeIcon, current: true },
-  { name: 'Contributing', href: '#', icon: UserGroupIcon, current: false },
-  { name: 'FAQ', href: '#', icon: QuestionMarkCircleIcon, current: false },
+  { name: 'Home', href: PATH_INDEX, icon: HomeIcon },
+  { name: 'ADRs', href: PATH_ADRS, icon: NewspaperIcon },
+  { name: 'Contributing', href: PATH_CONTRIBUTING, icon: UserGroupIcon },
+  { name: 'FAQ', href: PATH_FAQ, icon: QuestionMarkCircleIcon },
 ];
 
 export function MainMenuSideBar(props: { className?: string }) {
+  const router = useRouter();
+
   return (
     <div
       className={clsx(
@@ -35,7 +47,7 @@ export function MainMenuSideBar(props: { className?: string }) {
             key={index}
             href={item.href}
             className={clsx(
-              item.current
+              router.asPath === item.href
                 ? 'bg-green-200 bg-opacity-20 text-green-700 font-semibold relative before:absolute before:top-0 before:bottom-0 before:right-0 before:rounded-tl before:rounded-bl before:bg-green-700 before:w-1'
                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-normal',
               'group flex items-center pl-12 pr-4  py-4 text-sm'
@@ -43,7 +55,7 @@ export function MainMenuSideBar(props: { className?: string }) {
           >
             <item.icon
               className={clsx(
-                item.current ? 'text-green-700' : 'text-gray-400 group-hover:text-gray-500',
+                router.asPath === item.href ? 'text-green-700' : 'text-gray-400 group-hover:text-gray-500',
                 'mr-3 h-6 w-6'
               )}
               aria-hidden="true"
