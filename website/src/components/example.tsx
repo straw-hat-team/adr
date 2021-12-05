@@ -1,25 +1,14 @@
-import {
-  CalendarIcon,
-  HomeIcon,
-  MapIcon,
-  MenuIcon,
-  SearchCircleIcon,
-  SpeakerphoneIcon,
-  UserGroupIcon,
-  XIcon,
-} from '@heroicons/react/outline';
+import { HomeIcon, MenuIcon, UserGroupIcon, XIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Image } from '@/components/image';
+import { RouterLink } from '@/components/router-link';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Teams', href: '#', icon: UserGroupIcon, current: false },
-  { name: 'Directory', href: '#', icon: SearchCircleIcon, current: false },
-  { name: 'Announcements', href: '#', icon: SpeakerphoneIcon, current: false },
-  { name: 'Office Map', href: '#', icon: MapIcon, current: false },
+  { name: 'Home', href: '#', icon: HomeIcon, current: true },
+  { name: 'Contributing', href: '#', icon: UserGroupIcon, current: false },
+  { name: 'FAQ', href: '#', icon: QuestionMarkCircleIcon, current: false },
 ];
 
 export function MainMenuSideBar(props: { className?: string }) {
@@ -30,14 +19,16 @@ export function MainMenuSideBar(props: { className?: string }) {
         props.className
       )}
     >
-      <div className="px-4 py-4 border-b border-gray-200">
-        <Image
-          layout="fill"
-          className="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
-          alt="Workflow"
-        />
-      </div>
+      <RouterLink href="/" passHref>
+        <a className="px-4 py-4 border-b border-gray-200">
+          <Image
+            layout="fill"
+            className="h-8 w-auto"
+            src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
+            alt="Workflow"
+          />
+        </a>
+      </RouterLink>
       <nav className="flex-grow flex flex-col gap-1 overflow-scroll w-72">
         {navigation.concat().map((item, index) => (
           <a
@@ -61,14 +52,16 @@ export function MainMenuSideBar(props: { className?: string }) {
           </a>
         ))}
       </nav>
-      <div className="px-4 py-4 border-t border-gray-200">
-        <Image
-          layout="fill"
-          className="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
-          alt="Workflow"
-        />
-      </div>
+      <RouterLink href="/" passHref>
+        <a className="px-4 py-4 border-t border-gray-200">
+          <Image
+            layout="fill"
+            className="h-8 w-auto"
+            src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
+            alt="Workflow"
+          />
+        </a>
+      </RouterLink>
     </div>
   );
 }

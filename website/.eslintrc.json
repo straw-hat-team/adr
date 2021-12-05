@@ -1,0 +1,3 @@
+{
+  "extends": "@straw-hat/eslint-config-nextjs"
+}
