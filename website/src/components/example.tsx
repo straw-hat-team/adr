@@ -78,12 +78,13 @@ export function MainMenuSideBar(props: { className?: string }) {
   );
 }
 
+// TODO: fix modal backdrop background
 // background: linear-gradient(
 //   75deg, rgba(22, 28, 36, 0.48) 0%, rgb(22, 28, 36) 100%);
 
 export function Header(props: { onOpen: (value: boolean) => void }) {
   return (
-    <header className="flex items-center justify-between bg-white border-b border-gray-200 px-4 py-2">
+    <header className="flex lg:hidden items-center justify-between bg-white border-b border-gray-200 px-4 py-2">
       <div>
         <Image
           layout="fill"
