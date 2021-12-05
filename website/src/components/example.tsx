@@ -4,6 +4,7 @@ import {
   UserGroupIcon,
   XIcon,
   QuestionMarkCircleIcon,
+  AdjustmentsIcon,
   NewspaperIcon,
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
@@ -13,6 +14,7 @@ import { Image } from '@/components/image';
 import { RouterLink } from '@/components/router-link';
 import { useRouter } from 'next/router';
 import { PATH_ADRS, PATH_CONTRIBUTING, PATH_FAQ, PATH_INDEX } from '@/constants/routes';
+import { ThemeToggler } from '@/components/theme-toggler';
 
 const navigation = [
   { name: 'Home', href: PATH_INDEX, icon: HomeIcon },
@@ -41,6 +43,7 @@ export function MainMenuSideBar(props: { className?: string }) {
           />
         </a>
       </RouterLink>
+      <ThemeToggler />
       <nav className="flex-grow flex flex-col gap-1 overflow-scroll w-72">
         {navigation.concat().map((item, index) => (
           <a
@@ -50,13 +53,13 @@ export function MainMenuSideBar(props: { className?: string }) {
               router.asPath === item.href
                 ? 'bg-green-200 bg-opacity-20 text-green-700 font-semibold relative before:absolute before:top-0 before:bottom-0 before:right-0 before:rounded-tl before:rounded-bl before:bg-green-700 before:w-1'
                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-normal',
-              'group flex items-center pl-12 pr-4  py-4 text-sm'
+              'group flex items-center pl-12 pr-4 py-4 text-sm flex gap-3'
             )}
           >
             <item.icon
               className={clsx(
                 router.asPath === item.href ? 'text-green-700' : 'text-gray-400 group-hover:text-gray-500',
-                'mr-3 h-6 w-6'
+                'h-6 w-6'
               )}
               aria-hidden="true"
             />
@@ -64,16 +67,10 @@ export function MainMenuSideBar(props: { className?: string }) {
           </a>
         ))}
       </nav>
-      <RouterLink href="/" passHref>
-        <a className="px-4 py-4 border-t border-gray-200">
-          <Image
-            layout="fill"
-            className="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
-            alt="Workflow"
-          />
-        </a>
-      </RouterLink>
+      <button className="group flex gap-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-normal flex items-center pl-12 pr-4  py-4 text-sm">
+        <AdjustmentsIcon className="text-gray-400 group-hover:text-gray-500 h-6 w-6" aria-hidden="true" />
+        Settings
+      </button>
     </div>
   );
 }

@@ -33,9 +33,6 @@ export function Slug(props: SlugProps) {
       <div className="flex flex-col flex-1">
         <Header onOpen={() => setSidebarOpen(true)} />
         <div className="flex-1 flex overflow-hidden">
-          <aside className="xl:flex xl:flex-col flex-shrink-0 overflow-y-auto">
-            <LeftPanel />
-          </aside>
           <main className="pt-10 flex-1 overflow-y-auto">
             <MdxProvider>
               <PageTitle>{Module.title}</PageTitle>
@@ -77,17 +74,5 @@ export function Slug(props: SlugProps) {
         </div>
       </div>
     </MultiColumnLayout>
-  );
-}
-
-function LeftPanel() {
-  return (
-    <div className="flex flex-col gap-2 flex-1 py-6 px-4 sm:px-6 lg:px-8 w-96">
-      {Array(100)
-        .fill(0)
-        .map((_, index) => (
-          <p key={index}>Item {index}</p>
-        ))}
-    </div>
   );
 }
