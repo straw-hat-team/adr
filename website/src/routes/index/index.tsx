@@ -86,7 +86,7 @@ export function IndexRoute() {
           </div>
         </section>
       </main>
-      <LegalFooter className="px-4" />
+      <LegalFooter className="px-4 max-w-screen-lg xl:max-w-screen-xl" />
     </>
   );
 }

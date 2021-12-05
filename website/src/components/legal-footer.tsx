@@ -8,7 +8,7 @@ export function LegalFooter(props: { className?: string }) {
     <footer
       className={clsx(
         props.className,
-        'text-gray-500 dark:text-gray-400 text-sm max-w-screen-lg xl:max-w-screen-xl py-8 mx-auto text-gray-900 dark:text-gray-100'
+        'text-gray-500 dark:text-gray-400 text-sm py-8 mx-auto text-gray-900 dark:text-gray-100'
       )}
     >
       Except as otherwise noted, the content of this page is licensed under the&nbsp;
