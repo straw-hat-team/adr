@@ -4,7 +4,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --write */** --ignore-unknown --no-error-on-unmatched-pattern"
+    "format": "prettier --write */** --ignore-unknown --no-error-on-unmatched-pattern",
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/cache": "11.6.0",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@mdx-js/loader": "2.0.0-rc.1",
     "@next/bundle-analyzer": "12.0.4",
+    "@straw-hat/eslint-config-nextjs": "3.0.1",
     "@straw-hat/prettier-config": "2.0.2",
     "@straw-hat/tsconfig": "3.0.0",
     "@straw-hat/types": "0.2.0",
@@ -53,6 +55,8 @@
     "@types/mdx": "2.0.1",
     "@types/react": "17.0.35",
     "esbuild": "0.13.15",
+    "eslint": "<8.0.0",
+    "eslint-config-next": "^12.0.4",
     "next-compose-plugins": "2.2.1",
     "postcss": "8.3.11",
     "postcss-import": "14.0.2",

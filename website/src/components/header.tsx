@@ -1,9 +1,9 @@
-import { PropsWithChildren } from 'react';
+import * as React from 'react';
 import NextLink from 'next/link';
 
 import { ThemeToggler } from '@/components/theme-toggler';
 
-type NavLinkProps = PropsWithChildren<{
+type NavLinkProps = React.PropsWithChildren<{
   href: string;
 }>;
 

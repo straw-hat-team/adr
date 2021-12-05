@@ -1,5 +1,5 @@
-import { Header } from '@/components/header';
 import * as React from 'react';
+import { Header } from '@/components/header';
 
 type DefaultLayoutProps = React.PropsWithChildren<{}>;
 

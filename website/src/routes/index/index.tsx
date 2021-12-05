@@ -5,6 +5,7 @@ import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { adrFormat } from '@/helpers';
 import { Link } from '@/components/link';
 import { PageTitle } from '@/components/page-title';
+import { LegalFooter } from '@/components/legal-footer';
 
 export function IndexRoute() {
   return (
@@ -85,6 +86,7 @@ export function IndexRoute() {
           </div>
         </section>
       </main>
+      <LegalFooter className="px-4" />
     </>
   );
 }

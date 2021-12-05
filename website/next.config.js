@@ -9,6 +9,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
+  images: {
+    domains: ['tailwindui.com'],
+  },
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'mdx', 'md'],

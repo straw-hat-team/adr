@@ -3,19 +3,28 @@ import { SunIcon, MoonIcon } from '@heroicons/react/solid';
 
 import { useMounted } from '@/hooks/use-mounted';
 
+enum Theme {
+  Dark = 'dark',
+  Light = 'light',
+}
+
 function useThemeToggler() {
   const mounted = useMounted();
   const { resolvedTheme, setTheme } = useTheme();
 
   function onToggleTheme() {
-    return setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+    return setTheme(resolvedTheme === 'dark' ? Theme.Light : Theme.Dark);
   }
 
-  return { mounted, resolvedTheme, onToggleTheme };
+  return {
+    mounted,
+    resolvedTheme: resolvedTheme as Theme,
+    onToggleTheme,
+  };
 }
 
-function ThemeIcon(props) {
-  return props.theme === 'dark' ? (
+function ThemeIcon(props: { theme: Theme }) {
+  return props.theme === Theme.Dark ? (
     <SunIcon className="w-4 h-4" role="img" aria-hidden="true" />
   ) : (
     <MoonIcon className="w-4 h-4" role="img" aria-hidden="true" />

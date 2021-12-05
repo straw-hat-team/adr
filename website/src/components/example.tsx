@@ -11,6 +11,7 @@ import {
 import clsx from 'clsx';
 import * as React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Image } from '@/components/image';
 
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
@@ -30,7 +31,8 @@ export function MainMenuSideBar(props: { className?: string }) {
       )}
     >
       <div className="px-4 py-4 border-b border-gray-200">
-        <img
+        <Image
+          layout="fill"
           className="h-8 w-auto"
           src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
           alt="Workflow"
@@ -60,7 +62,8 @@ export function MainMenuSideBar(props: { className?: string }) {
         ))}
       </nav>
       <div className="px-4 py-4 border-t border-gray-200">
-        <img
+        <Image
+          layout="fill"
           className="h-8 w-auto"
           src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-900-text.svg"
           alt="Workflow"
@@ -77,7 +80,8 @@ export function Header(props: { onOpen: (value: boolean) => void }) {
   return (
     <header className="flex items-center justify-between bg-white border-b border-gray-200 px-4 py-2">
       <div>
-        <img
+        <Image
+          layout="fill"
           className="h-8 w-auto"
           src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
           alt="Workflow"

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 type LinkProps = Exclude<ComponentProps<'a'>, 'href'>;
 
-export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
+export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props, ref) {
   return (
     <a
       {...props}
