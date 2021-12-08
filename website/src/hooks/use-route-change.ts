@@ -10,8 +10,9 @@ export function useRouteChange() {
     }
 
     router.events.on('routeChangeComplete', onRouteChangeComplete);
+
     return () => {
       router.events.off('routeChangeComplete', onRouteChangeComplete);
     };
-  }, [router.events]);
+  }, [router]);
 }
