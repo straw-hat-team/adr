@@ -4,7 +4,7 @@ import { createEmotionCache, withMuiSetup } from '@/helpers/mui/core-nextjs';
 export class WebsiteDocument extends Document {
   override render() {
     return (
-      <Html lang="en" className="box-border antialiased">
+      <Html lang="en" className="box-border antialiased scroll-smooth">
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
