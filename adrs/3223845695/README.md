@@ -40,10 +40,10 @@ align with such project.
 
 ## Documentation
 
-- [Tutorials](./docs/tutorials)
-- [How-to](./docs/how-to)
-- [References](./docs/references)
-- [Explanations](./docs/explanations)
+- [Tutorials](./docs/tutorials/README.md)
+- [How-to Guides](./docs/how-to-guides/README.md)
+- [References](./docs/references/README.md)
+- [Explanations](./docs/explanations/README.md)
 ```
 
 ## Links
