@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { RouterLink } from '@/components/router-link';
 import { Image } from '@/components/image';
-import MuiDrawer from '@mui/material/Drawer';
+import { Drawer } from '../drawer';
 
 const NAVIGATION = [
   { name: 'Home', href: PATH_INDEX, icon: HomeIcon },
@@ -26,9 +26,9 @@ export function DefaultMultiColumnLayout(props: React.PropsWithChildren<{}>) {
 
   return (
     <MultiColumnLayoutContainer>
-      <MuiDrawer anchor="left" open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
+      <Drawer open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         <MainMenuSideBar className="flex-1" />
-      </MuiDrawer>
+      </Drawer>
       <MainMenuSideBar className="hidden lg:flex" />
       <div className="flex flex-col flex-1">
         <Header onOpen={() => setSidebarOpen(true)} />
