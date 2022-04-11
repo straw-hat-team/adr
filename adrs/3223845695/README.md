@@ -26,10 +26,10 @@ align with such project.
 
 * You **MUST** follow the [Diátaxis Framework](https://diataxis.fr/) writing
   documentation.
-* Your top-level documentation structure or navigation **MUST** include the
+* Your Top-Level Documentation structure or navigation **MUST** include the
   following:
   * Tutorials or Tutorial
-  * How-to Guides
+  * How-to Guides or How-to
   * References or Reference
   * Explanations or Explanation
 
@@ -41,7 +41,7 @@ align with such project.
 ## Documentation
 
 - [Tutorials](./docs/tutorials/README.md)
-- [How-to Guides](./docs/how-to-guides/README.md)
+- [How-to](./docs/how-to/README.md)
 - [References](./docs/references/README.md)
 - [Explanations](./docs/explanations/README.md)
 ```
