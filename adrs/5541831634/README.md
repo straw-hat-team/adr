@@ -108,47 +108,47 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
   of the URL, or the root path of your micro-frontend mounting path.
 
   ```text
-  URL: http://acme.io/
+  URL: https://acme.io/
   <rootDir>
   └── src
       └── routes
           └── index.tsx
   ```
 
-* URL subdirectories **MUST** must match a subdirectory inside
+* URL segments **MUST** match a subdirectory inside
   `<fractalDir>/routes`.
 
   ```text
-  URL: http://acme.io/authors/articles
+  URL: https://acme.io/authors/articles
   <rootDir>
   └── src
       └── routes
           ├── authors
-          │   ├── index.tsx
-          │   └── routes
-          │       └── articles
-          │           └── index.tsx
+          │         ├── index.tsx
+          │         └── routes
+          │             └── articles
+          │                 └── index.tsx
           └── index.tsx
   ```
 
-* Dynamic URL subdirectories **MUST** must match a subdirectory inside
+* Dynamic URL segments **MUST** match a subdirectory inside
   `<fractalDir>/routes` using `[the dynamic section identifier]` syntax. In case
   you use NextJS, you must use the same name as the dynamic NextJS route
   directory.
 
   ```text
-  URL: http://acme.io/authors/articles/:articleId/
+  URL: https://acme.io/authors/articles/:articleId/
   <rootDir>
   └── src
       └── routes
           ├── authors
-          │   ├── index.tsx
-          │   └── routes
-          │       └── articles
-          │           ├── index.tsx
-          │           └── routes
-          │               └── [articleId]
-          │                   └── index.tsx
+          │         ├── index.tsx
+          │         └── routes
+          │             └── articles
+          │                 ├── index.tsx
+          │                 └── routes
+          │                     └── [articleId]
+          │                         └── index.tsx
           └── index.tsx
   ```
 
@@ -164,7 +164,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
           └── index.tsx
   ```
 
-* Nested navigators and screens **MUST** must match a subdirectory
+* Nested navigators and screens **MUST** match a subdirectory
   inside `<fractalDir>/routes`. For example, given the following navigators /
   screens:
 
@@ -200,7 +200,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 
 ### Route
 
-In the context of React DOM, Route is a path or subdirectory of URL that the
+In the context of React DOM, Route is a path or segments of URL that the
 user is visiting.
 
 In the context of React Native, it is a screen.
