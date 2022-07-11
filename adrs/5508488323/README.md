@@ -22,7 +22,7 @@ about the intention. Saving little to no time over typing the submodule.
 
 ## Resolution
 
-- You **MUST** import from the submodules of the `lodash` package:
+* You **MUST** import from the submodules of the `lodash` package:
 
     ```ts
     import funcNameExample from 'lodash/func-name-example';
