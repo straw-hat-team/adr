@@ -1,8 +1,8 @@
 # Helper vs Util
 
-* **State:** Approved
-* **Created:** 2022-07-11
-* **Tags:** naming
+- **State:** Approved
+- **Created:** 2022-07-11
+- **Tags:** naming
 
 ## Context
 
@@ -23,4 +23,4 @@ debate in the long-term.
 
 ## Resolution
 
-* You **MUST** use `Helper(s)` over `Util` across all the codebases.
+- You **MUST** use `Helper(s)` over `Util` across all the codebases.

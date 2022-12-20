@@ -1,8 +1,8 @@
 # JavaScript Modules exports convention
 
-* **State:** Approved
-* **Created:** 2021-02-17
-* **Tags:** js,ts
+- **State:** Approved
+- **Created:** 2021-02-17
+- **Tags:** js,ts
 
 ## Context
 
@@ -23,10 +23,10 @@ import [name here] from 'base-button'
 
 What should be the right name for the import?
 
-* `Button`
-* `baseButton`
-* `BaseButton`
-* `MyButton` or any other name you would like it to be
+- `Button`
+- `baseButton`
+- `BaseButton`
+- `MyButton` or any other name you would like it to be
 
 For a simple default import, you already have at least three different
 variations to think about and combinations of any name for that matter.
@@ -43,7 +43,7 @@ It is not a simple task; therefore, people rely on linters and code reviewers to
 improve the source code's quality.
 
 Naming is hard. When you are authoring code, do not make the consumers of your
-code -- the importers of your exports --  figure out what names to use. As an
+code -- the importers of your exports -- figure out what names to use. As an
 author, you have the advantage of having thought about its intent and purpose;
 you are aware of its context and limitations and most likely gave it a name
 inside your module. That name is good enough, and by using named exports, you
@@ -59,7 +59,7 @@ File #1:
 
 ```ts
 // Notice the import name
-import Button from "...";
+import Button from '...';
 
 export function Something() {
   return (
@@ -75,7 +75,7 @@ File #2:
 
 ```ts
 // Notice the import name, it is different from the previous example
-import Btn from "...";
+import Btn from '...';
 
 export function SomethingElse() {
   return (
@@ -93,14 +93,14 @@ brain?
 
 Answer: probably close to none.
 
-* You may argue, How is this any different from named-exports?
+- You may argue, How is this any different from named-exports?
 
 Take the following files:
 
 File #1:
 
 ```ts
-import { Button } from "...";
+import { Button } from '...';
 
 export function Something() {
   return (
@@ -115,7 +115,7 @@ export function Something() {
 File #2:
 
 ```ts
-import { Button as Btn } from "...";
+import { Button as Btn } from '...';
 
 export function SomethingElse() {
   return (
@@ -146,8 +146,8 @@ can take advantage of the explicitness and static nature of the names.
 
 ## Resolution
 
-* You **MUST** use named-exports over default-exports unless some limitation
+- You **MUST** use named-exports over default-exports unless some limitation
   is imposed.
-* You **MUST** provide named-export and default-export for any case that
+- You **MUST** provide named-export and default-export for any case that
   requires default-export due a limitation, for example, React lazy
   loadable components.

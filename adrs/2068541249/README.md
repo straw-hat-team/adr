@@ -1,8 +1,8 @@
 # Configuration of import aliases in Javascript applications
 
-* **State:** Approved
-* **Created:** 2020-11-18
-* **Tags:** import aliases,application
+- **State:** Approved
+- **Created:** 2020-11-18
+- **Tags:** import aliases,application
 
 ## Context
 
@@ -16,9 +16,9 @@ having to use relative path to import a module.
 
 For example, `<rootDir>/tsconfig.json`, or `<rootDir>/jsconfig.json`:
 
-* **compilerOptions.baseUrl:** Base directory to resolve non-relative module
+- **compilerOptions.baseUrl:** Base directory to resolve non-relative module
   names.
-* **compilerOptions.paths:** Specify path mapping to be computed relative to
+- **compilerOptions.paths:** Specify path mapping to be computed relative to
   baseUrl option.
 
 Here is an example of such file:
@@ -121,9 +121,9 @@ import { goldenRatio } from 'design/golder-ratio';
 
 Same questions,
 
-* How do we know if those imports come from `node_modules` or it is part of our
+- How do we know if those imports come from `node_modules` or it is part of our
   codebase?
-* How does the module resolve resolution works in cases when somebody installs
+- How does the module resolve resolution works in cases when somebody installs
   `design` package as a dependency?
 
 The underline problem is registering a valid NPM package name as an alias,
@@ -140,11 +140,11 @@ module.
 
 Since `@/` is not a valid NPM package,
 
-* You **MUST NOT** configure tools to resolve absolute imports from `src`
+- You **MUST NOT** configure tools to resolve absolute imports from `src`
   directory directly.
-* You **MUST NOT** configure tools with aliases that are valid NPM package names
+- You **MUST NOT** configure tools with aliases that are valid NPM package names
   unless the alias point to a valid NPM package.
-* You **MUST** use `@` alias to resolve imports relative to the root of the
+- You **MUST** use `@` alias to resolve imports relative to the root of the
   project.
 
 ## Extra
@@ -168,7 +168,7 @@ Jest configuration:
 ```jsonc
 {
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@/(.*)$": "<rootDir>/src/$1"
   }
 }
 ```
@@ -193,15 +193,13 @@ import alias from '@rollup/plugin-alias';
 module.exports = {
   plugins: [
     alias({
-      entries: [
-        { find: '@', replacement: 'path/to/rootDir/src' },
-      ]
-    })
-  ]
+      entries: [{ find: '@', replacement: 'path/to/rootDir/src' }],
+    }),
+  ],
 };
 ```
 
 ## Links
 
-* [jsconfig.json](https://code.visualstudio.com/docs/languages/jsconfig)
-* [tsconfig.json](https://www.typescriptlang.org/tsconfig)
+- [jsconfig.json](https://code.visualstudio.com/docs/languages/jsconfig)
+- [tsconfig.json](https://www.typescriptlang.org/tsconfig)

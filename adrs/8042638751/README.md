@@ -1,8 +1,8 @@
 # JSX files extension
 
-* **State:** Approved
-* **Created:** 2020-12-01
-* **Tags:** jsx
+- **State:** Approved
+- **Created:** 2020-12-01
+- **Tags:** jsx
 
 ## Context
 
@@ -17,4 +17,4 @@ relying on extensions in order to swap the parsers.
 
 ## Resolution
 
-* You **MUST** use `.jsx` file extension when the file contains JSX.
+- You **MUST** use `.jsx` file extension when the file contains JSX.

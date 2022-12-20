@@ -1,8 +1,8 @@
 # Slots reserved React property key
 
-* **State:** Approved
-* **Created:** 2020-12-14
-* **Tags:** react
+- **State:** Approved
+- **Created:** 2020-12-14
+- **Tags:** react
 
 ## Context
 
@@ -14,16 +14,14 @@ label components for the following component.
 
 ```tsx
 function Badge(props) {
-  const displayValue = '...' // calculate something, does not matter the details
+  const displayValue = '...'; // calculate something, does not matter the details
 
   return (
     <div className="container">
       {props.children}
-      <div className="label">
-        {displayValue}
-      </div>
+      <div className="label">{displayValue}</div>
     </div>
-  )
+  );
 }
 ```
 
@@ -39,7 +37,7 @@ function Badge(props) {
       {props.children}
       {props.renderLabel({ className: 'label', children: displayValue })}
     </div>
-  )
+  );
 }
 ```
 
@@ -56,10 +54,10 @@ something else? Defining the TypeScript definitions and so on.
 
 ## Resolution
 
-* You **MUST** use `slots` key in React props to pass custom components.
-* The `slots` **MUST** be an object.
-* The `slots` object key **MUST** a valid component name.
-* The `slots` object value **MUST** a React component.
+- You **MUST** use `slots` key in React props to pass custom components.
+- The `slots` **MUST** be an object.
+- The `slots` object key **MUST** a valid component name.
+- The `slots` object value **MUST** a React component.
 
 ## Example
 
@@ -67,17 +65,14 @@ something else? Defining the TypeScript definitions and so on.
 import * as React from 'react';
 
 // You could reuse this across your system
-type PropsWithSlots<
-  C extends Partial<{ [key: string]: React.ElementType; }>,
-  P
-> = P & {
+type PropsWithSlots<C extends Partial<{ [key: string]: React.ElementType }>, P> = P & {
   slots?: C;
 };
 
 // Define the slots for your component
 type BadgeSlots = Partial<{
   Root: React.ElementType<{
-    className: string
+    className: string;
   }>;
   Label: React.ElementType<{
     className: string;
@@ -98,21 +93,17 @@ type BadgeProps = React.PropsWithChildren<
 >;
 
 export function Badge(props: BadgeProps) {
-  const displayValue = '...' // calculate something, does not matter the details
+  const displayValue = '...'; // calculate something, does not matter the details
   const Root = props.slots?.Root ?? 'div';
   const Label = props.slots?.Label ?? DefaultLabel;
 
   return (
     <Root className="container">
       {props.children}
-      <Label
-        className="label"
-        counter={props.counter}
-        something={props.something}
-      >
+      <Label className="label" counter={props.counter} something={props.something}>
         {displayValue}
       </Label>
     </Root>
-  )
+  );
 }
 ```

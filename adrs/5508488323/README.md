@@ -1,8 +1,8 @@
 # Lodash Importing
 
-* **State:** Approved
-* **Created:** 2022-03-21
-* **Tags:** javascript
+- **State:** Approved
+- **Created:** 2022-03-21
+- **Tags:** javascript
 
 ## Context
 
@@ -22,8 +22,8 @@ about the intention. Saving little to no time over typing the submodule.
 
 ## Resolution
 
-* You **MUST** import from the submodules of the `lodash` package:
+- You **MUST** import from the submodules of the `lodash` package:
 
-    ```ts
-    import funcNameExample from 'lodash/func-name-example';
-    ```
+  ```ts
+  import funcNameExample from 'lodash/func-name-example';
+  ```

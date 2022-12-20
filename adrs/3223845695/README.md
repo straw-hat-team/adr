@@ -1,8 +1,8 @@
 # Documentation structure
 
-* **State:** Approved
-* **Created:** 2021-12-21
-* **Tags:** documentation
+- **State:** Approved
+- **Created:** 2021-12-21
+- **Tags:** documentation
 
 ## Context
 
@@ -24,14 +24,14 @@ align with such project.
 
 ## Resolution
 
-* You **MUST** follow the [Diátaxis Framework](https://diataxis.fr/) writing
+- You **MUST** follow the [Diátaxis Framework](https://diataxis.fr/) writing
   documentation.
-* Your Top-Level Documentation structure or navigation **MUST** include the
+- Your Top-Level Documentation structure or navigation **MUST** include the
   following:
-  * Tutorials or Tutorial
-  * How-to Guides or How-to
-  * References or Reference
-  * Explanations or Explanation
+  - Tutorials or Tutorial
+  - How-to Guides or How-to
+  - References or Reference
+  - Explanations or Explanation
 
 ### Example
 
@@ -48,4 +48,4 @@ align with such project.
 
 ## Links
 
-* [Diátaxis Framework](https://diataxis.fr/)
+- [Diátaxis Framework](https://diataxis.fr/)

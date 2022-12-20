@@ -1,8 +1,8 @@
 # URL Path Design
 
-* **State:** Approved
-* **Created:** 2021-12-13
-* **Tags:** seo, url, openapi
+- **State:** Approved
+- **Created:** 2021-12-13
+- **Tags:** seo, url, openapi
 
 ## Context
 
@@ -37,24 +37,24 @@ technical limitation. You **MUST** assumed such rules de facto in conversations.
 
 You **MUST** use the following characters anywhere in the path:
 
-* U+0061 to U+007A ("a-z")
-* U+0030 to U+0039 ("0-9")
-* U+007E ("~")
-* U+002E (".")
-* U+0080 and above (non-ASCII Unicode characters; not recommended, not URL safe)
+- U+0061 to U+007A ("a-z")
+- U+0030 to U+0039 ("0-9")
+- U+007E ("~")
+- U+002E (".")
+- U+0080 and above (non-ASCII Unicode characters; not recommended, not URL safe)
 
 You **MAY** use the following characters are allowed in path, except as the
 first or last character:
 
-* U+002D HYPHEN-MINUS, "-"
-* U+005F LOW LINE, "_”
+- U+002D HYPHEN-MINUS, "-"
+- U+005F LOW LINE, "\_”
 
-* You **MUST** separate terms using hyphen character
-* You **MUST** use underscore for new compound words or composed terms
-* You **MUST** use non-reserved characters, URL safe characters specified in
+- You **MUST** separate terms using hyphen character
+- You **MUST** use underscore for new compound words or composed terms
+- You **MUST** use non-reserved characters, URL safe characters specified in
   [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#page-13)
 
 ## Links
 
-* [Underscores vs. dashes in URLs](https://www.youtube.com/watch?v=AQcSFsQyct8&ab_channel=GoogleSearchCentral)
-* [Keep a simple URL structure](https://developers.google.com/search/docs/advanced/guidelines/url-structure)
+- [Underscores vs. dashes in URLs](https://www.youtube.com/watch?v=AQcSFsQyct8&ab_channel=GoogleSearchCentral)
+- [Keep a simple URL structure](https://developers.google.com/search/docs/advanced/guidelines/url-structure)

@@ -1,15 +1,15 @@
 # React Component and Hooks Props Naming
 
-* **State:** Approved
-* **Created:** 2022-01-24
-* **Tags:** react
+- **State:** Approved
+- **Created:** 2022-01-24
+- **Tags:** react
 
 ## Context
 
 When it comes to React, they are two categories of properties:
 
-* Data (Information)
-* Callbacks (Events, Control Flow)
+- Data (Information)
+- Callbacks (Events, Control Flow)
 
 Data properties are primarily used for displaying information or transforming
 into another set of data.
@@ -35,6 +35,6 @@ between developers.
 
 ## Resolution
 
-* React Component and Hook `data` properties **MUST** be a noun.
-* React Component and Hook `callback` properties **MUST** a verb prefix
+- React Component and Hook `data` properties **MUST** be a noun.
+- React Component and Hook `callback` properties **MUST** a verb prefix
   with `on`.

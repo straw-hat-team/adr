@@ -2,9 +2,9 @@ daysUntilStale: 90
 daysUntilClose: 30
 
 exemptLabels:
-  - "State: Deferred"
+  - 'State: Deferred'
 
-staleLabel: "State: Withdrawn"
+staleLabel: 'State: Withdrawn'
 
 issues:
   markComment: >
@@ -19,7 +19,6 @@ issues:
     still relevant, feel free to re-open the issue. Thank you!
 
 pulls:
-
   markComment: >
     This pull request has been automatically marked as "Withdrawn". **If this
     pull request is still relevant, please leave any comment** (for example,

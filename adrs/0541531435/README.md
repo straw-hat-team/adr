@@ -1,16 +1,16 @@
 # NodeJS source code directory structure
 
-* **State:** Approved
-* **Created:** 2020-11-21
-* **Tags:** nodejs,directory
+- **State:** Approved
+- **Created:** 2020-11-21
+- **Tags:** nodejs,directory
 
 ## Context
 
 There are no guidelines on where to put the source code for your NodeJS
 projects.
 
-* Do I suppose to use `src`, `lib`, `dist` or `build` directories, or maybe put
-everything at the root of the project?
+- Do I suppose to use `src`, `lib`, `dist` or `build` directories, or maybe put
+  everything at the root of the project?
 
 Not having a clear guideline adds cognitive load, as well as add friction
 contributing to projects, and sometimes relying on a particular group of people
@@ -26,11 +26,11 @@ put all your files at the root of the project.
 
 Furthermore,
 
-* Where do I suppose to put my test files? What are the differences between X and
-Y directories?
+- Where do I suppose to put my test files? What are the differences between X and
+  Y directories?
 
-* How to structure the project when I have multiple testing frameworks, or
-multiple documentation tools?
+- How to structure the project when I have multiple testing frameworks, or
+  multiple documentation tools?
 
 This ADR is an attempt to follow the steps of other ecosystems like Elixir,
 Ruby or Rust came to a consensus about this topic.
@@ -73,7 +73,7 @@ websites (internal or public as an example), and how to manage them.
 
 ## Resolution
 
-* You **MUST** follow the following directory structures:
+- You **MUST** follow the following directory structures:
 
   ```text
   .
@@ -95,25 +95,25 @@ websites (internal or public as an example), and how to manage them.
       └── [another testing tool]
   ```
 
-* In the `./tests` directory, you **MUST** use the tool's name to reflect the
+- In the `./tests` directory, you **MUST** use the tool's name to reflect the
   tool used to run the tests.
-* In the `./docs` directory, you **MUST** separate documentation based on the
+- In the `./docs` directory, you **MUST** separate documentation based on the
   underline tool or context (for example, **internal** or **public**) unless
   you only have one documentation tool or context.
-* You **MUST** place `storybook` documentation under `./docs`.
-* `./src` **MUST** required compilation step, and you **MUST** compile the
+- You **MUST** place `storybook` documentation under `./docs`.
+- `./src` **MUST** required compilation step, and you **MUST** compile the
   source code into `./dist` directory.
-* `./dist` **MUST** required to compile `./src` directory to generate
+- `./dist` **MUST** required to compile `./src` directory to generate
   the source code, or any other compilation step in required cases.
 
 ### About files and directories
 
-* **./package.json:** the NodeJS package configuration.
-* **./bin:** contains executables files.
-* **./dist:** contains compiled source code.
-* **./docs:** contains the documentation of the project.
-* **./examples:** contains examples of the project's usage, primarily used
+- **./package.json:** the NodeJS package configuration.
+- **./bin:** contains executables files.
+- **./dist:** contains compiled source code.
+- **./docs:** contains the documentation of the project.
+- **./examples:** contains examples of the project's usage, primarily used
   in library projects.
-* **./lib:** source code that does not require compilation.
-* **./src:** source code that requires some compilation.
-* **./tests:** contains the tests files.
+- **./lib:** source code that does not require compilation.
+- **./src:** source code that requires some compilation.
+- **./tests:** contains the tests files.

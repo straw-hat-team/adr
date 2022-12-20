@@ -1,45 +1,39 @@
 # Usage of JSX Fragment
 
-* **State:** Approved
-* **Created:** 2020-11-15
-* **Tags:** jsx
+- **State:** Approved
+- **Created:** 2020-11-15
+- **Tags:** jsx
 
 ## Context
 
 Today we have a way to specify fragments in our React, Preact codebase or
 any other library that adopts such technology.
 
-* Using `Fragment` from React import:
+- Using `Fragment` from React import:
 
-    ```tsx
-    import { Fragment } from 'react';
-    function MyApp() {
-      return (
-        <Fragment></Fragment>
-      )
-    }
-    ```
+  ```tsx
+  import { Fragment } from 'react';
+  function MyApp() {
+    return <Fragment></Fragment>;
+  }
+  ```
 
-* Importing everything under a scope:
+- Importing everything under a scope:
 
-    ```tsx
-    import * as React from 'react';
-    function MyApp() {
-      return (
-        <React.Fragment></React.Fragment>
-      )
-    }
-    ```
+  ```tsx
+  import * as React from 'react';
+  function MyApp() {
+    return <React.Fragment></React.Fragment>;
+  }
+  ```
 
-* Using JSX fragment short syntax:
+- Using JSX fragment short syntax:
 
-    ```tsx
-    function MyApp() {
-       return (
-        <></>
-      )
-    }
-   ```
+  ```tsx
+  function MyApp() {
+    return <></>;
+  }
+  ```
 
 There are no rules about this introducing inconsistency in the codebase, or in
 some cases, refactoring of the import style is demanded.
@@ -62,18 +56,18 @@ agnostic of the library.
 
 ## Resolution
 
-* You **MUST** use JSX fragment short syntax `<></>`.
+- You **MUST** use JSX fragment short syntax `<></>`.
 
 ## Links
 
-* [react/jsx-fragments](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-fragments.md)
+- [react/jsx-fragments](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-fragments.md)
   ESLint rule about JSX short syntax. We suggest to enable the rule with the
   following config:
 
-    ```json
-    {
-      "rules": {
-        "react/jsx-fragments": ["error", "syntax"]
-      }
+  ```json
+  {
+    "rules": {
+      "react/jsx-fragments": ["error", "syntax"]
     }
-    ```
+  }
+  ```

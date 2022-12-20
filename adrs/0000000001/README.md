@@ -1,8 +1,8 @@
 # ADR Style guide
 
-* **State:** Approved
-* **Created:** 2020-11-8
-* **Tags:** genesis
+- **State:** Approved
+- **Created:** 2020-11-8
+- **Tags:** genesis
 
 ADRs are most useful when they are clear and concise, and cover a single topic
 or inquiry well. In the same way that ADRs describe consistent patterns and
@@ -65,10 +65,10 @@ ADRs **MAY** have other supporting files in the ADR directory.
 ADRs **MUST** begin with a top-level heading with the ADR's title (# Title).
 ADRs **SHOULD** then begin with the metadata information about the ADR
 
-* **State:** the estate of the ADR.
-* **Replaced by:** the link to the ADR that was replaced by.
-* **Created:** when the ADR was created following the **YYYY-MM-DD** format.
-* **Tags:** the tags separated by comma, and the tags **MUST** be lowercase.
+- **State:** the estate of the ADR.
+- **Replaced by:** the link to the ADR that was replaced by.
+- **Created:** when the ADR was created following the **YYYY-MM-DD** format.
+- **Tags:** the tags separated by comma, and the tags **MUST** be lowercase.
 
 Followed by the content of the ADR. Below is an example ADR shell that uses
 each major section:
@@ -76,10 +76,10 @@ each major section:
 ```md
 # The title of the ADR
 
-* **State:** Replaced
-* **Replaced by:** [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
-* **Created:** 2020-11-08
-* **Tags:** genesis
+- **State:** Replaced
+- **Replaced by:** [ADR#0000000000](../ADRs/../adrs/0000000000/README.md)
+- **Created:** 2020-11-08
+- **Tags:** genesis
 
 <!--
 Technical Story: [description | ticket/issue URL]
@@ -106,10 +106,10 @@ three sentences. You may want to articulate the problem in form of a question.
 
 [example | description | pointer to more information | …]
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … numbers of consequences
+- Good, because [argument a]
+- Good, because [argument b]
+- Bad, because [argument c]
+- … numbers of consequences
 
 ## Decision Outcome
 
@@ -119,14 +119,14 @@ out best (see below)].
 
 ### Advantages
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions
+- [e.g., improvement of quality attribute satisfaction, follow-up decisions
   required, …]
-* …
+- …
 
 ### Disadvantages
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
+- [e.g., compromising quality attribute, follow-up decisions required, …]
+- …
 
 ## Links
 
