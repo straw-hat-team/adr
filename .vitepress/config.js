@@ -5,7 +5,8 @@ export default {
   description: 'TL;DR: ADRs are lots of documentation on how Straw Hat Team works.',
   themeConfig: {
     footer: {
-      message: 'Except as otherwise noted, the content of this repository is licensed under the Creative Commons Attribution 4.0 License and code samples are licensed under the MIT',
+      message:
+        'Except as otherwise noted, the content of this repository is licensed under the Creative Commons Attribution 4.0 License and code samples are licensed under the MIT',
       copyright: 'Copyright © 2020-present Straw Hat, LLC',
     },
     editLink: {
