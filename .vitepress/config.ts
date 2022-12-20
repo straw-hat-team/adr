@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
+  base: '/adr/',
   srcDir: './adrs',
   lang: 'en-US',
   title: "Straw Hat's ADRs",
