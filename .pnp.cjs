@@ -28,6 +28,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@straw-hat/prettier-config", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:2.0.3"],\
+            ["prettier", "npm:2.8.1"],\
             ["vitepress", "npm:1.0.0-draft.8"],\
             ["vue", "npm:3.2.45"]\
           ],\
@@ -355,6 +357,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@npmcli/move-file", "npm:2.0.1"],\
             ["mkdirp", "npm:1.0.4"],\
             ["rimraf", "npm:3.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@straw-hat/prettier-config", [\
+        ["npm:2.0.3", {\
+          "packageLocation": "./.yarn/cache/@straw-hat-prettier-config-npm-2.0.3-a08bfbfca4-54e933922a.zip/node_modules/@straw-hat/prettier-config/",\
+          "packageDependencies": [\
+            ["@straw-hat/prettier-config", "npm:2.0.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:2.0.3", {\
+          "packageLocation": "./.yarn/__virtual__/@straw-hat-prettier-config-virtual-3659343f80/0/cache/@straw-hat-prettier-config-npm-2.0.3-a08bfbfca4-54e933922a.zip/node_modules/@straw-hat/prettier-config/",\
+          "packageDependencies": [\
+            ["@straw-hat/prettier-config", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:2.0.3"],\
+            ["@types/prettier", null],\
+            ["prettier", "npm:2.8.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/prettier",\
+            "prettier"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -731,6 +755,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["adr", "workspace:."],\
+            ["@straw-hat/prettier-config", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:2.0.3"],\
+            ["prettier", "npm:2.8.1"],\
             ["vitepress", "npm:1.0.0-draft.8"],\
             ["vue", "npm:3.2.45"]\
           ],\
@@ -1802,6 +1828,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/preact-npm-10.11.3-4973d2dda6-9387115aa0.zip/node_modules/preact/",\
           "packageDependencies": [\
             ["preact", "npm:10.11.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["prettier", [\
+        ["npm:2.8.1", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-2.8.1-be60b51821-4f21a0f126.zip/node_modules/prettier/",\
+          "packageDependencies": [\
+            ["prettier", "npm:2.8.1"]\
           ],\
           "linkType": "HARD"\
         }]\

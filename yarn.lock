@@ -273,6 +273,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@straw-hat/prettier-config@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@straw-hat/prettier-config@npm:2.0.3"
+  peerDependencies:
+    prettier: ^2.2.1
+  checksum: 54e933922acb8f25ac73d1d9f96e9f0714e935fe9576dbe425782f18ddf77f8de36ee963ca527a27f9e1d1ff84e47c0a91141a4852f7ab1f812c5ade6a76435d
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -576,6 +585,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "adr@workspace:."
   dependencies:
+    "@straw-hat/prettier-config": ^2.0.3
+    prettier: ^2.8.1
     vitepress: ^1.0.0-alpha.32
     vue: ^3.2.45
   languageName: unknown
@@ -1555,6 +1566,15 @@ __metadata:
   version: 10.11.3
   resolution: "preact@npm:10.11.3"
   checksum: 9387115aa0581e8226309e6456e9856f17dfc0e3d3e63f774de80f3d462a882ba7c60914c05942cb51d51e23e120dcfe904b8d392d46f29ad15802941fe7a367
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^2.8.1":
+  version: 2.8.1
+  resolution: "prettier@npm:2.8.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 4f21a0f1269f76fb36f54e9a8a1ea4c11e27478958bf860661fb4b6d7ac69aac1581f8724fa98ea3585e56d42a2ea317a17ff6e3324f40cb11ff9e20b73785cc
   languageName: node
   linkType: hard
 
