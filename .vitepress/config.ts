@@ -1,4 +1,6 @@
-export default {
+import { defineConfig } from 'vitepress';
+
+export default defineConfig({
   srcDir: './adrs',
   lang: 'en-US',
   title: "Straw Hat's ADRs",
@@ -61,4 +63,4 @@ export default {
       },
     ],
   },
-};
+});
