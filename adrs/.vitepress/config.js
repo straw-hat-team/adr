@@ -13,34 +13,34 @@ export default {
           { text: 'ADR Style guide', link: '/0000000001/README.md' },
           {
             text: 'NodeJS source code directory structure',
-            link: '/0541531435/README.md'
+            link: '/0541531435/README.md',
           },
           { text: 'Helper vs Util', link: '/1146361044/README.md' },
           {
             text: 'Slots reserved React property key',
-            link: '/1358452048/README.md'
+            link: '/1358452048/README.md',
           },
           {
             text: 'Configuration of import aliases in Javascript applications',
-            link: '/2068541249/README.md'
+            link: '/2068541249/README.md',
           },
           {
             text: 'React Component and Hooks Props Naming',
-            link: '/2131725034/README.md'
+            link: '/2131725034/README.md',
           },
           {
             text: 'NodeJS files and directories names convention',
-            link: '/3122196229/README.md'
+            link: '/3122196229/README.md',
           },
           { text: 'Documentation structure', link: '/3223845695/README.md' },
           {
             text: 'JavaScript Modules exports convention',
-            link: '/4937890790/README.md'
+            link: '/4937890790/README.md',
           },
           { text: 'Lodash Importing', link: '/5508488323/README.md' },
           {
             text: 'React project files and directories names convention',
-            link: '/5541831634/README.md'
+            link: '/5541831634/README.md',
           },
           { text: 'Error CloudEvents Adapter', link: '/6860374633/README.md' },
           { text: 'JSX files extension', link: '/8042638751/README.md' },
