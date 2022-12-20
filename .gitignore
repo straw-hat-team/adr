@@ -1,3 +1,5 @@
+node_modules
+
 !.vscode/*
 !adrs/draft/.gitkeep
 !.tool-versions

@@ -1,4 +1,13 @@
 {
   "packageManager": "yarn@3.3.0",
-  "name": "adr"
+  "name": "adr",
+  "scripts": {
+    "docs:dev": "vitepress dev adrs",
+    "docs:build": "vitepress build adrs",
+    "docs:preview": "vitepress preview adrs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0-alpha.32",
+    "vue": "^3.2.45"
+  }
 }
