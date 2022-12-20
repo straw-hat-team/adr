@@ -296,6 +296,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/web-bluetooth@npm:^0.0.16":
+  version: 0.0.16
+  resolution: "@types/web-bluetooth@npm:0.0.16"
+  checksum: f68a630d062202a25c46d48686ebae1cf429dc70b4578fcf13b8357b2db63e4aedfb6f6d752bd388366be46ebd19c1c9de45f8a15c2631bb79e904fdfc454f94
+  languageName: node
+  linkType: hard
+
 "@vitejs/plugin-vue@npm:^2.3.2":
   version: 2.3.4
   resolution: "@vitejs/plugin-vue@npm:2.3.4"
@@ -550,10 +557,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:^9.7.0":
+  version: 9.7.0
+  resolution: "@vueuse/core@npm:9.7.0"
+  dependencies:
+    "@types/web-bluetooth": ^0.0.16
+    "@vueuse/metadata": 9.7.0
+    "@vueuse/shared": 9.7.0
+    vue-demi: "*"
+  checksum: 20df2c1f46d5310eed3996f9147227bfba754cf0bb9f4ff97b2cb90f65f4bff2eb604422cce20ed68e3005ea043c156b3c546ca9fcae01fd7667e83c1bc668f5
+  languageName: node
+  linkType: hard
+
 "@vueuse/metadata@npm:8.9.4":
   version: 8.9.4
   resolution: "@vueuse/metadata@npm:8.9.4"
   checksum: f289adc73d7d396e0245b0f219126811556497dcc093008b2b9e8c9023196c52eb5918dce4f5f6cc3a01db9c6a699b6adfc678800a1b543f6cc1c857d5643526
+  languageName: node
+  linkType: hard
+
+"@vueuse/metadata@npm:9.7.0":
+  version: 9.7.0
+  resolution: "@vueuse/metadata@npm:9.7.0"
+  checksum: c64ce884b16c629081cbe6baabe7e176230d5ccd8c5da632f9894178669497b380881ca8124384fbcfc09c3fb28382bd17e33116eb02aa3268f9e6eb10a87fbd
   languageName: node
   linkType: hard
 
@@ -574,6 +600,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/shared@npm:9.7.0":
+  version: 9.7.0
+  resolution: "@vueuse/shared@npm:9.7.0"
+  dependencies:
+    vue-demi: "*"
+  checksum: 4b7754e8dbe159d9b44717f5d5fbeb1137bf1676d35f266428e701600b624f802f7d93f6b54febbe4bbdbf67a0da73b83db82c1812c392458cf9445cdb0c9841
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^1.0.0":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -586,6 +621,8 @@ __metadata:
   resolution: "adr@workspace:."
   dependencies:
     "@straw-hat/prettier-config": ^2.0.3
+    "@vueuse/core": ^9.7.0
+    body-scroll-lock: ^4.0.0-beta.0
     prettier: ^2.8.1
     vitepress: ^1.0.0-alpha.32
     vue: ^3.2.45
