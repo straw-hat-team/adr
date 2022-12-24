@@ -25,8 +25,8 @@ function Badge(props) {
 }
 ```
 
-Also, although some of the implementations are not technically wrong, they may
-miss some concern.
+Also, although some implementations are not technically wrong, they may miss
+some concern.
 
 For example, using render function over components:
 
@@ -42,7 +42,7 @@ function Badge(props) {
 ```
 
 In the previous example, React loses the ability to figure out if the component
-needs to be re-render since it is no longer a component but a function call.
+needs to be re-rendered since it is no longer a component but a function call.
 
 Also, subjectively speaking, it feels non-React since we lose the JSX syntax.
 
@@ -56,7 +56,7 @@ something else? Defining the TypeScript definitions and so on.
 
 - You **MUST** use `slots` key in React props to pass custom components.
 - The `slots` **MUST** be an object.
-- The `slots` object key **MUST** a valid component name.
+- The `slots` object key **MUST** in pascalCase.
 - The `slots` object value **MUST** a React component.
 
 ## Example
@@ -71,10 +71,10 @@ type PropsWithSlots<C extends Partial<{ [key: string]: React.ElementType }>, P> 
 
 // Define the slots for your component
 type BadgeSlots = Partial<{
-  Root: React.ElementType<{
+  root: React.ElementType<{
     className: string;
   }>;
-  Label: React.ElementType<{
+  label: React.ElementType<{
     className: string;
     counter?: number;
     something: any;
@@ -94,8 +94,8 @@ type BadgeProps = React.PropsWithChildren<
 
 export function Badge(props: BadgeProps) {
   const displayValue = '...'; // calculate something, does not matter the details
-  const Root = props.slots?.Root ?? 'div';
-  const Label = props.slots?.Label ?? DefaultLabel;
+  const Root = props.slots?.root ?? 'div';
+  const Label = props.slots?.label ?? DefaultLabel;
 
   return (
     <Root className="container">
