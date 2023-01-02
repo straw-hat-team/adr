@@ -5,14 +5,16 @@
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
+    "lint:markdownlint": "markdownlint **/*.md",
     "format:prettier": "prettier --ignore-unknown --no-error-on-unmatched-pattern --write '**/*'"
   },
   "devDependencies": {
-    "@straw-hat/prettier-config": "^2.0.3",
-    "@vueuse/core": "^9.7.0",
-    "body-scroll-lock": "^4.0.0-beta.0",
-    "prettier": "^2.8.1",
-    "vitepress": "^1.0.0-alpha.32",
-    "vue": "^3.2.45"
+    "@straw-hat/prettier-config": "2.0.3",
+    "@vueuse/core": "9.9.0",
+    "body-scroll-lock": "4.0.0-beta.0",
+    "markdownlint-cli": "0.32.2",
+    "prettier": "2.8.1",
+    "vitepress": "1.0.0-alpha.34",
+    "vue": "3.2.45"
   }
 }
