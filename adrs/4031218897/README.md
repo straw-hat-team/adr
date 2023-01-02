@@ -32,12 +32,12 @@ the value comes from is straightforward.
 
 ### Naming the argument
 
-Since, by convention, in a React Component, you call the single  argument
+Since, by convention, in a React Component, you call the single argument
 `props`, and in a React codebase, you will enter and leave the React context,
 it is better to keep the single argument named `props` in a hook as well. The
 `props` name is generic enough that it still makes sense, and it keeps the
 clarity around the React codebase, which is the static value that comes from a
-single  argument.
+single argument.
 
 ## Resolution
 

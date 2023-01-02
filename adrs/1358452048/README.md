@@ -65,9 +65,7 @@ something else? Defining the TypeScript definitions and so on.
 import * as React from 'react';
 
 // You could reuse this across your system
-type PropsWithSlots<
-  C extends Partial<{ [key: string]: React.ElementType }>, P
-> = P & {
+type PropsWithSlots<C extends Partial<{ [key: string]: React.ElementType }>, P> = P & {
   slots?: C;
 };
 
