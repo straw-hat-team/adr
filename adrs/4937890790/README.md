@@ -151,3 +151,7 @@ can take advantage of the explicitness and static nature of the names.
 - You **MUST** provide named-export and default-export for any case that
   requires default-export due a limitation, for example, React lazy
   loadable components.
+
+## Links
+
+- https://esbuild.github.io/content-types/#default-interop
