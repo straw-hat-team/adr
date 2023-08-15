@@ -47,7 +47,7 @@ SECRET = "secret:[NID]:[NSS]:[secret value]
 
 The secret regex value is:
 
-```regexp
+```text
 ^secret:(?:[a-z0-9-]*):(?:[a-z0-9-]*):(.+)$
 ```
 
