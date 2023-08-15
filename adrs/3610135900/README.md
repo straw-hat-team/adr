@@ -1,6 +1,6 @@
 # Secret Value Syntax
 
-- **State:** Draft
+- **State:** Approved
 - **Created:** 2023-08-13
 - **Tags:** secret
 
