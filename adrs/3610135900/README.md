@@ -12,7 +12,7 @@ developers often define the format themselves. Such a disparate approach results
 in many developers either forgetting to set up scanning tools or being unable to
 utilize preconfigured scanning tools.
 
-The lack of a consistent secret format introduces vulnerabilities and potential
+The lack of a consistent secret format hinders tools that would otherwise help guard against vulnerabilities and potential
 security risks. The changes in GitHub Authentication Token Formats, among other
 companies adding more meaningful prefixes to their secrets, highlight the need
 for a more standardized approach.
