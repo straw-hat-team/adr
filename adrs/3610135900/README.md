@@ -53,7 +53,7 @@ The secret regex value is:
 For example, a Personal Access Token for GitHub could be in the format:
 
 ```text
-secret:github:ghp:[.... secret value ....]
+secret:github:ghp:ghp_000000000000000000000000000000000000
 ```
 
 ## Links
