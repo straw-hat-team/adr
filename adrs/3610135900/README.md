@@ -39,11 +39,11 @@ SECRET = "secret:[NID]:[NSS]:[secret value]
 
 - "secret:" is the required case-sensitive scheme at the beginning.
 - NID (Namespace Identifier) defines the specific context or namespace.
-  It isa optional case-sensitive and consist of only alphanumeric characters and
-  dashes value. Regex: `[a-z0-9-]`.
+  It is an optional case-sensitive and consist of only lower case alphanumeric
+  characters and dashes value. Regex: `[a-z0-9-]`.
 - NSS (Namespace-Specific String) is unique within the specific namespace.
-  It is a optional case-sensitive and consist of only alphanumeric characters
-  and dashes value. Regex: `[a-z0-9-]`.
+  It is an optional case-sensitive and consist of only lower case alphanumeric
+  characters and dashes value. Regex: `[a-z0-9-]`.
 
 The secret regex value is:
 
