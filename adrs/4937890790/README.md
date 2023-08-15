@@ -154,4 +154,4 @@ can take advantage of the explicitness and static nature of the names.
 
 ## Links
 
-- https://esbuild.github.io/content-types/#default-interop
+- <https://esbuild.github.io/content-types/#default-interop>
