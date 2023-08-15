@@ -61,6 +61,7 @@ export default defineConfig({
           { text: 'Usage of JSX Fragment', link: '/8618797096/README.md' },
           { text: 'URL Path Design', link: '/8702033095/README.md' },
           { text: 'React Hook Arguments Convention', link: '/4031218897/README.md' },
+          { text: 'Secret Value Syntax', link: '/3610135900/README.md' },
         ],
       },
     ],
