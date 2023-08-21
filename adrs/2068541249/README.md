@@ -43,7 +43,7 @@ adding aliases, or registering `src` as a root for imports.
 
 Let's assume the following directory structure as a reference for the examples:
 
-```text
+```txt
 tree . -L 2
 
 ├── tsconfig.json

@@ -33,7 +33,7 @@ scanning tools with a standardized format.
 
 The agreed-upon structure will be similar to the URN syntax:
 
-```text
+```txt
 SECRET = "secret:[NID]:[NSS]:[secret value]
 ```
 
@@ -47,13 +47,13 @@ SECRET = "secret:[NID]:[NSS]:[secret value]
 
 The secret regex value is:
 
-```text
+```txt
 ^secret:(?:[a-z0-9-]*):(?:[a-z0-9-]*):(.+)$
 ```
 
 For example, a Personal Access Token for GitHub could be in the format:
 
-```text
+```txt
 secret:github:ghp:ghp_000000000000000000000000000000000000
 ```
 

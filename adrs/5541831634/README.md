@@ -107,7 +107,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 - `<rootDir>/src/routes/index.tsx` **MUST** be used as the root path
   of the URL, or the root path of your micro-frontend mounting path.
 
-  ```text
+  ```txt
   URL: https://acme.io/
   <rootDir>
   └── src
@@ -118,7 +118,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 - URL segments **MUST** match a subdirectory inside
   `<fractalDir>/routes`.
 
-  ```text
+  ```txt
   URL: https://acme.io/authors/articles
   <rootDir>
   └── src
@@ -136,7 +136,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
   you use NextJS, you must use the same name as the dynamic NextJS route
   directory.
 
-  ```text
+  ```txt
   URL: https://acme.io/authors/articles/:articleId/
   <rootDir>
   └── src
@@ -157,7 +157,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 - `<rootDir>/src/routes/index.tsx` **MUST** be used to define the
   `NavigationContainer` and top-level navigator.
 
-  ```text
+  ```txt
   <rootDir>
   └── src
       └── routes
@@ -168,7 +168,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
   inside `<fractalDir>/routes`. For example, given the following navigators /
   screens:
 
-  ```text
+  ```txt
   Stack.Navigator
     Home (Tab.Navigator)
       Feed (Screen)
@@ -179,7 +179,7 @@ directory. The pattern repeated in `<rootDir>/src`, `<rootDir>/src/routes/` or
 
   The directory structure **MUST** be:
 
-  ```text
+  ```txt
   <rootDir>
   └── src
       └── routes

@@ -75,7 +75,7 @@ websites (internal or public as an example), and how to manage them.
 
 - You **MUST** follow the following directory structures:
 
-  ```text
+  ```txt
   .
   ├── package.json
   ├── bin
