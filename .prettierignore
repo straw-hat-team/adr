@@ -17,3 +17,5 @@ out
 .idea
 .pnp.cjs
 .pnp.loader.mjs
+.vitepress/dist
+.vitepress/cache
