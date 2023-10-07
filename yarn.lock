@@ -715,6 +715,7 @@ __metadata:
     body-scroll-lock: 4.0.0-beta.0
     markdownlint-cli: 0.35.0
     prettier: 3.0.2
+    prettier-plugin-organize-imports: 3.2.3
     vitepress: 1.0.0-rc.4
     vue: 3.3.4
   languageName: unknown
@@ -1861,7 +1862,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-organize-imports@npm:^3.2.3":
+"prettier-plugin-organize-imports@npm:3.2.3, prettier-plugin-organize-imports@npm:^3.2.3":
   version: 3.2.3
   resolution: "prettier-plugin-organize-imports@npm:3.2.3"
   peerDependencies:

@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-scroll-lock", "npm:4.0.0-beta.0"],\
             ["markdownlint-cli", "npm:0.35.0"],\
             ["prettier", "npm:3.0.2"],\
+            ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.3"],\
             ["vitepress", "npm:1.0.0-rc.4"],\
             ["vue", "npm:3.3.4"]\
           ],\
@@ -672,7 +673,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/prettier", null],\
             ["@types/typescript", null],\
             ["prettier", "npm:3.0.2"],\
-            ["prettier-plugin-organize-imports", "virtual:e8fd0a73d9bf0fd019c9efb941162e389564abe74006f25b0dee68a6e64809d0c160600be2695de4b8e2014c4889bba7652b6ae2082b75cf3a8ca06eedad9255#npm:3.2.3"],\
+            ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.3"],\
             ["prettier-plugin-tailwindcss", "virtual:e8fd0a73d9bf0fd019c9efb941162e389564abe74006f25b0dee68a6e64809d0c160600be2695de4b8e2014c4889bba7652b6ae2082b75cf3a8ca06eedad9255#npm:0.5.3"],\
             ["typescript", null]\
           ],\
@@ -992,6 +993,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-scroll-lock", "npm:4.0.0-beta.0"],\
             ["markdownlint-cli", "npm:0.35.0"],\
             ["prettier", "npm:3.0.2"],\
+            ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.3"],\
             ["vitepress", "npm:1.0.0-rc.4"],\
             ["vue", "npm:3.3.4"]\
           ],\
@@ -2228,10 +2230,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:e8fd0a73d9bf0fd019c9efb941162e389564abe74006f25b0dee68a6e64809d0c160600be2695de4b8e2014c4889bba7652b6ae2082b75cf3a8ca06eedad9255#npm:3.2.3", {\
-          "packageLocation": "./.yarn/__virtual__/prettier-plugin-organize-imports-virtual-09a5f559b6/0/cache/prettier-plugin-organize-imports-npm-3.2.3-7f40e110b3-e97dd707ce.zip/node_modules/prettier-plugin-organize-imports/",\
+        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.3", {\
+          "packageLocation": "./.yarn/__virtual__/prettier-plugin-organize-imports-virtual-b800a0f61d/0/cache/prettier-plugin-organize-imports-npm-3.2.3-7f40e110b3-e97dd707ce.zip/node_modules/prettier-plugin-organize-imports/",\
           "packageDependencies": [\
-            ["prettier-plugin-organize-imports", "virtual:e8fd0a73d9bf0fd019c9efb941162e389564abe74006f25b0dee68a6e64809d0c160600be2695de4b8e2014c4889bba7652b6ae2082b75cf3a8ca06eedad9255#npm:3.2.3"],\
+            ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.3"],\
             ["@types/prettier", null],\
             ["@types/typescript", null],\
             ["@types/volar__vue-language-plugin-pug", null],\
@@ -2294,7 +2296,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier-plugin-jsdoc", null],\
             ["prettier-plugin-marko", null],\
             ["prettier-plugin-organize-attributes", null],\
-            ["prettier-plugin-organize-imports", "virtual:e8fd0a73d9bf0fd019c9efb941162e389564abe74006f25b0dee68a6e64809d0c160600be2695de4b8e2014c4889bba7652b6ae2082b75cf3a8ca06eedad9255#npm:3.2.3"],\
+            ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.3"],\
             ["prettier-plugin-style-order", null],\
             ["prettier-plugin-svelte", null],\
             ["prettier-plugin-twig-melody", null]\
