@@ -2671,17 +2671,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["vite", [\
-        ["npm:4.5.1", {\
-          "packageLocation": "./.yarn/cache/vite-npm-4.5.1-567bbcf9ff-72b3584b3d.zip/node_modules/vite/",\
+        ["npm:4.5.2", {\
+          "packageLocation": "./.yarn/cache/vite-npm-4.5.2-e430b2c117-9d1f84f703.zip/node_modules/vite/",\
           "packageDependencies": [\
-            ["vite", "npm:4.5.1"]\
+            ["vite", "npm:4.5.2"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:db3928deed067d4abe527e5e92a530eedccfdace99ccb4064aa7d2fd92b4286b575167c8c178ac2fbd01d6e4f3b5334df7e863e0df9819f78accecba5871725e#npm:4.5.1", {\
-          "packageLocation": "./.yarn/__virtual__/vite-virtual-3b57511103/0/cache/vite-npm-4.5.1-567bbcf9ff-72b3584b3d.zip/node_modules/vite/",\
+        ["virtual:db3928deed067d4abe527e5e92a530eedccfdace99ccb4064aa7d2fd92b4286b575167c8c178ac2fbd01d6e4f3b5334df7e863e0df9819f78accecba5871725e#npm:4.5.2", {\
+          "packageLocation": "./.yarn/__virtual__/vite-virtual-5c5990273b/0/cache/vite-npm-4.5.2-e430b2c117-9d1f84f703.zip/node_modules/vite/",\
           "packageDependencies": [\
-            ["vite", "virtual:db3928deed067d4abe527e5e92a530eedccfdace99ccb4064aa7d2fd92b4286b575167c8c178ac2fbd01d6e4f3b5334df7e863e0df9819f78accecba5871725e#npm:4.5.1"],\
+            ["vite", "virtual:db3928deed067d4abe527e5e92a530eedccfdace99ccb4064aa7d2fd92b4286b575167c8c178ac2fbd01d6e4f3b5334df7e863e0df9819f78accecba5871725e#npm:4.5.2"],\
             ["@types/less", null],\
             ["@types/lightningcss", null],\
             ["@types/node", null],\
@@ -2744,7 +2744,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["minisearch", "npm:6.1.0"],\
             ["postcss", null],\
             ["shiki", "npm:0.14.4"],\
-            ["vite", "virtual:db3928deed067d4abe527e5e92a530eedccfdace99ccb4064aa7d2fd92b4286b575167c8c178ac2fbd01d6e4f3b5334df7e863e0df9819f78accecba5871725e#npm:4.5.1"],\
+            ["vite", "virtual:db3928deed067d4abe527e5e92a530eedccfdace99ccb4064aa7d2fd92b4286b575167c8c178ac2fbd01d6e4f3b5334df7e863e0df9819f78accecba5871725e#npm:4.5.2"],\
             ["vue", "npm:3.3.4"]\
           ],\
           "packagePeers": [\
