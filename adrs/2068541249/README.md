@@ -109,9 +109,9 @@ for example:
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "design/*": ["./src/design/*"]
-    }
-  }
+      "design/*": ["./src/design/*"],
+    },
+  },
 }
 ```
 
@@ -157,9 +157,9 @@ For `tsconfig.json` or `jsconfig.json` files:
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+      "@/*": ["./src/*"],
+    },
+  },
 }
 ```
 
@@ -168,8 +168,8 @@ Jest configuration:
 ```jsonc
 {
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1"
-  }
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
 }
 ```
 
