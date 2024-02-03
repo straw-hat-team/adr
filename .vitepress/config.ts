@@ -16,7 +16,10 @@ export default defineConfig({
       text: 'Edit this page on GitHub',
       pattern: 'https://github.com/straw-hat-team/adr/edit/master/adrs/:path',
     },
-    nav: [{ text: 'GitHub', link: 'https://github.com/straw-hat-team/adr' }],
+    nav: [
+      { text: 'Contributing', link: '/contributing' },
+      { text: 'GitHub', link: 'https://github.com/straw-hat-team/adr' },
+    ],
     sidebar: [
       {
         text: 'ADRs',
