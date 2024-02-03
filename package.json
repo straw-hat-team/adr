@@ -10,13 +10,13 @@
     "format:prettier": "prettier --ignore-unknown --no-error-on-unmatched-pattern --write '**/*'"
   },
   "devDependencies": {
-    "@straw-hat/prettier-config": "3.1.2",
-    "@vueuse/core": "10.5.0",
+    "@straw-hat/prettier-config": "3.1.5",
+    "@vueuse/core": "10.7.2",
     "body-scroll-lock": "4.0.0-beta.0",
-    "markdownlint-cli": "0.37.0",
-    "prettier": "3.0.3",
-    "prettier-plugin-organize-imports": "3.2.3",
-    "vitepress": "1.0.0-rc.20",
-    "vue": "3.3.4"
+    "markdownlint-cli": "0.39.0",
+    "prettier": "3.2.4",
+    "prettier-plugin-organize-imports": "3.2.4",
+    "vitepress": "1.0.0-rc.41",
+    "vue": "3.4.15"
   }
 }
