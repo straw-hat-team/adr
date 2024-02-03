@@ -22,8 +22,8 @@ We'd love to accept your patches and contributions to this project.
 
 Make sure you have read the following ADRs:
 
-- [ADR#0000000000](./adrs/0000000000/README.md)
-- [ADR#0000000001](./adrs/0000000001/README.md)
+- [ADR#0000000000](./src/adrs/0000000000/README.md)
+- [ADR#0000000001](./src/adrs/0000000001/README.md)
 
 Use the following command to get started:
 
