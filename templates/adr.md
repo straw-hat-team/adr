@@ -4,7 +4,7 @@ title: [short title of solved problem and solution]
 state: <!-- Draft|Reviewing|Approved|Rejected|Deferred|Withdrawn|Replaced -->
 replaced_by: <!-- [ADR#0000000000](../ards/../adrs/0000000000/README.md) -->
 created: <!-- YYYY-MM-DD -->
-tags: <!-- separated by comma, and lowercase -->
+tags: [<!-- separated by comma, and lowercase -->]
 ---
 
 # [short title of solved problem and solution]
