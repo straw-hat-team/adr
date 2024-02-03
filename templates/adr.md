@@ -1,9 +1,13 @@
-# [short title of solved problem and solution]
+---
+id: <!-- ADR unique identifier -->
+title: [short title of solved problem and solution]
+state: <!-- Draft|Reviewing|Approved|Rejected|Deferred|Withdrawn|Replaced -->
+replaced_by: <!-- [ADR#0000000000](../ards/../adrs/0000000000/README.md) -->
+created: <!-- YYYY-MM-DD -->
+tags: <!-- separated by comma, and lowercase -->
+---
 
-- **State:** <!-- Draft|Reviewing|Approved|Rejected|Deferred|Withdrawn|Replaced -->
-- **Replaced by:** <!-- [ADR#0000000000](../ards/../adrs/0000000000/README.md) -->
-- **Created:** <!-- YYYY-MM-DD -->
-- **Tags:** <!-- separated by comma, and lowercase -->
+# [short title of solved problem and solution]
 
 ## Context
 

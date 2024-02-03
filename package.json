@@ -18,5 +18,11 @@
     "prettier-plugin-organize-imports": "3.2.4",
     "vitepress": "1.0.0-rc.41",
     "vue": "3.4.15"
+  },
+  "dependencies": {
+    "fast-glob": "3.3.2",
+    "gray-matter": "4.0.3",
+    "vite": "5.0.12",
+    "zod": "3.22.4"
   }
 }
