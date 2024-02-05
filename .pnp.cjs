@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.3.2"],\
             ["gray-matter", "npm:4.0.3"],\
             ["markdownlint-cli", "npm:0.39.0"],\
-            ["postcss", "npm:8.4.33"],\
+            ["postcss", "npm:8.4.34"],\
             ["prettier", "npm:3.2.4"],\
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
@@ -1287,7 +1287,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.3.2"],\
             ["gray-matter", "npm:4.0.3"],\
             ["markdownlint-cli", "npm:0.39.0"],\
-            ["postcss", "npm:8.4.33"],\
+            ["postcss", "npm:8.4.34"],\
             ["prettier", "npm:3.2.4"],\
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
@@ -1472,7 +1472,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fraction.js", "npm:4.3.7"],\
             ["normalize-range", "npm:0.1.2"],\
             ["picocolors", "npm:1.0.0"],\
-            ["postcss", "npm:8.4.33"],\
+            ["postcss", "npm:8.4.34"],\
             ["postcss-value-parser", "npm:4.2.0"]\
           ],\
           "packagePeers": [\
@@ -3023,6 +3023,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map-js", "npm:1.0.2"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:8.4.34", {\
+          "packageLocation": "./.yarn/cache/postcss-npm-8.4.34-2179f0d4b5-46c32b5181.zip/node_modules/postcss/",\
+          "packageDependencies": [\
+            ["postcss", "npm:8.4.34"],\
+            ["nanoid", "npm:3.3.7"],\
+            ["picocolors", "npm:1.0.0"],\
+            ["source-map-js", "npm:1.0.2"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["postcss-import", [\
@@ -3948,7 +3958,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mark.js", "npm:8.11.1"],\
             ["markdown-it-mathjax3", null],\
             ["minisearch", "npm:6.3.0"],\
-            ["postcss", "npm:8.4.33"],\
+            ["postcss", "npm:8.4.34"],\
             ["shiki", "npm:1.0.0-beta.5"],\
             ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.0.12"],\
             ["vue", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.4.15"]\
