@@ -633,19 +633,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/core@npm:1.0.0-beta.5, @shikijs/core@npm:^1.0.0-beta.3":
-  version: 1.0.0-beta.5
-  resolution: "@shikijs/core@npm:1.0.0-beta.5"
-  checksum: 01371e8da3d08ebd703d7cbf59f857872849a372924358b91fba9f8e9312a213046adbf81f36db65c2c8b9ebe579032f7ef6f5dab797d9aa2a0353b6f7c5c4c5
+"@shikijs/core@npm:1.0.0, @shikijs/core@npm:^1.0.0-rc.0":
+  version: 1.0.0
+  resolution: "@shikijs/core@npm:1.0.0"
+  checksum: 05f75df930ee1e020148da6b60c4ceec217a87dd2b073f87816f64971062c6fed9f539957217b94cd6fd12e5d9c4c8d41741a53319ceb4362360acf56a4e3140
   languageName: node
   linkType: hard
 
-"@shikijs/transformers@npm:^1.0.0-beta.3":
-  version: 1.0.0-beta.5
-  resolution: "@shikijs/transformers@npm:1.0.0-beta.5"
+"@shikijs/transformers@npm:^1.0.0-rc.0":
+  version: 1.0.0
+  resolution: "@shikijs/transformers@npm:1.0.0"
   dependencies:
-    shiki: 1.0.0-beta.5
-  checksum: faab3fb0de22eb686117b54b35f8698b8a144db1f4c280be8918ff127a2c395672335ab6850f304f56a691a4cade5fbaa89c486e14dd6edccde323a47cb78f5b
+    shiki: 1.0.0
+  checksum: 1f269aa8fbea7b0718cb19054406a84c9f53483e094967ef050d006d4ac39b845cebd02d368c1171c970feb2821f26ac0432a5f7a4cce2e870620a234b7ac73f
   languageName: node
   linkType: hard
 
@@ -955,7 +955,7 @@ __metadata:
     prettier-plugin-organize-imports: 3.2.4
     tailwindcss: 3.4.1
     vite: 5.0.12
-    vitepress: 1.0.0-rc.41
+    vitepress: 1.0.0-rc.42
     vue: 3.4.15
     zod: 3.22.4
   languageName: unknown
@@ -2972,12 +2972,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shiki@npm:1.0.0-beta.5, shiki@npm:^1.0.0-beta.3":
-  version: 1.0.0-beta.5
-  resolution: "shiki@npm:1.0.0-beta.5"
+"shiki@npm:1.0.0, shiki@npm:^1.0.0-rc.0":
+  version: 1.0.0
+  resolution: "shiki@npm:1.0.0"
   dependencies:
-    "@shikijs/core": 1.0.0-beta.5
-  checksum: 5f61997c9fa54b490b936139ee3893009e1873737f736485a9bb7c17c6a667837d7afdf093c472d64590c48c8ecae9ed1abb2cf38546fd0cfcc43169896cb55f
+    "@shikijs/core": 1.0.0
+  checksum: 5f791a334518e6160d3137c6e3677a09a0344b9b21c50bd54240be1a19d8c0bf16ea12af712e2ef2652a658e1e0e992bcfb6411035567d50713df6aee657b9fd
   languageName: node
   linkType: hard
 
@@ -3322,14 +3322,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:1.0.0-rc.41":
-  version: 1.0.0-rc.41
-  resolution: "vitepress@npm:1.0.0-rc.41"
+"vitepress@npm:1.0.0-rc.42":
+  version: 1.0.0-rc.42
+  resolution: "vitepress@npm:1.0.0-rc.42"
   dependencies:
     "@docsearch/css": ^3.5.2
     "@docsearch/js": ^3.5.2
-    "@shikijs/core": ^1.0.0-beta.3
-    "@shikijs/transformers": ^1.0.0-beta.3
+    "@shikijs/core": ^1.0.0-rc.0
+    "@shikijs/transformers": ^1.0.0-rc.0
     "@types/markdown-it": ^13.0.7
     "@vitejs/plugin-vue": ^5.0.3
     "@vue/devtools-api": ^7.0.14
@@ -3338,12 +3338,12 @@ __metadata:
     focus-trap: ^7.5.4
     mark.js: 8.11.1
     minisearch: ^6.3.0
-    shiki: ^1.0.0-beta.3
+    shiki: ^1.0.0-rc.0
     vite: ^5.0.12
     vue: ^3.4.15
   peerDependencies:
     markdown-it-mathjax3: ^4.3.2
-    postcss: ^8.4.33
+    postcss: ^8.4.34
   peerDependenciesMeta:
     markdown-it-mathjax3:
       optional: true
@@ -3351,7 +3351,7 @@ __metadata:
       optional: true
   bin:
     vitepress: bin/vitepress.js
-  checksum: bbc13d586b54d8c9cce8e69d4938a8dd96e246000630d35141ec3f8cf1478dd7320c3f6ff69d348949e60d4ebd9a550438f7ff2d8b39617ba9bd11af8d0d130a
+  checksum: 16fb994cfe9759edeef9d80abdc23559be11a5bb84e763e425c7cb0a0cbe7f404617cea575e3972954d209d9575754a675260f082aaf5ebd416434674df4c283
   languageName: node
   linkType: hard
 

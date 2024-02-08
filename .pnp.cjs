@@ -40,7 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
             ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.0.12"],\
-            ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.41"],\
+            ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.42"],\
             ["vue", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.4.15"],\
             ["zod", "npm:3.22.4"]\
           ],\
@@ -873,20 +873,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@shikijs/core", [\
-        ["npm:1.0.0-beta.5", {\
-          "packageLocation": "./.yarn/cache/@shikijs-core-npm-1.0.0-beta.5-95a81f3533-01371e8da3.zip/node_modules/@shikijs/core/",\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/@shikijs-core-npm-1.0.0-4eb94d135d-05f75df930.zip/node_modules/@shikijs/core/",\
           "packageDependencies": [\
-            ["@shikijs/core", "npm:1.0.0-beta.5"]\
+            ["@shikijs/core", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@shikijs/transformers", [\
-        ["npm:1.0.0-beta.5", {\
-          "packageLocation": "./.yarn/cache/@shikijs-transformers-npm-1.0.0-beta.5-0a77e74c92-faab3fb0de.zip/node_modules/@shikijs/transformers/",\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/@shikijs-transformers-npm-1.0.0-09b38feee9-1f269aa8fb.zip/node_modules/@shikijs/transformers/",\
           "packageDependencies": [\
-            ["@shikijs/transformers", "npm:1.0.0-beta.5"],\
-            ["shiki", "npm:1.0.0-beta.5"]\
+            ["@shikijs/transformers", "npm:1.0.0"],\
+            ["shiki", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -983,10 +983,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:50f0133fe228ca0cb08fb750a6ef06971b1a1a67c9eb2612f5bfc8f7fa430cf3d40480c2c2837ee8857b07d692977807cb58bef73707a92b410a2f53bef886be#npm:5.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@vitejs-plugin-vue-virtual-39ccdd8702/0/cache/@vitejs-plugin-vue-npm-5.0.3-313d6adaca-f89658de11.zip/node_modules/@vitejs/plugin-vue/",\
+        ["virtual:c17f743f59157e777f2b220868e09cbe22ab244614c506e719c5a287c2708f73168a8e762ee624d907b8338c85d591f8f7fe7b0622dfb4dd567246a5b5ff759f#npm:5.0.3", {\
+          "packageLocation": "./.yarn/__virtual__/@vitejs-plugin-vue-virtual-7d63773c15/0/cache/@vitejs-plugin-vue-npm-5.0.3-313d6adaca-f89658de11.zip/node_modules/@vitejs/plugin-vue/",\
           "packageDependencies": [\
-            ["@vitejs/plugin-vue", "virtual:50f0133fe228ca0cb08fb750a6ef06971b1a1a67c9eb2612f5bfc8f7fa430cf3d40480c2c2837ee8857b07d692977807cb58bef73707a92b410a2f53bef886be#npm:5.0.3"],\
+            ["@vitejs/plugin-vue", "virtual:c17f743f59157e777f2b220868e09cbe22ab244614c506e719c5a287c2708f73168a8e762ee624d907b8338c85d591f8f7fe7b0622dfb4dd567246a5b5ff759f#npm:5.0.3"],\
             ["@types/vite", null],\
             ["@types/vue", null],\
             ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.0.12"],\
@@ -1186,10 +1186,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:50f0133fe228ca0cb08fb750a6ef06971b1a1a67c9eb2612f5bfc8f7fa430cf3d40480c2c2837ee8857b07d692977807cb58bef73707a92b410a2f53bef886be#npm:10.7.2", {\
-          "packageLocation": "./.yarn/__virtual__/@vueuse-integrations-virtual-4139930d3f/0/cache/@vueuse-integrations-npm-10.7.2-c38d5e8ffa-2a2a795d7a.zip/node_modules/@vueuse/integrations/",\
+        ["virtual:c17f743f59157e777f2b220868e09cbe22ab244614c506e719c5a287c2708f73168a8e762ee624d907b8338c85d591f8f7fe7b0622dfb4dd567246a5b5ff759f#npm:10.7.2", {\
+          "packageLocation": "./.yarn/__virtual__/@vueuse-integrations-virtual-f68831f47a/0/cache/@vueuse-integrations-npm-10.7.2-c38d5e8ffa-2a2a795d7a.zip/node_modules/@vueuse/integrations/",\
           "packageDependencies": [\
-            ["@vueuse/integrations", "virtual:50f0133fe228ca0cb08fb750a6ef06971b1a1a67c9eb2612f5bfc8f7fa430cf3d40480c2c2837ee8857b07d692977807cb58bef73707a92b410a2f53bef886be#npm:10.7.2"],\
+            ["@vueuse/integrations", "virtual:c17f743f59157e777f2b220868e09cbe22ab244614c506e719c5a287c2708f73168a8e762ee624d907b8338c85d591f8f7fe7b0622dfb4dd567246a5b5ff759f#npm:10.7.2"],\
             ["@types/async-validator", null],\
             ["@types/axios", null],\
             ["@types/change-case", null],\
@@ -1292,7 +1292,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
             ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.0.12"],\
-            ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.41"],\
+            ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.42"],\
             ["vue", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.4.15"],\
             ["zod", "npm:3.22.4"]\
           ],\
@@ -3531,11 +3531,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["shiki", [\
-        ["npm:1.0.0-beta.5", {\
-          "packageLocation": "./.yarn/cache/shiki-npm-1.0.0-beta.5-99b074ee11-5f61997c9f.zip/node_modules/shiki/",\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/shiki-npm-1.0.0-2bedbc7e5b-5f791a3345.zip/node_modules/shiki/",\
           "packageDependencies": [\
-            ["shiki", "npm:1.0.0-beta.5"],\
-            ["@shikijs/core", "npm:1.0.0-beta.5"]\
+            ["shiki", "npm:1.0.0"],\
+            ["@shikijs/core", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3932,34 +3932,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["vitepress", [\
-        ["npm:1.0.0-rc.41", {\
-          "packageLocation": "./.yarn/cache/vitepress-npm-1.0.0-rc.41-0b312b7376-bbc13d586b.zip/node_modules/vitepress/",\
+        ["npm:1.0.0-rc.42", {\
+          "packageLocation": "./.yarn/cache/vitepress-npm-1.0.0-rc.42-915eddcd88-16fb994cfe.zip/node_modules/vitepress/",\
           "packageDependencies": [\
-            ["vitepress", "npm:1.0.0-rc.41"]\
+            ["vitepress", "npm:1.0.0-rc.42"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.41", {\
-          "packageLocation": "./.yarn/__virtual__/vitepress-virtual-50f0133fe2/0/cache/vitepress-npm-1.0.0-rc.41-0b312b7376-bbc13d586b.zip/node_modules/vitepress/",\
+        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.42", {\
+          "packageLocation": "./.yarn/__virtual__/vitepress-virtual-c17f743f59/0/cache/vitepress-npm-1.0.0-rc.42-915eddcd88-16fb994cfe.zip/node_modules/vitepress/",\
           "packageDependencies": [\
-            ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.41"],\
+            ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.42"],\
             ["@docsearch/css", "npm:3.5.2"],\
             ["@docsearch/js", "npm:3.5.2"],\
-            ["@shikijs/core", "npm:1.0.0-beta.5"],\
-            ["@shikijs/transformers", "npm:1.0.0-beta.5"],\
+            ["@shikijs/core", "npm:1.0.0"],\
+            ["@shikijs/transformers", "npm:1.0.0"],\
             ["@types/markdown-it", "npm:13.0.7"],\
             ["@types/markdown-it-mathjax3", null],\
             ["@types/postcss", null],\
-            ["@vitejs/plugin-vue", "virtual:50f0133fe228ca0cb08fb750a6ef06971b1a1a67c9eb2612f5bfc8f7fa430cf3d40480c2c2837ee8857b07d692977807cb58bef73707a92b410a2f53bef886be#npm:5.0.3"],\
+            ["@vitejs/plugin-vue", "virtual:c17f743f59157e777f2b220868e09cbe22ab244614c506e719c5a287c2708f73168a8e762ee624d907b8338c85d591f8f7fe7b0622dfb4dd567246a5b5ff759f#npm:5.0.3"],\
             ["@vue/devtools-api", "npm:7.0.14"],\
             ["@vueuse/core", "npm:10.7.2"],\
-            ["@vueuse/integrations", "virtual:50f0133fe228ca0cb08fb750a6ef06971b1a1a67c9eb2612f5bfc8f7fa430cf3d40480c2c2837ee8857b07d692977807cb58bef73707a92b410a2f53bef886be#npm:10.7.2"],\
+            ["@vueuse/integrations", "virtual:c17f743f59157e777f2b220868e09cbe22ab244614c506e719c5a287c2708f73168a8e762ee624d907b8338c85d591f8f7fe7b0622dfb4dd567246a5b5ff759f#npm:10.7.2"],\
             ["focus-trap", "npm:7.5.4"],\
             ["mark.js", "npm:8.11.1"],\
             ["markdown-it-mathjax3", null],\
             ["minisearch", "npm:6.3.0"],\
             ["postcss", "npm:8.4.35"],\
-            ["shiki", "npm:1.0.0-beta.5"],\
+            ["shiki", "npm:1.0.0"],\
             ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.0.12"],\
             ["vue", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.4.15"]\
           ],\
