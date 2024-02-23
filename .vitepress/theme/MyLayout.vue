@@ -8,7 +8,7 @@ const data = useData();
 <template>
   <Layout>
     <template #doc-before>
-      <div class="flex gap-4 items-center">
+      <div class="flex gap-4 items-center mb-4">
         <div class="flex gap-2">
           <span
             class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset text-gray-900 dark:text-white"
