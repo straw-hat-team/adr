@@ -14,3 +14,4 @@ node_modules
 
 /.vitepress/dist/
 /.vitepress/cache
+/.vitepress/config.ts.*
