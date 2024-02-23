@@ -867,6 +867,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:10.8.0":
+  version: 10.8.0
+  resolution: "@vueuse/core@npm:10.8.0"
+  dependencies:
+    "@types/web-bluetooth": ^0.0.20
+    "@vueuse/metadata": 10.8.0
+    "@vueuse/shared": 10.8.0
+    vue-demi: ">=0.14.7"
+  checksum: 8112f24bc3de025cddede12b15c3046cf176a6a64f9ac04493ddbf3ac187c90eb31c53c461f9d0e9a088ba592e0a3a4684bf8bd40e608eeaba9da5276f8fb941
+  languageName: node
+  linkType: hard
+
 "@vueuse/integrations@npm:^10.7.2":
   version: 10.7.2
   resolution: "@vueuse/integrations@npm:10.7.2"
@@ -923,12 +935,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/metadata@npm:10.8.0":
+  version: 10.8.0
+  resolution: "@vueuse/metadata@npm:10.8.0"
+  checksum: 3b094e569047fdae0a1b107b9f367d99ab3ddae14c36650a88e1b8ee7b55e5ea3a369da7f486957a70bc8ca439433063269e72ee5953bf32995ebaa593d04ad9
+  languageName: node
+  linkType: hard
+
 "@vueuse/shared@npm:10.7.2":
   version: 10.7.2
   resolution: "@vueuse/shared@npm:10.7.2"
   dependencies:
     vue-demi: ">=0.14.6"
   checksum: c03cbbd7cdf640ff3179ea26bf98879cbbc71cdedd994c8a5a519cb90d96b3ae088dbc5411e904681a76470849ff9a110a1c4c136eca0d94081f1c64ca850798
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:10.8.0":
+  version: 10.8.0
+  resolution: "@vueuse/shared@npm:10.8.0"
+  dependencies:
+    vue-demi: ">=0.14.7"
+  checksum: ec0f1a3220f70b37d60cede4f9a17c1ae1c890c900b8a1c101587cdd7df62ba1363bef060a3c8ea61fbef402572d05af01e18ea5a1c6d1102abd525e5830fcae
   languageName: node
   linkType: hard
 
@@ -944,7 +972,7 @@ __metadata:
   resolution: "adr@workspace:."
   dependencies:
     "@straw-hat/prettier-config": 3.1.5
-    "@vueuse/core": 10.7.2
+    "@vueuse/core": 10.8.0
     autoprefixer: 10.4.17
     body-scroll-lock: 4.0.0-beta.0
     fast-glob: 3.3.2
@@ -954,7 +982,7 @@ __metadata:
     prettier: 3.2.5
     prettier-plugin-organize-imports: 3.2.4
     tailwindcss: 3.4.1
-    vite: 5.0.12
+    vite: 5.1.4
     vitepress: 1.0.0-rc.44
     vue: 3.4.19
     zod: 3.22.4
@@ -2624,7 +2652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.23, postcss@npm:^8.4.32, postcss@npm:^8.4.33":
+"postcss@npm:^8.4.23, postcss@npm:^8.4.33":
   version: 8.4.33
   resolution: "postcss@npm:8.4.33"
   dependencies:
@@ -3282,47 +3310,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.0.12":
-  version: 5.0.12
-  resolution: "vite@npm:5.0.12"
-  dependencies:
-    esbuild: ^0.19.3
-    fsevents: ~2.3.3
-    postcss: ^8.4.32
-    rollup: ^4.2.0
-  peerDependencies:
-    "@types/node": ^18.0.0 || >=20.0.0
-    less: "*"
-    lightningcss: ^1.21.0
-    sass: "*"
-    stylus: "*"
-    sugarss: "*"
-    terser: ^5.4.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-    less:
-      optional: true
-    lightningcss:
-      optional: true
-    sass:
-      optional: true
-    stylus:
-      optional: true
-    sugarss:
-      optional: true
-    terser:
-      optional: true
-  bin:
-    vite: bin/vite.js
-  checksum: b97b6f1c204d9091d0973626827a6e9d8e8b1959ebd0877b6f76e7068e1e7adf9ecd3b1cc382cbab9d421e3eeca5e1a95f27f9c1734439b229f5a58ef2052fa4
-  languageName: node
-  linkType: hard
-
-"vite@npm:^5.1.3":
+"vite@npm:5.1.4, vite@npm:^5.1.3":
   version: 5.1.4
   resolution: "vite@npm:5.1.4"
   dependencies:
@@ -3408,6 +3396,22 @@ __metadata:
     vue-demi-fix: bin/vue-demi-fix.js
     vue-demi-switch: bin/vue-demi-switch.js
   checksum: 424b1f340d5111fc4d4a0f8042c14ae836ba983bc968773a6d955d6846202d7e6f951993ac1525be8732b0cfe0c81d94ab88f427c97bfa86ead08db06491279b
+  languageName: node
+  linkType: hard
+
+"vue-demi@npm:>=0.14.7":
+  version: 0.14.7
+  resolution: "vue-demi@npm:0.14.7"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: 6819b1cd52355047ae899d7cdfa32f1b00e806e6c67455601d33ab0226f3172c48a5f6c3d547cb7fa32925b3b7100448bf18f98ea4d5f8bc4b9d28ae005a805d
   languageName: node
   linkType: hard
 
