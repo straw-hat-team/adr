@@ -4,6 +4,7 @@ title: Configuration of import aliases in Javascript applications
 state: Approved
 created: 2020-11-18
 tags: [import-aliases, application]
+category: JavaScript
 ---
 
 # Configuration of import aliases in Javascript applications

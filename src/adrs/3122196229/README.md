@@ -4,6 +4,7 @@ title: NodeJS files and directories names convention
 state: Approved
 created: 2020-11-10
 tags: [nodejs]
+category: JavaScript
 ---
 
 # NodeJS files and directories names convention

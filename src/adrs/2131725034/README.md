@@ -4,6 +4,7 @@ title: React Component and Hooks Props Naming
 state: Approved
 created: 2022-01-24
 tags: [react]
+category: JavaScript
 ---
 
 # React Component and Hooks Props Naming

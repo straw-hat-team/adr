@@ -4,6 +4,7 @@ title: Slots reserved React property key
 state: Approved
 created: 2020-12-14
 tags: [react]
+category: JavaScript
 ---
 
 # Slots reserved React property key

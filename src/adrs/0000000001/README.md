@@ -4,6 +4,7 @@ title: ADR Style guide
 state: Approved
 created: 2020-11-8
 tags: [genesis]
+category: General
 ---
 
 # ADR Style guide

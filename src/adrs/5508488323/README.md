@@ -4,6 +4,7 @@ title: Lodash Importing
 state: Approved
 created: 2022-03-21
 tags: [javascript]
+category: JavaScript
 ---
 
 # Lodash Importing

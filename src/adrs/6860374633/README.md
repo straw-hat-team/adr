@@ -4,6 +4,7 @@ title: Error CloudEvents Adapter
 state: Approved
 created: 2020-11-10
 tags: [nodejs]
+category: General
 ---
 
 # Error CloudEvents Adapter

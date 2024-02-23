@@ -4,6 +4,7 @@ title: Genesis ADR
 state: Approved
 created: 2020-11-8
 tags: [genesis]
+category: General
 ---
 
 # Genesis ADR

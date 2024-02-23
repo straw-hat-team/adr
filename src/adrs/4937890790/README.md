@@ -4,6 +4,7 @@ title: JavaScript Modules exports convention
 state: Approved
 created: 2021-02-17
 tags: [js, ts]
+category: JavaScript
 ---
 
 # JavaScript Modules exports convention

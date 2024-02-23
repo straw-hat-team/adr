@@ -4,6 +4,7 @@ title: Helper vs Util
 state: Approved
 created: 2022-07-11
 tags: [naming]
+category: General
 ---
 
 # Helper vs Util

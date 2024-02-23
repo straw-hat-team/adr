@@ -4,6 +4,7 @@ title: Secret Value Syntax
 state: Approved
 created: 2023-08-13
 tags: [secret]
+category: General
 ---
 
 # Secret Value Syntax

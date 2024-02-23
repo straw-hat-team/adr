@@ -80,12 +80,22 @@ export const AdrFrontmatter = z.object({
   created: z.coerce.date(),
   state: z.enum(['Draft', 'Reviewing', 'Approved', 'Withdrawn', 'Rejected', 'Deferred', 'Replaced']),
   tags: z.array(z.string()),
+  category: z.enum(['General', 'JavaScript']),
 });
 
 type IAdrFrontmatter = z.infer<typeof AdrFrontmatter>;
 
 export function orderByCreated(r1: ReadFrontmatterResult<IAdrFrontmatter>, r2: ReadFrontmatterResult<IAdrFrontmatter>) {
   return r1.frontmatter.created - r2.frontmatter.created;
+}
+
+export function groupByCategory<TKeys extends string>(
+  acc: Record<TKeys, Array<ReadFrontmatterResult<IAdrFrontmatter>>>,
+  r: ReadFrontmatterResult<IAdrFrontmatter>,
+) {
+  acc[r.frontmatter.category] ??= [];
+  acc[r.frontmatter.category].push(r);
+  return acc;
 }
 
 export function toSidebarItem(r: ReadFrontmatterResult<IAdrFrontmatter>) {

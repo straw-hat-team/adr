@@ -4,6 +4,7 @@ title: React project files and directories names convention
 state: Approved
 created: 2020-12-01
 tags: [react]
+category: JavaScript
 ---
 
 # React project files and directories names convention

@@ -4,6 +4,7 @@ title: React Hook Arguments Convention
 state: Approved
 created: 2022-12-30
 tags: [react, react-hooks]
+category: JavaScript
 ---
 
 # React Hook Arguments Convention

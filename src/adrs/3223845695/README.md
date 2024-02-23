@@ -4,6 +4,7 @@ title: Documentation structure
 state: Approved
 created: 2021-12-21
 tags: [documentation]
+category: General
 ---
 
 # Documentation structure

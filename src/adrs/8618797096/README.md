@@ -4,6 +4,7 @@ title: Usage of JSX Fragment
 state: Approved
 created: 2020-11-15
 tags: [jsx]
+category: JavaScript
 ---
 
 # Usage of JSX Fragment

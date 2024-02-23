@@ -4,6 +4,7 @@ title: NodeJS source code directory structure
 state: Approved
 created: 2020-11-21
 tags: [nodejs, directory]
+category: JavaScript
 ---
 
 # NodeJS source code directory structure

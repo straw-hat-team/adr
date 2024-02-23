@@ -1,12 +1,13 @@
 import { defineConfig } from 'vitepress';
 import path from 'node:path';
-import { readFrontmatter, orderByCreated, AdrFrontmatter, toSidebarItem } from './helpers';
+import { readFrontmatter, orderByCreated, AdrFrontmatter, toSidebarItem, groupByCategory } from './helpers';
 
 export default async () => {
   const frontmatters = await readFrontmatter(['adrs/**/*.md'], {
     rootDir: path.join(__dirname, '../src'),
     schema: AdrFrontmatter,
   });
+  const categories = frontmatters.sort(orderByCreated).reduce(groupByCategory, {});
 
   return defineConfig({
     base: '/adr/',
@@ -30,10 +31,16 @@ export default async () => {
       ],
       sidebar: [
         {
-          text: 'ADRs',
+          text: 'General',
           collapsible: true,
           collapsed: false,
-          items: frontmatters.sort(orderByCreated).map(toSidebarItem),
+          items: categories['General'].map(toSidebarItem),
+        },
+        {
+          text: 'JavaScript Stack',
+          collapsible: true,
+          collapsed: false,
+          items: categories['JavaScript']?.map(toSidebarItem) ?? [],
         },
       ],
     },

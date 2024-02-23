@@ -4,6 +4,7 @@ title: JSX files extension
 state: Approved
 created: 2020-12-01
 tags: [jsx]
+category: JavaScript
 ---
 
 # JSX files extension
