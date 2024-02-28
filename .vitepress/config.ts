@@ -23,7 +23,7 @@ export default async () => {
       },
       editLink: {
         text: 'Edit this page on GitHub',
-        pattern: 'https://github.com/straw-hat-team/adr/edit/master/adrs/:path',
+        pattern: 'https://github.com/straw-hat-team/adr/tree/master/src/adrs/:path',
       },
       nav: [
         { text: 'Contributing', link: '/contributing' },
