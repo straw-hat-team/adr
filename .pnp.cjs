@@ -30,7 +30,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@straw-hat/prettier-config", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.1.5"],\
             ["@vueuse/core", "npm:10.9.0"],\
-            ["autoprefixer", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.17"],\
+            ["autoprefixer", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.18"],\
             ["body-scroll-lock", "npm:4.0.0-beta.0"],\
             ["fast-glob", "npm:3.3.2"],\
             ["gray-matter", "npm:4.0.3"],\
@@ -1410,7 +1410,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["adr", "workspace:."],\
             ["@straw-hat/prettier-config", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.1.5"],\
             ["@vueuse/core", "npm:10.9.0"],\
-            ["autoprefixer", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.17"],\
+            ["autoprefixer", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.18"],\
             ["body-scroll-lock", "npm:4.0.0-beta.0"],\
             ["fast-glob", "npm:3.3.2"],\
             ["gray-matter", "npm:4.0.3"],\
@@ -1583,20 +1583,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["autoprefixer", [\
-        ["npm:10.4.17", {\
-          "packageLocation": "./.yarn/cache/autoprefixer-npm-10.4.17-8379be1d95-1b4cf40975.zip/node_modules/autoprefixer/",\
+        ["npm:10.4.18", {\
+          "packageLocation": "./.yarn/cache/autoprefixer-npm-10.4.18-98c236b887-3c6fe631db.zip/node_modules/autoprefixer/",\
           "packageDependencies": [\
-            ["autoprefixer", "npm:10.4.17"]\
+            ["autoprefixer", "npm:10.4.18"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.17", {\
-          "packageLocation": "./.yarn/__virtual__/autoprefixer-virtual-c007b67787/0/cache/autoprefixer-npm-10.4.17-8379be1d95-1b4cf40975.zip/node_modules/autoprefixer/",\
+        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.18", {\
+          "packageLocation": "./.yarn/__virtual__/autoprefixer-virtual-945cd0b3cc/0/cache/autoprefixer-npm-10.4.18-98c236b887-3c6fe631db.zip/node_modules/autoprefixer/",\
           "packageDependencies": [\
-            ["autoprefixer", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.17"],\
+            ["autoprefixer", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:10.4.18"],\
             ["@types/postcss", null],\
-            ["browserslist", "npm:4.22.3"],\
-            ["caniuse-lite", "npm:1.0.30001583"],\
+            ["browserslist", "npm:4.23.0"],\
+            ["caniuse-lite", "npm:1.0.30001591"],\
             ["fraction.js", "npm:4.3.7"],\
             ["normalize-range", "npm:0.1.2"],\
             ["picocolors", "npm:1.0.0"],\
@@ -1667,14 +1667,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["browserslist", [\
-        ["npm:4.22.3", {\
-          "packageLocation": "./.yarn/cache/browserslist-npm-4.22.3-c3c1809375-e62b17348e.zip/node_modules/browserslist/",\
+        ["npm:4.23.0", {\
+          "packageLocation": "./.yarn/cache/browserslist-npm-4.23.0-8126a959d4-436f49e796.zip/node_modules/browserslist/",\
           "packageDependencies": [\
-            ["browserslist", "npm:4.22.3"],\
-            ["caniuse-lite", "npm:1.0.30001583"],\
-            ["electron-to-chromium", "npm:1.4.656"],\
+            ["browserslist", "npm:4.23.0"],\
+            ["caniuse-lite", "npm:1.0.30001591"],\
+            ["electron-to-chromium", "npm:1.4.690"],\
             ["node-releases", "npm:2.0.14"],\
-            ["update-browserslist-db", "virtual:c3c1809375389507a1aeedf534fd79f857bb3c64ecc9e006768cadbfe62986d5f0c6d60929598771fa39a935d74fd2f97a9ee5a236e30da17e2b3a480f1ecae0#npm:1.0.13"]\
+            ["update-browserslist-db", "virtual:8126a959d46e6def6d7f2497c47970a23a94adac85f5be1df9be290c674503b9bcbe0dc057e2741ee222cc2a8a3b9f584b20c3a9eb5ce085704d99fc5d94514c#npm:1.0.13"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1716,10 +1716,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["caniuse-lite", [\
-        ["npm:1.0.30001583", {\
-          "packageLocation": "./.yarn/cache/caniuse-lite-npm-1.0.30001583-0bd1a8643c-35d34eac99.zip/node_modules/caniuse-lite/",\
+        ["npm:1.0.30001591", {\
+          "packageLocation": "./.yarn/cache/caniuse-lite-npm-1.0.30001591-88044eed22-e48f924cde.zip/node_modules/caniuse-lite/",\
           "packageDependencies": [\
-            ["caniuse-lite", "npm:1.0.30001583"]\
+            ["caniuse-lite", "npm:1.0.30001591"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1929,10 +1929,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["electron-to-chromium", [\
-        ["npm:1.4.656", {\
-          "packageLocation": "./.yarn/cache/electron-to-chromium-npm-1.4.656-0d6e5a861a-b9e00c81e7.zip/node_modules/electron-to-chromium/",\
+        ["npm:1.4.690", {\
+          "packageLocation": "./.yarn/cache/electron-to-chromium-npm-1.4.690-0d92de6f50-c3fd731041.zip/node_modules/electron-to-chromium/",\
           "packageDependencies": [\
-            ["electron-to-chromium", "npm:1.4.656"]\
+            ["electron-to-chromium", "npm:1.4.690"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3986,12 +3986,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:c3c1809375389507a1aeedf534fd79f857bb3c64ecc9e006768cadbfe62986d5f0c6d60929598771fa39a935d74fd2f97a9ee5a236e30da17e2b3a480f1ecae0#npm:1.0.13", {\
-          "packageLocation": "./.yarn/__virtual__/update-browserslist-db-virtual-62df18e86e/0/cache/update-browserslist-db-npm-1.0.13-ea7b8ee24d-1e47d80182.zip/node_modules/update-browserslist-db/",\
+        ["virtual:8126a959d46e6def6d7f2497c47970a23a94adac85f5be1df9be290c674503b9bcbe0dc057e2741ee222cc2a8a3b9f584b20c3a9eb5ce085704d99fc5d94514c#npm:1.0.13", {\
+          "packageLocation": "./.yarn/__virtual__/update-browserslist-db-virtual-c44986bb1a/0/cache/update-browserslist-db-npm-1.0.13-ea7b8ee24d-1e47d80182.zip/node_modules/update-browserslist-db/",\
           "packageDependencies": [\
-            ["update-browserslist-db", "virtual:c3c1809375389507a1aeedf534fd79f857bb3c64ecc9e006768cadbfe62986d5f0c6d60929598771fa39a935d74fd2f97a9ee5a236e30da17e2b3a480f1ecae0#npm:1.0.13"],\
+            ["update-browserslist-db", "virtual:8126a959d46e6def6d7f2497c47970a23a94adac85f5be1df9be290c674503b9bcbe0dc057e2741ee222cc2a8a3b9f584b20c3a9eb5ce085704d99fc5d94514c#npm:1.0.13"],\
             ["@types/browserslist", null],\
-            ["browserslist", "npm:4.22.3"],\
+            ["browserslist", "npm:4.23.0"],\
             ["escalade", "npm:3.1.1"],\
             ["picocolors", "npm:1.0.0"]\
           ],\
