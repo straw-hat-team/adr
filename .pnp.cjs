@@ -39,7 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:3.2.5"],\
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
-            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.4"],\
+            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.5"],\
             ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.44"],\
             ["vue", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.4.21"],\
             ["zod", "npm:3.22.4"]\
@@ -989,7 +989,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-vue", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:5.0.4"],\
             ["@types/vite", null],\
             ["@types/vue", null],\
-            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.4"],\
+            ["vite", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:5.1.4"],\
             ["vue", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:3.4.19"]\
           ],\
           "packagePeers": [\
@@ -1419,7 +1419,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:3.2.5"],\
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
-            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.4"],\
+            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.5"],\
             ["vitepress", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:1.0.0-rc.44"],\
             ["vue", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.4.21"],\
             ["zod", "npm:3.22.4"]\
@@ -4019,10 +4019,56 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.4", {\
-          "packageLocation": "./.yarn/__virtual__/vite-virtual-02a5d98546/0/cache/vite-npm-5.1.4-330f2f209c-fb8b944c69.zip/node_modules/vite/",\
+        ["npm:5.1.5", {\
+          "packageLocation": "./.yarn/cache/vite-npm-5.1.5-419c18fcfa-14c079ebe5.zip/node_modules/vite/",\
           "packageDependencies": [\
-            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.4"],\
+            ["vite", "npm:5.1.5"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.5", {\
+          "packageLocation": "./.yarn/__virtual__/vite-virtual-5bf64b7fa1/0/cache/vite-npm-5.1.5-419c18fcfa-14c079ebe5.zip/node_modules/vite/",\
+          "packageDependencies": [\
+            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.5"],\
+            ["@types/less", null],\
+            ["@types/lightningcss", null],\
+            ["@types/node", null],\
+            ["@types/sass", null],\
+            ["@types/stylus", null],\
+            ["@types/sugarss", null],\
+            ["@types/terser", null],\
+            ["esbuild", "npm:0.19.12"],\
+            ["fsevents", "patch:fsevents@npm%3A2.3.3#~builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"],\
+            ["less", null],\
+            ["lightningcss", null],\
+            ["postcss", "npm:8.4.35"],\
+            ["rollup", "npm:4.9.6"],\
+            ["sass", null],\
+            ["stylus", null],\
+            ["sugarss", null],\
+            ["terser", null]\
+          ],\
+          "packagePeers": [\
+            "@types/less",\
+            "@types/lightningcss",\
+            "@types/node",\
+            "@types/sass",\
+            "@types/stylus",\
+            "@types/sugarss",\
+            "@types/terser",\
+            "less",\
+            "lightningcss",\
+            "sass",\
+            "stylus",\
+            "sugarss",\
+            "terser"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:5.1.4", {\
+          "packageLocation": "./.yarn/__virtual__/vite-virtual-661f58ed1d/0/cache/vite-npm-5.1.4-330f2f209c-fb8b944c69.zip/node_modules/vite/",\
+          "packageDependencies": [\
+            ["vite", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:5.1.4"],\
             ["@types/less", null],\
             ["@types/lightningcss", null],\
             ["@types/node", null],\
@@ -4088,7 +4134,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["minisearch", "npm:6.3.0"],\
             ["postcss", "npm:8.4.35"],\
             ["shiki", "npm:1.1.6"],\
-            ["vite", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:5.1.4"],\
+            ["vite", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:5.1.4"],\
             ["vue", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:3.4.19"]\
           ],\
           "packagePeers": [\
