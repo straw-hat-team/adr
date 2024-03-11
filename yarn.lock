@@ -1081,7 +1081,7 @@ __metadata:
     prettier: 3.2.5
     prettier-plugin-organize-imports: 3.2.4
     tailwindcss: 3.4.1
-    vite: 5.1.5
+    vite: 5.1.6
     vitepress: 1.0.0-rc.44
     vue: 3.4.21
     zod: 3.22.4
@@ -3409,9 +3409,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.1.5":
-  version: 5.1.5
-  resolution: "vite@npm:5.1.5"
+"vite@npm:5.1.6":
+  version: 5.1.6
+  resolution: "vite@npm:5.1.6"
   dependencies:
     esbuild: ^0.19.3
     fsevents: ~2.3.3
@@ -3445,7 +3445,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 14c079ebe508d55198a3b1ca528d13515c745d7ae279e4864e89110a1661a4cfa880d894c2d7dcf557f6ed3ffc17fa3abea9d9ea4b6f256f0cab99d16a3b385b
+  checksum: 21863ca12303ea6305fe9230a55e7cb30b4cac05dd2a2596889e079163ccc81bcb465ff6dd165001042f47e999192b9c579329484211e000afe9b47068c7fab0
   languageName: node
   linkType: hard
 
