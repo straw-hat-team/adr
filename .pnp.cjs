@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.3.2"],\
             ["gray-matter", "npm:4.0.3"],\
             ["markdownlint-cli", "npm:0.39.0"],\
-            ["postcss", "npm:8.4.35"],\
+            ["postcss", "npm:8.4.36"],\
             ["prettier", "npm:3.2.5"],\
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
@@ -1415,7 +1415,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.3.2"],\
             ["gray-matter", "npm:4.0.3"],\
             ["markdownlint-cli", "npm:0.39.0"],\
-            ["postcss", "npm:8.4.35"],\
+            ["postcss", "npm:8.4.36"],\
             ["prettier", "npm:3.2.5"],\
             ["prettier-plugin-organize-imports", "virtual:0baeb778e0670fc147a4016d79e3cb9aca3c3ce34b443c1c6af314315cbbe82917c539b1234580d851b461bdbd95828dc32054551e06805ee82e23e6aca0bbb8#npm:3.2.4"],\
             ["tailwindcss", "npm:3.4.1"],\
@@ -1600,7 +1600,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fraction.js", "npm:4.3.7"],\
             ["normalize-range", "npm:0.1.2"],\
             ["picocolors", "npm:1.0.0"],\
-            ["postcss", "npm:8.4.35"],\
+            ["postcss", "npm:8.4.36"],\
             ["postcss-value-parser", "npm:4.2.0"]\
           ],\
           "packagePeers": [\
@@ -3161,6 +3161,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map-js", "npm:1.0.2"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:8.4.36", {\
+          "packageLocation": "./.yarn/cache/postcss-npm-8.4.36-b1cd359dc2-1bb0f2bdfc.zip/node_modules/postcss/",\
+          "packageDependencies": [\
+            ["postcss", "npm:8.4.36"],\
+            ["nanoid", "npm:3.3.7"],\
+            ["picocolors", "npm:1.0.0"],\
+            ["source-map-js", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["postcss-import", [\
@@ -3723,6 +3733,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map-js", "npm:1.0.2"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/source-map-js-npm-1.1.0-f0dc61cfce-6ef39381cd.zip/node_modules/source-map-js/",\
+          "packageDependencies": [\
+            ["source-map-js", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["speakingurl", [\
@@ -4132,7 +4149,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mark.js", "npm:8.11.1"],\
             ["markdown-it-mathjax3", null],\
             ["minisearch", "npm:6.3.0"],\
-            ["postcss", "npm:8.4.35"],\
+            ["postcss", "npm:8.4.36"],\
             ["shiki", "npm:1.1.6"],\
             ["vite", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:5.1.4"],\
             ["vue", "virtual:4484ec9c9fa29a1ebd884636dbbb37e314ce712351a4332e4c71f02f759b7939016babfb5eacf0bc57cef99e45de8834a0066bcf74a654e33cfa421885dc23ff#npm:3.4.19"]\
