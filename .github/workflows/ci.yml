@@ -28,5 +28,5 @@ jobs:
         with:
           node-version-file: .tool-versions
           cache: yarn
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - run: yarn lint:markdownlint
