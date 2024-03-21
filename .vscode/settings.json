@@ -1,5 +1,10 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.markdownlint": "explicit"
-  }
+  },
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs"
 }

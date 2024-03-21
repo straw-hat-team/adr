@@ -3,3 +3,7 @@ generate_adr_id:
 
 start_adr:
 	./scripts/start_adr.sh
+
+yarn-upgrade-stable:
+	yarn set version stable
+	yarn dlx @yarnpkg/sdks vscode
