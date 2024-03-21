@@ -34,7 +34,7 @@ align with such project.
 - Your Top-Level Documentation structure or navigation **MUST** include the
   following:
   - Tutorials or Tutorial
-  - How-to Guides or How-to
+  - How-to Guides or How-tos
   - References or Reference
   - Explanations or Explanation
 
@@ -46,7 +46,7 @@ align with such project.
 ## Documentation
 
 - [Tutorials](./docs/tutorials/README.md)
-- [How-to](./docs/how-to/README.md)
+- [How-tos](./docs/how-tos/README.md)
 - [References](./docs/references/README.md)
 - [Explanations](./docs/explanations/README.md)
 ```
