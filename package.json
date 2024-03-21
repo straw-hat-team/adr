@@ -1,6 +1,6 @@
 {
   "packageManager": "yarn@4.1.1",
-  "name": "adr",
+  "name": "@straw-hat/adr-webapp",
   "type": "module",
   "scripts": {
     "docs:dev": "vitepress dev",
