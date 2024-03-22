@@ -633,14 +633,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/core@npm:1.2.0, @shikijs/core@npm:^1.1.7":
+"@shikijs/core@npm:1.2.0, @shikijs/core@npm:^1.2.0":
   version: 1.2.0
   resolution: "@shikijs/core@npm:1.2.0"
   checksum: 10c0/6c8e2af3231e79824d34e0c513bc4d55db480add8a206b79f5db3e3839bd234002864f5cca0469296abbb6c3f8848322c05ba3e9a3a31de16397bb3b473c371b
   languageName: node
   linkType: hard
 
-"@shikijs/transformers@npm:^1.1.7":
+"@shikijs/transformers@npm:^1.2.0":
   version: 1.2.0
   resolution: "@shikijs/transformers@npm:1.2.0"
   dependencies:
@@ -665,7 +665,7 @@ __metadata:
     prettier-plugin-organize-imports: "npm:3.2.4"
     tailwindcss: "npm:3.4.1"
     vite: "npm:5.2.2"
-    vitepress: "npm:1.0.0"
+    vitepress: "npm:1.0.1"
     vue: "npm:3.4.21"
     zod: "npm:3.22.4"
   languageName: unknown
@@ -2995,7 +2995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shiki@npm:1.2.0, shiki@npm:^1.1.7":
+"shiki@npm:1.2.0, shiki@npm:^1.2.0":
   version: 1.2.0
   resolution: "shiki@npm:1.2.0"
   dependencies:
@@ -3352,14 +3352,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:1.0.0":
-  version: 1.0.0
-  resolution: "vitepress@npm:1.0.0"
+"vitepress@npm:1.0.1":
+  version: 1.0.1
+  resolution: "vitepress@npm:1.0.1"
   dependencies:
     "@docsearch/css": "npm:^3.6.0"
     "@docsearch/js": "npm:^3.6.0"
-    "@shikijs/core": "npm:^1.1.7"
-    "@shikijs/transformers": "npm:^1.1.7"
+    "@shikijs/core": "npm:^1.2.0"
+    "@shikijs/transformers": "npm:^1.2.0"
     "@types/markdown-it": "npm:^13.0.7"
     "@vitejs/plugin-vue": "npm:^5.0.4"
     "@vue/devtools-api": "npm:^7.0.16"
@@ -3368,12 +3368,12 @@ __metadata:
     focus-trap: "npm:^7.5.4"
     mark.js: "npm:8.11.1"
     minisearch: "npm:^6.3.0"
-    shiki: "npm:^1.1.7"
+    shiki: "npm:^1.2.0"
     vite: "npm:^5.2.2"
     vue: "npm:^3.4.21"
   peerDependencies:
-    markdown-it-mathjax3: ^4.3.2
-    postcss: ^8.4.35
+    markdown-it-mathjax3: ^4
+    postcss: ^8
   peerDependenciesMeta:
     markdown-it-mathjax3:
       optional: true
@@ -3381,7 +3381,7 @@ __metadata:
       optional: true
   bin:
     vitepress: bin/vitepress.js
-  checksum: 10c0/bbb7fc65e70ce1725396ef1f6f69be85ae5e646b903209384132605c788ebed44b9d0eb195faa9a68f9b39e8e4ae2a72e201413dad81b02db5cec967d6b73526
+  checksum: 10c0/0bb2eca570139aa1889d76b8de101eab49cdeafc13c82a6a9bb63a887fd898d6eb975b6e3284453a14b91bf478a268dfd3fbe22261da2bcd85071e8c2e472847
   languageName: node
   linkType: hard
 
