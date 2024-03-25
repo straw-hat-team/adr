@@ -5,6 +5,7 @@ state: <!-- Draft|Reviewing|Approved|Rejected|Deferred|Withdrawn|Replaced -->
 replaced_by: <!-- [ADR#0000000000](../ards/../adrs/0000000000/README.md) -->
 created: <!-- YYYY-MM-DD -->
 tags: [<!-- separated by comma, and lowercase -->]
+category: <!-- General|Platform|JavaScript -->
 ---
 
 # [short title of solved problem and solution]
