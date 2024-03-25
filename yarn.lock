@@ -664,7 +664,7 @@ __metadata:
     prettier: "npm:3.2.5"
     prettier-plugin-organize-imports: "npm:3.2.4"
     tailwindcss: "npm:3.4.1"
-    vite: "npm:5.2.3"
+    vite: "npm:5.2.6"
     vitepress: "npm:1.0.1"
     vue: "npm:3.4.21"
     zod: "npm:3.22.4"
@@ -3312,9 +3312,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.2.3":
-  version: 5.2.3
-  resolution: "vite@npm:5.2.3"
+"vite@npm:5.2.6":
+  version: 5.2.6
+  resolution: "vite@npm:5.2.6"
   dependencies:
     esbuild: "npm:^0.20.1"
     fsevents: "npm:~2.3.3"
@@ -3348,7 +3348,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/6cd235a4fdb41da87cc6e9734c91935751fe6eae1f797a68c5f8772be7e99cc1fd596c783255c168c2aa6fb3ce4f520b2b246713b91e7b0642a976ba29b89c07
+  checksum: 10c0/9ccaa65521b738ed5d6ad9cd118584a833191d29649eaa77ccb8096a60ded2ca9014193b8b866ad76054d0c89443f7b68b578686e4e2ef83147273e7788408c2
   languageName: node
   linkType: hard
 
