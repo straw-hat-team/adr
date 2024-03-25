@@ -3,7 +3,7 @@ id: '5541831634'
 title: React project files and directories names convention
 state: Approved
 created: 2020-12-01
-tags: [react]
+tags: [ react ]
 category: JavaScript
 ---
 
@@ -49,6 +49,18 @@ need to answer the simple question:
 
 The simplest way to answer that question is to ask which [Route](#route) is
 involved, and work your way up or down the Application Tree.
+
+For that reason, we need to have a strong cohesion and controlled coupling of
+the files between the routes is critical. The higher your changes are in the
+Application Tree, the more risk you are introducing to the application.
+The lower your changes are in the Application Tree, the less risk you are
+introducing to the application since the changes are more isolated.
+
+Probably the most important part of the ADR is the fact that you can not import
+or have circular dependencies between sibling routes, you will require to move
+the files to a common root directory that is a parent to the routes. Signaling
+that the files are shared between the routes and that the files are increasing
+the risk of the application.
 
 ## Resolution
 
