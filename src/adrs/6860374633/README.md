@@ -3,8 +3,8 @@ id: '6860374633'
 title: Error CloudEvents Adapter
 state: Approved
 created: 2020-11-10
-tags: [nodejs]
-category: General
+tags: [messaging, errors, cloudevents, adapter]
+category: Platform
 ---
 
 # Error CloudEvents Adapter

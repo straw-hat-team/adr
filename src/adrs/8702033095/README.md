@@ -4,7 +4,7 @@ title: URL Path Design
 state: Approved
 created: 2021-12-13
 tags: [seo, url, openapi]
-category: General
+category: Platform
 ---
 
 # URL Path Design
