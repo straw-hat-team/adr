@@ -1,6 +1,13 @@
-import { defineConfig } from 'vitepress';
+import {defineConfig} from 'vitepress';
 import path from 'node:path';
-import { readFrontmatter, orderByCreated, AdrFrontmatter, toSidebarItem, groupByCategory } from './helpers';
+import {
+  readFrontmatter,
+  orderByCreated,
+  AdrFrontmatter,
+  toSidebarItem,
+  groupByCategory,
+  hasAnyCategory
+} from './helpers';
 
 export default async () => {
   const frontmatters = await readFrontmatter(['adrs/**/*.md'], {
@@ -26,23 +33,17 @@ export default async () => {
         pattern: 'https://github.com/straw-hat-team/adr/tree/master/src/:path',
       },
       nav: [
-        { text: 'Contributing', link: '/contributing' },
-        { text: 'GitHub', link: 'https://github.com/straw-hat-team/adr' },
+        {text: 'Contributing', link: '/contributing'},
+        {text: 'GitHub', link: 'https://github.com/straw-hat-team/adr'},
       ],
-      sidebar: [
-        {
-          text: 'General',
+      sidebar: ['General', 'Platform', 'JavaScript'].filter(hasAnyCategory(categories)).map(
+        (category) => ({
+          text: category,
           collapsible: true,
           collapsed: false,
-          items: categories['General'].map(toSidebarItem),
-        },
-        {
-          text: 'JavaScript Stack',
-          collapsible: true,
-          collapsed: false,
-          items: categories['JavaScript']?.map(toSidebarItem) ?? [],
-        },
-      ],
+          items: categories[category].map(toSidebarItem) ?? [],
+        }),
+      ),
     },
   });
 };

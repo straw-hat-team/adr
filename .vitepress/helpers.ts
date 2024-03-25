@@ -74,13 +74,17 @@ class InvalidFrontmatterError extends Error {
   }
 }
 
+const categories = ['General', 'Platform', 'JavaScript'] as const;
+
+type Category = typeof categories[number];
+
 export const AdrFrontmatter = z.object({
   id: z.string(),
   title: z.string(),
   created: z.coerce.date(),
   state: z.enum(['Draft', 'Reviewing', 'Approved', 'Withdrawn', 'Rejected', 'Deferred', 'Replaced']),
   tags: z.array(z.string()),
-  category: z.enum(['General', 'JavaScript']),
+  category: z.enum(categories),
 });
 
 type IAdrFrontmatter = z.infer<typeof AdrFrontmatter>;
@@ -89,8 +93,8 @@ export function orderByCreated(r1: ReadFrontmatterResult<IAdrFrontmatter>, r2: R
   return r1.frontmatter.created - r2.frontmatter.created;
 }
 
-export function groupByCategory<TKeys extends string>(
-  acc: Record<TKeys, Array<ReadFrontmatterResult<IAdrFrontmatter>>>,
+export function groupByCategory(
+  acc: Record<Category, Array<ReadFrontmatterResult<IAdrFrontmatter>>>,
   r: ReadFrontmatterResult<IAdrFrontmatter>,
 ) {
   acc[r.frontmatter.category] ??= [];
@@ -103,4 +107,8 @@ export function toSidebarItem(r: ReadFrontmatterResult<IAdrFrontmatter>) {
     text: r.frontmatter.title,
     link: `/adrs/${r.frontmatter.id}/README.md`,
   };
+}
+
+export function hasAnyCategory(categories: Record<Category, Array<ReadFrontmatterResult<IAdrFrontmatter>>>) {
+  return (category: Category) => categories[category]?.length > 0;
 }
