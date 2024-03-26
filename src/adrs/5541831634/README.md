@@ -72,10 +72,8 @@ the risk of the application.
 - You **MUST** use `<rootDir>/src/@types` to store TypeScript definition files
   (`*.d.ts`).
 - You **MUST** use `<rootDir>/src/polyfills` to store polyfills.
-- You **MUST** use `_` as a prefix
-  for [Private Directories](#private-directory), except direct children of
-  `<rootDir>/src` or under `<rootDir>/src/libs`.
-  directories.
+- You **MUST** use `_` as a prefix for [Private Directories](#private-directory) under
+  `<rootDir>/src/app` to opt-out of the routing system.
 - You **SHOULD** avoid re-exporting files, and you **SHOULD** use the file
   directly.
 - You **SHOULD** use relative imports when importing sibling files or nested
