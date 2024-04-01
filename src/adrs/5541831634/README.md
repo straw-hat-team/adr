@@ -161,6 +161,7 @@ A fractal pattern is a pattern that you could repeat over and over again.
 
 - You **MUST** use `<fractalDir>/i18n` to store anything
   related to Internationalization.
+- You **MUST** use `<fractalDir>/i18n/messages` to store the i18n messages.
 - You **MUST** use `<fractalDir>/i18n/datetime` to store i18n date
   and time formatting. Read more about the intent
   at [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
