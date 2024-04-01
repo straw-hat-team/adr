@@ -665,7 +665,7 @@ __metadata:
     prettier-plugin-organize-imports: "npm:3.2.4"
     tailwindcss: "npm:3.4.3"
     vite: "npm:5.2.6"
-    vitepress: "npm:1.0.1"
+    vitepress: "npm:1.0.2"
     vue: "npm:3.4.21"
     zod: "npm:3.22.4"
   languageName: unknown
@@ -3392,9 +3392,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:1.0.1":
-  version: 1.0.1
-  resolution: "vitepress@npm:1.0.1"
+"vitepress@npm:1.0.2":
+  version: 1.0.2
+  resolution: "vitepress@npm:1.0.2"
   dependencies:
     "@docsearch/css": "npm:^3.6.0"
     "@docsearch/js": "npm:^3.6.0"
@@ -3421,7 +3421,7 @@ __metadata:
       optional: true
   bin:
     vitepress: bin/vitepress.js
-  checksum: 10c0/0bb2eca570139aa1889d76b8de101eab49cdeafc13c82a6a9bb63a887fd898d6eb975b6e3284453a14b91bf478a268dfd3fbe22261da2bcd85071e8c2e472847
+  checksum: 10c0/1cb5430852776e6b1923912aac61a5ae235d3a4f114e56af82918a42857487abe7357fa1b738e9bc0f8b2f4811b3f8409a874e9205d9c2294560dd926014f368
   languageName: node
   linkType: hard
 
