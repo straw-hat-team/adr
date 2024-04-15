@@ -20,7 +20,7 @@
     "prettier-plugin-organize-imports": "3.2.4",
     "tailwindcss": "3.4.3",
     "vitepress": "1.0.2",
-    "vue": "3.4.21"
+    "vue": "3.4.22"
   },
   "dependencies": {
     "fast-glob": "3.3.2",
