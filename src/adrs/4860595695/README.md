@@ -1,9 +1,10 @@
 ---
-id: 4860595695
+id: "4860595695"
 title: Human-Readable IDs
 state: Approved
 created: 2024-03-24
-tags: [ platform ]
+category: Platform
+tags: [ id ]
 ---
 
 # Human-Readable IDs
