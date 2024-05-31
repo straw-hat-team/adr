@@ -42,15 +42,12 @@ easily understandable.
 
 - Potential Length: Human-readable IDs might be longer.
 
-## Out of Scope
-
-- Define the format of human-readable IDs. Although strongly recommended to
-  use `[resource type]_[ulid]`, the format is not the focus of this ADR.
-
 ## Resolution
 
 - You **MUST** use a human-readable ID as a single value to identify a resource.
 - You **MUST** include the resource type as a prefix in the ID.
+- You **MUST** `[resource type]_[resource id]` as the format for human-readable
+  IDs.
 
 ## Links
 
