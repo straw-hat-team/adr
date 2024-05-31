@@ -25,7 +25,7 @@
   "dependencies": {
     "fast-glob": "3.3.2",
     "gray-matter": "4.0.3",
-    "vite": "5.2.11",
+    "vite": "5.2.12",
     "zod": "3.23.8"
   }
 }

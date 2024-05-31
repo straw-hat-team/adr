@@ -664,7 +664,7 @@ __metadata:
     prettier: "npm:3.2.5"
     prettier-plugin-organize-imports: "npm:3.2.4"
     tailwindcss: "npm:3.4.3"
-    vite: "npm:5.2.11"
+    vite: "npm:5.2.12"
     vitepress: "npm:1.2.2"
     vue: "npm:3.4.27"
     zod: "npm:3.23.8"
@@ -3372,7 +3372,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.2.11, vite@npm:^5.2.11":
+"vite@npm:5.2.12":
+  version: 5.2.12
+  resolution: "vite@npm:5.2.12"
+  dependencies:
+    esbuild: "npm:^0.20.1"
+    fsevents: "npm:~2.3.3"
+    postcss: "npm:^8.4.38"
+    rollup: "npm:^4.13.0"
+  peerDependencies:
+    "@types/node": ^18.0.0 || >=20.0.0
+    less: "*"
+    lightningcss: ^1.21.0
+    sass: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    less:
+      optional: true
+    lightningcss:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 10c0/f03fdfc320adea3397df3e327029fd875f8220779f679ab183a3a994e8788b4ce531fee28f830361fb274f3cf08ed9adb9429496ecefdc3faf535b38da7ea8b1
+  languageName: node
+  linkType: hard
+
+"vite@npm:^5.2.11":
   version: 5.2.11
   resolution: "vite@npm:5.2.11"
   dependencies:
