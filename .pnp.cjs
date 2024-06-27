@@ -37,7 +37,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.3.2"],\
           ["prettier-plugin-organize-imports", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.2.4"],\
           ["tailwindcss", "npm:3.4.4"],\
-          ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.1"],\
+          ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.2"],\
           ["vitepress", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:1.2.3"],\
           ["vue", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.4.29"],\
           ["zod", "npm:3.23.8"]\
@@ -1074,7 +1074,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.3.2"],\
           ["prettier-plugin-organize-imports", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.2.4"],\
           ["tailwindcss", "npm:3.4.4"],\
-          ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.1"],\
+          ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.2"],\
           ["vitepress", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:1.2.3"],\
           ["vue", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.4.29"],\
           ["zod", "npm:3.23.8"]\
@@ -4312,17 +4312,17 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["npm:5.3.1", {\
-        "packageLocation": "../../.yarn/berry/cache/vite-npm-5.3.1-0fe9027262-10c0.zip/node_modules/vite/",\
+      ["npm:5.3.2", {\
+        "packageLocation": "../../.yarn/berry/cache/vite-npm-5.3.2-0bfa725124-10c0.zip/node_modules/vite/",\
         "packageDependencies": [\
-          ["vite", "npm:5.3.1"]\
+          ["vite", "npm:5.3.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.1", {\
-        "packageLocation": "./.yarn/__virtual__/vite-virtual-dd7d4c2aa1/3/.yarn/berry/cache/vite-npm-5.3.1-0fe9027262-10c0.zip/node_modules/vite/",\
+      ["virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.2", {\
+        "packageLocation": "./.yarn/__virtual__/vite-virtual-6073a77b77/3/.yarn/berry/cache/vite-npm-5.3.2-0bfa725124-10c0.zip/node_modules/vite/",\
         "packageDependencies": [\
-          ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.1"],\
+          ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.3.2"],\
           ["@types/less", null],\
           ["@types/lightningcss", null],\
           ["@types/node", null],\
