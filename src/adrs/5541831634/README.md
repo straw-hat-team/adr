@@ -3,7 +3,7 @@ id: '5541831634'
 title: React project files and directories names convention
 state: Approved
 created: 2020-12-01
-tags: [ react ]
+tags: [react]
 category: JavaScript
 ---
 

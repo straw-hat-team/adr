@@ -1,4 +1,4 @@
-import {defineConfig} from 'vitepress';
+import { defineConfig } from 'vitepress';
 import path from 'node:path';
 import {
   readFrontmatter,
@@ -6,7 +6,7 @@ import {
   AdrFrontmatter,
   toSidebarItem,
   groupByCategory,
-  hasAnyCategory
+  hasAnyCategory,
 } from './helpers';
 
 export default async () => {
@@ -33,17 +33,15 @@ export default async () => {
         pattern: 'https://github.com/straw-hat-team/adr/tree/master/src/:path',
       },
       nav: [
-        {text: 'Contributing', link: '/contributing'},
-        {text: 'GitHub', link: 'https://github.com/straw-hat-team/adr'},
+        { text: 'Contributing', link: '/contributing' },
+        { text: 'GitHub', link: 'https://github.com/straw-hat-team/adr' },
       ],
-      sidebar: ['General', 'Platform', 'JavaScript'].filter(hasAnyCategory(categories)).map(
-        (category) => ({
-          text: category,
-          collapsible: true,
-          collapsed: false,
-          items: categories[category].map(toSidebarItem) ?? [],
-        }),
-      ),
+      sidebar: ['General', 'Platform', 'JavaScript'].filter(hasAnyCategory(categories)).map((category) => ({
+        text: category,
+        collapsible: true,
+        collapsed: false,
+        items: categories[category].map(toSidebarItem) ?? [],
+      })),
     },
   });
 };

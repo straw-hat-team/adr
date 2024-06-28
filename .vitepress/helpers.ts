@@ -76,7 +76,7 @@ class InvalidFrontmatterError extends Error {
 
 const categories = ['General', 'Platform', 'JavaScript'] as const;
 
-type Category = typeof categories[number];
+type Category = (typeof categories)[number];
 
 export const AdrFrontmatter = z.object({
   id: z.string(),
