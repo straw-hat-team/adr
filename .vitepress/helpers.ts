@@ -74,7 +74,7 @@ class InvalidFrontmatterError extends Error {
   }
 }
 
-const categories = ['General', 'Platform', 'JavaScript'] as const;
+const categories = ['General', 'Platform', 'Elixir', 'JavaScript'] as const;
 
 type Category = (typeof categories)[number];
 

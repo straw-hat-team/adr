@@ -36,7 +36,7 @@ export default async () => {
         { text: 'Contributing', link: '/contributing' },
         { text: 'GitHub', link: 'https://github.com/straw-hat-team/adr' },
       ],
-      sidebar: ['General', 'Platform', 'JavaScript'].filter(hasAnyCategory(categories)).map((category) => ({
+      sidebar: ['General', 'Platform', 'Elixir', 'JavaScript'].filter(hasAnyCategory(categories)).map((category) => ({
         text: category,
         collapsible: true,
         collapsed: false,
