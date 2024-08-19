@@ -27,16 +27,16 @@ Defining the "Context" is not straightforward, especially in CRUD-based
 development, leading to bike-shedding. This is especially true in GraphQL, where
 we have a Graph, and data travels in and out of multiple "Contexts."
 
-The God Module becomes more challenging to maintain and understand as the system
-grows; scrolling through hundreds of lines of code to find the resolver you seek
-could be a better experience. Need more practical names for functions. And even
+As the system grows, the God Module becomes more challenging to maintain and
+understand. Scrolling through hundreds of lines of code to find the resolver you
+seek could be a better experience. Functions need more practical names. And even
 worse, maintaining the test suite becomes a nightmare.
 
 ### Focusing on Use Cases
 
-Giving the use case its module following the same Interface/Behaviour, it
-allows Platform-Level indirection to wrap the Product-Level code, especially
-when the resolver is about a specific use case and not the entity/data.
+Giving the use case its module following the same Interface/Behaviour allows
+Platform-Level indirection to wrap the Product-Level code, especially when the
+resolver concerns a specific use case and not the entity/data.
 
 Adding caching, a11y, or other concerns becomes easier; the module name becomes
 the identity (as if it were the Message Type) the Platform Level code can
@@ -67,12 +67,11 @@ We have tried naming around the Node only in the past, such as:
 - `List[Plural Resource Name]Of[Parent Resource Name]`
 - `Get[Singular Resource Name]Of[Parent Resource Name]`
 
-The problem with that is that it is not possible since you could have multiple
-fields that return the same type, and the focus should be on the field, not
-the return type.
+The problem is that it is impossible since you could have multiple fields that
+return the same type, and the focus should be on the field, not the return type.
 
-Likewise, using List or Get is not as relevant as the field name to identity
-what the resolver is about.
+Likewise, List or Get is less relevant than the field name to identify the
+resolver's purpose.
 
 ## Resolution
 
