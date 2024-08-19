@@ -44,7 +44,6 @@ leverage.
 
 Since the resolvers are not shared, we are applying the practical
 Single-Responsibility Principle and DRY Principle; the intent was always about
-
 Use Cases since that is ultimately what the system is about.
 
 > "A system is what the system does, not by its classification. Its capabilities
