@@ -1,7 +1,7 @@
 ---
 id: '4615273139'
 title: GraphQL Resolver Naming Convention
-state: Draft
+state: Approved
 created: 2024-08-10
 tags: [ elixir, absinthe, graphql, naming ]
 category: Elixir
