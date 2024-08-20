@@ -65,7 +65,7 @@ agnostic of the library.
 
 ## Links
 
-- [react/jsx-fragments](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-fragments.md)
+- [react/jsx-fragments](https://github.com/yannickcr/eslint-plugin-react/blob/main/docs/rules/jsx-fragments.md)
   ESLint rule about JSX short syntax. We suggest to enable the rule with the
   following config:
 

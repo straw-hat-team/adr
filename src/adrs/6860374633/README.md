@@ -45,7 +45,7 @@ provide interoperability across services, platforms, and systems.
 
 - Constraints:
   - REQUIRED
-  - MUST be <https://github.com/straw-hat-team/adr/tree/master/adrs/6860374633/v1/dataschema.json>
+  - MUST be <https://github.com/straw-hat-team/adr/tree/main/adrs/6860374633/v1/dataschema.json>
 
 ### data
 
