@@ -768,7 +768,7 @@ __metadata:
   resolution: "@straw-hat/adr-webapp@workspace:."
   dependencies:
     "@straw-hat/prettier-config": "npm:3.1.5"
-    "@vueuse/core": "npm:11.0.1"
+    "@vueuse/core": "npm:11.0.3"
     autoprefixer: "npm:10.4.20"
     body-scroll-lock: "npm:4.0.0-beta.0"
     fast-glob: "npm:3.3.2"
@@ -779,7 +779,7 @@ __metadata:
     prettier-plugin-organize-imports: "npm:4.0.0"
     tailwindcss: "npm:3.4.10"
     vite: "npm:5.4.2"
-    vitepress: "npm:1.3.3"
+    vitepress: "npm:1.3.4"
     vue: "npm:3.4.38"
     zod: "npm:3.23.8"
   languageName: unknown
@@ -1014,6 +1014,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:11.0.3":
+  version: 11.0.3
+  resolution: "@vueuse/core@npm:11.0.3"
+  dependencies:
+    "@types/web-bluetooth": "npm:^0.0.20"
+    "@vueuse/metadata": "npm:11.0.3"
+    "@vueuse/shared": "npm:11.0.3"
+    vue-demi: "npm:>=0.14.10"
+  checksum: 10c0/9b8266d7d7d3e2942b632217da6dc651ef7394b1744736941f48e32d73db3ccd1a5684a70d40af9c956d58f74e4719a6fa31a884cb8f76d4e09f762dbf0bfc0a
+  languageName: node
+  linkType: hard
+
 "@vueuse/integrations@npm:^11.0.0":
   version: 11.0.1
   resolution: "@vueuse/integrations@npm:11.0.1"
@@ -1070,12 +1082,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/metadata@npm:11.0.3":
+  version: 11.0.3
+  resolution: "@vueuse/metadata@npm:11.0.3"
+  checksum: 10c0/d6ad604bd59b59f3342e5c227efc322e562150550003c82527cd32be97ae4e28654eacca06870ceec9b5b835c61056d83edfdfe6ff6c856f53f6a6302790ae53
+  languageName: node
+  linkType: hard
+
 "@vueuse/shared@npm:11.0.1":
   version: 11.0.1
   resolution: "@vueuse/shared@npm:11.0.1"
   dependencies:
     vue-demi: "npm:>=0.14.10"
   checksum: 10c0/9255432a7d1581f4cfcc5c5fa1eb2320a0ced084933c2068a9162abf3fd8b581192d532727632f52e88a730f3def24fec1bf87f19e08bb65039573af770a6a78
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:11.0.3":
+  version: 11.0.3
+  resolution: "@vueuse/shared@npm:11.0.3"
+  dependencies:
+    vue-demi: "npm:>=0.14.10"
+  checksum: 10c0/3d42bf185dcfd17aa20f2381271057cf55484c983795ed211c69586526b7b80ec5641a476b0ed8645dc19991203396b5a7c6219e93f9a79fab8f2ab47f680448
   languageName: node
   linkType: hard
 
@@ -3702,9 +3730,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:1.3.3":
-  version: 1.3.3
-  resolution: "vitepress@npm:1.3.3"
+"vitepress@npm:1.3.4":
+  version: 1.3.4
+  resolution: "vitepress@npm:1.3.4"
   dependencies:
     "@docsearch/css": "npm:^3.6.1"
     "@docsearch/js": "npm:^3.6.1"
@@ -3732,7 +3760,7 @@ __metadata:
       optional: true
   bin:
     vitepress: bin/vitepress.js
-  checksum: 10c0/11606999fef83c48f081d066c61119f2207bd2e7b1f57d29e4ab9eebf52609f0e68b460ee11f56a93a0612606b3cc4cafbafc89a04399bf1900995a56d27718b
+  checksum: 10c0/5892035ee39cbb030d9dec5e329d768f8b5b8469c6e349cb3444c9f66e07b0cf8ccff1a58f7f57de1a73e3af9de3e4cd12b1a46c18c63f852dcbe4ef91e3c94d
   languageName: node
   linkType: hard
 
