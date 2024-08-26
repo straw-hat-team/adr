@@ -289,14 +289,12 @@ you may need to merge the `subject` when wrapping errors.
 
 ```ts
 type UniversalError = {
-  /**
-   * The version of the specification that the error uses.
-   */
-  specversion: string;
+  specversion: SpecVersion;
   code: Code;
   message: MessageDescription;
   info: ErrorInfo;
   causes: UniversalError[];
+  visibility: Visibility;
 
   //
   // Optional Information
@@ -308,6 +306,25 @@ type UniversalError = {
   localized_message?: LocalizedMessage;
   retry_info?: RetryInfo;
 };
+
+/**
+ * The version of the specification that the error uses.
+ * Monotonically increasing version numbers are used to identify the evolution
+ * of the error format. The version number is represented as a non-negative
+ * integer.
+ */
+type SpecVersion = integer;
+
+enum Visibility {
+  /**
+   * The error must not be shown to the client.
+   */
+  INTERNAL,
+  /**
+   * The error can be shown to the client.
+   */
+  PUBLIC,
+}i
 
 enum Code {
   CANCELLED,
@@ -538,3 +555,7 @@ type Duration = {
 - <https://datatracker.ietf.org/doc/html/rfc7807>
 - <https://cloud.google.com/storage/docs/json_api/v1/status-codes>
 - <https://laravel.com/docs/9.x/validation#validation-error-response-format>
+- <https://owasp.org/www-community/Improper_Error_Handling>
+- <https://owasp.org/www-project-developer-guide/draft/design/web_app_checklist/handle_errors_and_exceptions/>
+- <https://cheatsheetseries.owasp.org/cheatsheets/Error_Handling_Cheat_Sheet>
+- <https://top10proactive.owasp.org/v3/en/c10-errors-exceptions>
