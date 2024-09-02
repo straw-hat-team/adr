@@ -34,7 +34,7 @@ const RAW_RUNTIME_STATE =
           ["fast-glob", "npm:3.3.2"],\
           ["gray-matter", "npm:4.0.3"],\
           ["markdownlint-cli", "npm:0.41.0"],\
-          ["postcss", "npm:8.4.41"],\
+          ["postcss", "npm:8.4.44"],\
           ["prettier", "npm:3.3.3"],\
           ["prettier-plugin-organize-imports", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:4.0.0"],\
           ["tailwindcss", "npm:3.4.10"],\
@@ -1021,7 +1021,7 @@ const RAW_RUNTIME_STATE =
           ["fast-glob", "npm:3.3.2"],\
           ["gray-matter", "npm:4.0.3"],\
           ["markdownlint-cli", "npm:0.41.0"],\
-          ["postcss", "npm:8.4.41"],\
+          ["postcss", "npm:8.4.44"],\
           ["prettier", "npm:3.3.3"],\
           ["prettier-plugin-organize-imports", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:4.0.0"],\
           ["tailwindcss", "npm:3.4.10"],\
@@ -1628,7 +1628,7 @@ const RAW_RUNTIME_STATE =
           ["fraction.js", "npm:4.3.7"],\
           ["normalize-range", "npm:0.1.2"],\
           ["picocolors", "npm:1.0.1"],\
-          ["postcss", "npm:8.4.41"],\
+          ["postcss", "npm:8.4.44"],\
           ["postcss-value-parser", "npm:4.2.0"]\
         ],\
         "packagePeers": [\
@@ -3286,6 +3286,16 @@ const RAW_RUNTIME_STATE =
           ["source-map-js", "npm:1.2.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:8.4.44", {\
+        "packageLocation": "../../.yarn/berry/cache/postcss-npm-8.4.44-2d4d96a81a-10c0.zip/node_modules/postcss/",\
+        "packageDependencies": [\
+          ["postcss", "npm:8.4.44"],\
+          ["nanoid", "npm:3.3.7"],\
+          ["picocolors", "npm:1.0.1"],\
+          ["source-map-js", "npm:1.2.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["postcss-import", [\
@@ -4357,7 +4367,7 @@ const RAW_RUNTIME_STATE =
           ["mark.js", "npm:8.11.1"],\
           ["markdown-it-mathjax3", null],\
           ["minisearch", "npm:7.1.0"],\
-          ["postcss", "npm:8.4.41"],\
+          ["postcss", "npm:8.4.44"],\
           ["shiki", "npm:1.14.1"],\
           ["vite", "virtual:300c8bac83502407458d92199db511b8c85f98aac1e372cefceeb897a9fa2a0bcd952282ec763f86b5020f12994086cb83e117411ba7a865ebdad8dbda3a48e4#npm:5.4.1"],\
           ["vue", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.4.38"]\
