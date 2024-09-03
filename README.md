@@ -24,7 +24,7 @@ know.
 
 ### Have an idea for an ADR?
 
-If you have an idea for an ARD that isn't written yet (yes, there are plenty!)
+If you have an idea for an ADR that isn't written yet (yes, there are plenty!)
 check out [Contributing to the project](./CONTRIBUTING.md) to see how you can
 write ADRs for others to follow.
 
