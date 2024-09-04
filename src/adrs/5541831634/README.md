@@ -108,6 +108,9 @@ the risk of the application.
 - You **MUST NOT** use Next.js Pages Router directory structure.
 - You **MUST** use `<rootDir>/src/app` directory to store the Next.js Router.
 - You **MUST** use `<rootDir>/public` to store static files.
+- You **MUST NOT** import Server Action files from another Server Action file.
+- You **MUST NOT** call a Server Action function from another Server Action
+  function.
 
 ### React Native Only
 
@@ -193,10 +196,9 @@ Related to Next.js projects only.
 
 - You **MUST** use `<fractalDir>/server` to store anything related to the
   Next.js server-side code. You **MUST** add `'use server;'` directive to the
-  top of
-  the files.
+  top of the files.
 - You **MUST** use `<fractalDir>/server/actions` to store anything related to
-  Next.js actions.
+  Next.js Server Actions.
 
 ## Terminology
 
