@@ -52,4 +52,4 @@ easily understandable.
 ## Links
 
 - [Designing APIs for humans: Object IDs](https://dev.to/stripe/designing-apis-for-humans-object-ids-3o5a)
-- [About Data vs. Information](https://www.systems-thinking.org/dikw/dikw.htm)
+- [About Data vs. Information](https://strawhatllc.notion.site/Data-Information-Knowledge-and-Wisdom-142b2220e11d8004a842fd982fde319c)
