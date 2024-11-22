@@ -3021,7 +3021,7 @@ const RAW_RUNTIME_STATE =
           ["markdownlint", "npm:0.35.0"],\
           ["minimatch", "npm:10.0.1"],\
           ["run-con", "npm:1.3.2"],\
-          ["smol-toml", "npm:1.3.0"]\
+          ["smol-toml", "npm:1.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4214,10 +4214,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["smol-toml", [\
-      ["npm:1.3.0", {\
-        "packageLocation": "../../.yarn/berry/cache/smol-toml-npm-1.3.0-9387afb182-10c0.zip/node_modules/smol-toml/",\
+      ["npm:1.3.1", {\
+        "packageLocation": "../../.yarn/berry/cache/smol-toml-npm-1.3.1-11d8975e54-10c0.zip/node_modules/smol-toml/",\
         "packageDependencies": [\
-          ["smol-toml", "npm:1.3.0"]\
+          ["smol-toml", "npm:1.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
