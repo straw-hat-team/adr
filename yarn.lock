@@ -745,14 +745,14 @@ __metadata:
   resolution: "@straw-hat/adr-webapp@workspace:."
   dependencies:
     "@straw-hat/prettier-config": "npm:3.1.5"
-    "@vueuse/core": "npm:11.2.0"
+    "@vueuse/core": "npm:11.3.0"
     autoprefixer: "npm:10.4.20"
     body-scroll-lock: "npm:4.0.0-beta.0"
     fast-glob: "npm:3.3.2"
     gray-matter: "npm:4.0.3"
-    markdownlint-cli: "npm:0.42.0"
+    markdownlint-cli: "npm:0.43.0"
     postcss: "npm:8.4.49"
-    prettier: "npm:3.3.3"
+    prettier: "npm:3.4.1"
     prettier-plugin-organize-imports: "npm:4.1.0"
     tailwindcss: "npm:3.4.15"
     vite: "npm:5.4.11"
@@ -1114,15 +1114,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@vueuse/core@npm:11.2.0"
+"@vueuse/core@npm:11.3.0":
+  version: 11.3.0
+  resolution: "@vueuse/core@npm:11.3.0"
   dependencies:
     "@types/web-bluetooth": "npm:^0.0.20"
-    "@vueuse/metadata": "npm:11.2.0"
-    "@vueuse/shared": "npm:11.2.0"
+    "@vueuse/metadata": "npm:11.3.0"
+    "@vueuse/shared": "npm:11.3.0"
     vue-demi: "npm:>=0.14.10"
-  checksum: 10c0/d4ac9abef8680a521c160c387922fa98e7cb2f7cbc43d647a0c9eaa654bb72581b4e53fe8452ce8520b2a600b657c252ac87d09eafd4736ed0ae1a3c9c91c8e1
+  checksum: 10c0/57ebed3ee2fd5b33297bbb36727424dc1707357db52954a1715366dd6583a4d53a05b10d17d16d1e5bf91fe8f12ea69fd6b232551f60167098ebc606b7234d4a
   languageName: node
   linkType: hard
 
@@ -1182,10 +1182,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/metadata@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@vueuse/metadata@npm:11.2.0"
-  checksum: 10c0/a6f6b734d7237e9e80d005f3cd566141153cf2f59011c57396517a5d448857ecda792c910cde0401f7d524f0f693608616af30fd0f70e867a25f9b0d768a8fb4
+"@vueuse/metadata@npm:11.3.0":
+  version: 11.3.0
+  resolution: "@vueuse/metadata@npm:11.3.0"
+  checksum: 10c0/4548912f325d4f250595b029357977824431db66a94651bc6801c04e4992374286ff71eb41604470638ef100338c2b80df2039d663a20f66d92799f68ccba7e9
   languageName: node
   linkType: hard
 
@@ -1198,12 +1198,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@vueuse/shared@npm:11.2.0"
+"@vueuse/shared@npm:11.3.0":
+  version: 11.3.0
+  resolution: "@vueuse/shared@npm:11.3.0"
   dependencies:
     vue-demi: "npm:>=0.14.10"
-  checksum: 10c0/24c8b4ffb7e1d253f67cb19736926707b5c1b18901b1cd71c075f22495c3382b845253185d2c8986b4a86a17bf637dac01317d68a044cc712621221d278f23ff
+  checksum: 10c0/820af5359d204e434b27ef570e5dfb5fe765e19d540738665c51c8d1569b81dd000dbe292add15dffb1b9538cbcec890626d0b47a5525e624273a0963b524e1f
   languageName: node
   linkType: hard
 
@@ -2006,13 +2006,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-stdin@npm:~9.0.0":
-  version: 9.0.0
-  resolution: "get-stdin@npm:9.0.0"
-  checksum: 10c0/7ef2edc0c81a0644ca9f051aad8a96ae9373d901485abafaabe59fd347a1c378689d8a3d8825fb3067415d1d09dfcaa43cb9b9516ecac6b74b3138b65a8ccc6b
-  languageName: node
-  linkType: hard
-
 "glob-parent@npm:^5.1.2, glob-parent@npm:~5.1.2":
   version: 5.1.2
   resolution: "glob-parent@npm:5.1.2"
@@ -2538,41 +2531,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdownlint-cli@npm:0.42.0":
-  version: 0.42.0
-  resolution: "markdownlint-cli@npm:0.42.0"
+"markdownlint-cli@npm:0.43.0":
+  version: 0.43.0
+  resolution: "markdownlint-cli@npm:0.43.0"
   dependencies:
     commander: "npm:~12.1.0"
-    get-stdin: "npm:~9.0.0"
     glob: "npm:~11.0.0"
     ignore: "npm:~6.0.2"
     js-yaml: "npm:^4.1.0"
     jsonc-parser: "npm:~3.3.1"
     jsonpointer: "npm:5.0.1"
-    markdownlint: "npm:~0.35.0"
+    markdownlint: "npm:~0.36.1"
     minimatch: "npm:~10.0.1"
     run-con: "npm:~1.3.2"
-    smol-toml: "npm:~1.3.0"
+    smol-toml: "npm:~1.3.1"
   bin:
     markdownlint: markdownlint.js
-  checksum: 10c0/7e2aa6301e573dcf8dd64955c468b26d59cedbb7fcb8fdf4e5dcca2e91cb60376925bde38b595d8c1a37dad5dd99788f23fe865c90a5a85ecd8dc4df74ab2ecc
+  checksum: 10c0/55c7fab5f3558a73840228eb92c8ef56873c160a0fcf92d350db7c9ee62fc732c70590a68efed9d93cd99551d559b5330065dc91c0764c1e38d01233c5b9d64a
   languageName: node
   linkType: hard
 
-"markdownlint-micromark@npm:0.1.10":
-  version: 0.1.10
-  resolution: "markdownlint-micromark@npm:0.1.10"
-  checksum: 10c0/1a392a3d92c01093244c15f69a658e68eeffe26b96218189509184246e19be9f64c7937241a5911f1ff2bd721f0d60f32242a46a9b3b6ab505ef22b8dbb66918
+"markdownlint-micromark@npm:0.1.12":
+  version: 0.1.12
+  resolution: "markdownlint-micromark@npm:0.1.12"
+  checksum: 10c0/6833c2b9eb6fd63c43dde30aff8bc526cb97638b287535f8277e2c97015602df0670becdece639986dbe3ac2b279d7c1d308c0a65cb5d2aacc331ea768afa86e
   languageName: node
   linkType: hard
 
-"markdownlint@npm:~0.35.0":
-  version: 0.35.0
-  resolution: "markdownlint@npm:0.35.0"
+"markdownlint@npm:~0.36.1":
+  version: 0.36.1
+  resolution: "markdownlint@npm:0.36.1"
   dependencies:
     markdown-it: "npm:14.1.0"
-    markdownlint-micromark: "npm:0.1.10"
-  checksum: 10c0/32330f6e6c2a35e3505f4bdae5211c0b8bd9130604a0d93bb22506835447065a4efd9d3ecefaa7f7c6744628f8427fe98296b71948d2d1502a46917863235717
+    markdownlint-micromark: "npm:0.1.12"
+  checksum: 10c0/1f93a010c5421a9c9cbd51aeb4046c674b4797ef1c6ad55b0344e7a6ecec46dd38d526e623fd6a3d4c486fe594119c5161dad6033b6468f7719d3c69b5d0cea6
   languageName: node
   linkType: hard
 
@@ -3253,12 +3245,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.3.3":
-  version: 3.3.3
-  resolution: "prettier@npm:3.3.3"
+"prettier@npm:3.4.1":
+  version: 3.4.1
+  resolution: "prettier@npm:3.4.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/b85828b08e7505716324e4245549b9205c0cacb25342a030ba8885aba2039a115dbcf75a0b7ca3b37bc9d101ee61fab8113fc69ca3359f2a226f1ecc07ad2e26
+  checksum: 10c0/2d6cc3101ad9de72b49c59339480b0983e6ff6742143da0c43f476bf3b5ef88ede42ebd9956d7a0a8fa59f7a5990e8ef03c9ad4c37f7e4c9e5db43ee0853156c
   languageName: node
   linkType: hard
 
@@ -3591,10 +3583,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"smol-toml@npm:~1.3.0":
-  version: 1.3.0
-  resolution: "smol-toml@npm:1.3.0"
-  checksum: 10c0/442b4d033236ff6dd05bf91d57695fd9070a8221af080a5b2782cb2d9fad8bc31f698c61de5308a351907c1200202ba3ee51d52c5704f5349149e7c374f5fe90
+"smol-toml@npm:~1.3.1":
+  version: 1.3.1
+  resolution: "smol-toml@npm:1.3.1"
+  checksum: 10c0/bac5bf4f2655fd561fe41f9426d70ab68b486631beff97a7f127f5d2f811b5e247d50a06583be03d35a625dcb05b7984b94a61a81c68ea2810ac7a9bf4edc64d
   languageName: node
   linkType: hard
 

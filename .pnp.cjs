@@ -28,14 +28,14 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@straw-hat/prettier-config", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.1.5"],\
-          ["@vueuse/core", "npm:11.2.0"],\
+          ["@vueuse/core", "npm:11.3.0"],\
           ["autoprefixer", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:10.4.20"],\
           ["body-scroll-lock", "npm:4.0.0-beta.0"],\
           ["fast-glob", "npm:3.3.2"],\
           ["gray-matter", "npm:4.0.3"],\
-          ["markdownlint-cli", "npm:0.42.0"],\
+          ["markdownlint-cli", "npm:0.43.0"],\
           ["postcss", "npm:8.4.49"],\
-          ["prettier", "npm:3.3.3"],\
+          ["prettier", "npm:3.4.1"],\
           ["prettier-plugin-organize-imports", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:4.1.0"],\
           ["tailwindcss", "npm:3.4.15"],\
           ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.4.11"],\
@@ -998,14 +998,14 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@straw-hat/adr-webapp", "workspace:."],\
           ["@straw-hat/prettier-config", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.1.5"],\
-          ["@vueuse/core", "npm:11.2.0"],\
+          ["@vueuse/core", "npm:11.3.0"],\
           ["autoprefixer", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:10.4.20"],\
           ["body-scroll-lock", "npm:4.0.0-beta.0"],\
           ["fast-glob", "npm:3.3.2"],\
           ["gray-matter", "npm:4.0.3"],\
-          ["markdownlint-cli", "npm:0.42.0"],\
+          ["markdownlint-cli", "npm:0.43.0"],\
           ["postcss", "npm:8.4.49"],\
-          ["prettier", "npm:3.3.3"],\
+          ["prettier", "npm:3.4.1"],\
           ["prettier-plugin-organize-imports", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:4.1.0"],\
           ["tailwindcss", "npm:3.4.15"],\
           ["vite", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:5.4.11"],\
@@ -1030,7 +1030,7 @@ const RAW_RUNTIME_STATE =
           ["@straw-hat/prettier-config", "virtual:4dc36b04866f034102a41fb0966576691a7a110bbc9f616791ca260f94c89b5010584fa2161ae9135504672aa8560e03b1460271c9f7a0a30c1e26bf131c1651#npm:3.1.5"],\
           ["@types/prettier", null],\
           ["@types/typescript", null],\
-          ["prettier", "npm:3.3.3"],\
+          ["prettier", "npm:3.4.1"],\
           ["prettier-plugin-organize-imports", "virtual:9950ebcf6ab083453f05c042d80e161f52445736d7c221fddc13d1a9879b0ba0b8fa05f39184066eebaa4b99a67083cf029c3f33ebb1d37ca706a573207e0c91#npm:3.2.4"],\
           ["prettier-plugin-tailwindcss", "virtual:9950ebcf6ab083453f05c042d80e161f52445736d7c221fddc13d1a9879b0ba0b8fa05f39184066eebaa4b99a67083cf029c3f33ebb1d37ca706a573207e0c91#npm:0.5.11"],\
           ["typescript", null]\
@@ -1439,18 +1439,18 @@ const RAW_RUNTIME_STATE =
           ["@types/web-bluetooth", "npm:0.0.20"],\
           ["@vueuse/metadata", "npm:11.1.0"],\
           ["@vueuse/shared", "npm:11.1.0"],\
-          ["vue-demi", "virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10"]\
+          ["vue-demi", "virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:11.2.0", {\
-        "packageLocation": "../../.yarn/berry/cache/@vueuse-core-npm-11.2.0-824502b349-10c0.zip/node_modules/@vueuse/core/",\
+      ["npm:11.3.0", {\
+        "packageLocation": "../../.yarn/berry/cache/@vueuse-core-npm-11.3.0-05f6e71b8d-10c0.zip/node_modules/@vueuse/core/",\
         "packageDependencies": [\
-          ["@vueuse/core", "npm:11.2.0"],\
+          ["@vueuse/core", "npm:11.3.0"],\
           ["@types/web-bluetooth", "npm:0.0.20"],\
-          ["@vueuse/metadata", "npm:11.2.0"],\
-          ["@vueuse/shared", "npm:11.2.0"],\
-          ["vue-demi", "virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10"]\
+          ["@vueuse/metadata", "npm:11.3.0"],\
+          ["@vueuse/shared", "npm:11.3.0"],\
+          ["vue-demi", "virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1493,7 +1493,7 @@ const RAW_RUNTIME_STATE =
           ["qrcode", null],\
           ["sortablejs", null],\
           ["universal-cookie", null],\
-          ["vue-demi", "virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10"]\
+          ["vue-demi", "virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10"]\
         ],\
         "packagePeers": [\
           "@types/async-validator",\
@@ -1532,10 +1532,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:11.2.0", {\
-        "packageLocation": "../../.yarn/berry/cache/@vueuse-metadata-npm-11.2.0-66bc4667e5-10c0.zip/node_modules/@vueuse/metadata/",\
+      ["npm:11.3.0", {\
+        "packageLocation": "../../.yarn/berry/cache/@vueuse-metadata-npm-11.3.0-b41c961ef4-10c0.zip/node_modules/@vueuse/metadata/",\
         "packageDependencies": [\
-          ["@vueuse/metadata", "npm:11.2.0"]\
+          ["@vueuse/metadata", "npm:11.3.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1545,15 +1545,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/@vueuse-shared-npm-11.1.0-0e83f0c8d9-10c0.zip/node_modules/@vueuse/shared/",\
         "packageDependencies": [\
           ["@vueuse/shared", "npm:11.1.0"],\
-          ["vue-demi", "virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10"]\
+          ["vue-demi", "virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:11.2.0", {\
-        "packageLocation": "../../.yarn/berry/cache/@vueuse-shared-npm-11.2.0-c02d28c46d-10c0.zip/node_modules/@vueuse/shared/",\
+      ["npm:11.3.0", {\
+        "packageLocation": "../../.yarn/berry/cache/@vueuse-shared-npm-11.3.0-d866f70d59-10c0.zip/node_modules/@vueuse/shared/",\
         "packageDependencies": [\
-          ["@vueuse/shared", "npm:11.2.0"],\
-          ["vue-demi", "virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10"]\
+          ["@vueuse/shared", "npm:11.3.0"],\
+          ["vue-demi", "virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2409,15 +2409,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["get-stdin", [\
-      ["npm:9.0.0", {\
-        "packageLocation": "../../.yarn/berry/cache/get-stdin-npm-9.0.0-4221477153-10c0.zip/node_modules/get-stdin/",\
-        "packageDependencies": [\
-          ["get-stdin", "npm:9.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["glob", [\
       ["npm:10.3.10", {\
         "packageLocation": "../../.yarn/berry/cache/glob-npm-10.3.10-da1ef8b112-10c0.zip/node_modules/glob/",\
@@ -2996,41 +2987,40 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["markdownlint", [\
-      ["npm:0.35.0", {\
-        "packageLocation": "../../.yarn/berry/cache/markdownlint-npm-0.35.0-c7c12d8703-10c0.zip/node_modules/markdownlint/",\
+      ["npm:0.36.1", {\
+        "packageLocation": "../../.yarn/berry/cache/markdownlint-npm-0.36.1-ae45ca55d7-10c0.zip/node_modules/markdownlint/",\
         "packageDependencies": [\
-          ["markdownlint", "npm:0.35.0"],\
+          ["markdownlint", "npm:0.36.1"],\
           ["markdown-it", "npm:14.1.0"],\
-          ["markdownlint-micromark", "npm:0.1.10"]\
+          ["markdownlint-micromark", "npm:0.1.12"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["markdownlint-cli", [\
-      ["npm:0.42.0", {\
-        "packageLocation": "../../.yarn/berry/cache/markdownlint-cli-npm-0.42.0-2713bfe572-10c0.zip/node_modules/markdownlint-cli/",\
+      ["npm:0.43.0", {\
+        "packageLocation": "../../.yarn/berry/cache/markdownlint-cli-npm-0.43.0-fdde634381-10c0.zip/node_modules/markdownlint-cli/",\
         "packageDependencies": [\
-          ["markdownlint-cli", "npm:0.42.0"],\
+          ["markdownlint-cli", "npm:0.43.0"],\
           ["commander", "npm:12.1.0"],\
-          ["get-stdin", "npm:9.0.0"],\
           ["glob", "npm:11.0.0"],\
           ["ignore", "npm:6.0.2"],\
           ["js-yaml", "npm:4.1.0"],\
           ["jsonc-parser", "npm:3.3.1"],\
           ["jsonpointer", "npm:5.0.1"],\
-          ["markdownlint", "npm:0.35.0"],\
+          ["markdownlint", "npm:0.36.1"],\
           ["minimatch", "npm:10.0.1"],\
           ["run-con", "npm:1.3.2"],\
-          ["smol-toml", "npm:1.3.0"]\
+          ["smol-toml", "npm:1.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["markdownlint-micromark", [\
-      ["npm:0.1.10", {\
-        "packageLocation": "../../.yarn/berry/cache/markdownlint-micromark-npm-0.1.10-def4ba0688-10c0.zip/node_modules/markdownlint-micromark/",\
+      ["npm:0.1.12", {\
+        "packageLocation": "../../.yarn/berry/cache/markdownlint-micromark-npm-0.1.12-89d9e760c3-10c0.zip/node_modules/markdownlint-micromark/",\
         "packageDependencies": [\
-          ["markdownlint-micromark", "npm:0.1.10"]\
+          ["markdownlint-micromark", "npm:0.1.12"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3738,10 +3728,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["prettier", [\
-      ["npm:3.3.3", {\
-        "packageLocation": "./.yarn/unplugged/prettier-npm-3.3.3-e811f023f3/node_modules/prettier/",\
+      ["npm:3.4.1", {\
+        "packageLocation": "./.yarn/unplugged/prettier-npm-3.4.1-ebb52d2db5/node_modules/prettier/",\
         "packageDependencies": [\
-          ["prettier", "npm:3.3.3"]\
+          ["prettier", "npm:3.4.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3768,7 +3758,7 @@ const RAW_RUNTIME_STATE =
           ["@types/prettier", null],\
           ["@types/typescript", null],\
           ["@types/vue-tsc", null],\
-          ["prettier", "npm:3.3.3"],\
+          ["prettier", "npm:3.4.1"],\
           ["typescript", null],\
           ["vue-tsc", null]\
         ],\
@@ -3792,7 +3782,7 @@ const RAW_RUNTIME_STATE =
           ["@types/volar__vue-typescript", null],\
           ["@volar/vue-language-plugin-pug", null],\
           ["@volar/vue-typescript", null],\
-          ["prettier", "npm:3.3.3"],\
+          ["prettier", "npm:3.4.1"],\
           ["typescript", null]\
         ],\
         "packagePeers": [\
@@ -3839,7 +3829,7 @@ const RAW_RUNTIME_STATE =
           ["@types/prettier__plugin-pug", null],\
           ["@types/shopify__prettier-plugin-liquid", null],\
           ["@types/trivago__prettier-plugin-sort-imports", null],\
-          ["prettier", "npm:3.3.3"],\
+          ["prettier", "npm:3.4.1"],\
           ["prettier-plugin-astro", null],\
           ["prettier-plugin-css-order", null],\
           ["prettier-plugin-import-sort", null],\
@@ -4214,10 +4204,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["smol-toml", [\
-      ["npm:1.3.0", {\
-        "packageLocation": "../../.yarn/berry/cache/smol-toml-npm-1.3.0-9387afb182-10c0.zip/node_modules/smol-toml/",\
+      ["npm:1.3.1", {\
+        "packageLocation": "../../.yarn/berry/cache/smol-toml-npm-1.3.1-11d8975e54-10c0.zip/node_modules/smol-toml/",\
         "packageDependencies": [\
-          ["smol-toml", "npm:1.3.0"]\
+          ["smol-toml", "npm:1.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4818,16 +4808,16 @@ const RAW_RUNTIME_STATE =
     ]],\
     ["vue-demi", [\
       ["npm:0.14.10", {\
-        "packageLocation": "./.yarn/unplugged/vue-demi-virtual-aa4910fa5f/node_modules/vue-demi/",\
+        "packageLocation": "./.yarn/unplugged/vue-demi-virtual-6f8bb751d6/node_modules/vue-demi/",\
         "packageDependencies": [\
           ["vue-demi", "npm:0.14.10"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10", {\
-        "packageLocation": "./.yarn/unplugged/vue-demi-virtual-aa4910fa5f/node_modules/vue-demi/",\
+      ["virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10", {\
+        "packageLocation": "./.yarn/unplugged/vue-demi-virtual-6f8bb751d6/node_modules/vue-demi/",\
         "packageDependencies": [\
-          ["vue-demi", "virtual:c02d28c46d6dff82059a65cc0d3d976974882aa191f59fd37f807c9d344664b878513c912e3135f2f2d717c8d47c1896b517840cba168ff97efe838abaaada50#npm:0.14.10"],\
+          ["vue-demi", "virtual:d866f70d5938a45d6e497f0dbb5a5eb0ea56f5b3d6a8946546d0935e404e99f9dae7e092b50c75e60e4474b5d130dae6ff58c20985afb4f2d6cbc9da05d5bb83#npm:0.14.10"],\
           ["@types/vue", null],\
           ["@types/vue__composition-api", null],\
           ["@vue/composition-api", null],\
