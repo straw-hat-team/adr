@@ -745,16 +745,16 @@ __metadata:
   resolution: "@straw-hat/adr-webapp@workspace:."
   dependencies:
     "@straw-hat/prettier-config": "npm:3.1.5"
-    "@vueuse/core": "npm:11.2.0"
+    "@vueuse/core": "npm:12.0.0"
     autoprefixer: "npm:10.4.20"
     body-scroll-lock: "npm:4.0.0-beta.0"
     fast-glob: "npm:3.3.2"
     gray-matter: "npm:4.0.3"
-    markdownlint-cli: "npm:0.42.0"
+    markdownlint-cli: "npm:0.43.0"
     postcss: "npm:8.4.49"
-    prettier: "npm:3.3.3"
+    prettier: "npm:3.4.1"
     prettier-plugin-organize-imports: "npm:4.1.0"
-    tailwindcss: "npm:3.4.15"
+    tailwindcss: "npm:3.4.16"
     vite: "npm:5.4.11"
     vitepress: "npm:1.5.0"
     vue: "npm:3.5.13"
@@ -1114,15 +1114,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@vueuse/core@npm:11.2.0"
+"@vueuse/core@npm:12.0.0":
+  version: 12.0.0
+  resolution: "@vueuse/core@npm:12.0.0"
   dependencies:
     "@types/web-bluetooth": "npm:^0.0.20"
-    "@vueuse/metadata": "npm:11.2.0"
-    "@vueuse/shared": "npm:11.2.0"
-    vue-demi: "npm:>=0.14.10"
-  checksum: 10c0/d4ac9abef8680a521c160c387922fa98e7cb2f7cbc43d647a0c9eaa654bb72581b4e53fe8452ce8520b2a600b657c252ac87d09eafd4736ed0ae1a3c9c91c8e1
+    "@vueuse/metadata": "npm:12.0.0"
+    "@vueuse/shared": "npm:12.0.0"
+    vue: "npm:^3.5.13"
+  checksum: 10c0/416a5d2725069ace3901a77168ff24e0f9aea535b04174edf506bedd97c8f6a14d23105c80e1f58ed3b690c9931fc9089b1e5960e769e6a3e886fa8b9d320cbb
   languageName: node
   linkType: hard
 
@@ -1182,10 +1182,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/metadata@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@vueuse/metadata@npm:11.2.0"
-  checksum: 10c0/a6f6b734d7237e9e80d005f3cd566141153cf2f59011c57396517a5d448857ecda792c910cde0401f7d524f0f693608616af30fd0f70e867a25f9b0d768a8fb4
+"@vueuse/metadata@npm:12.0.0":
+  version: 12.0.0
+  resolution: "@vueuse/metadata@npm:12.0.0"
+  checksum: 10c0/f67a256fef7961883e9921d2369be334015a4a0193987c3082b9b6386e31ed2d90de555b8d9aca63c5dda6cb3cf8df5d9b7842db77488c1ba638437befffca08
   languageName: node
   linkType: hard
 
@@ -1198,12 +1198,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@vueuse/shared@npm:11.2.0"
+"@vueuse/shared@npm:12.0.0":
+  version: 12.0.0
+  resolution: "@vueuse/shared@npm:12.0.0"
   dependencies:
-    vue-demi: "npm:>=0.14.10"
-  checksum: 10c0/24c8b4ffb7e1d253f67cb19736926707b5c1b18901b1cd71c075f22495c3382b845253185d2c8986b4a86a17bf637dac01317d68a044cc712621221d278f23ff
+    vue: "npm:^3.5.13"
+  checksum: 10c0/7900edc00f636b9cc5fcf96e13ff9e7ec8f4f7efc0960964227cc31a26b3b45123d613a201c6b5d331534b72908b5e754ae2cba4169c5a145255987d3ad7da78
   languageName: node
   linkType: hard
 
@@ -2006,13 +2006,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-stdin@npm:~9.0.0":
-  version: 9.0.0
-  resolution: "get-stdin@npm:9.0.0"
-  checksum: 10c0/7ef2edc0c81a0644ca9f051aad8a96ae9373d901485abafaabe59fd347a1c378689d8a3d8825fb3067415d1d09dfcaa43cb9b9516ecac6b74b3138b65a8ccc6b
-  languageName: node
-  linkType: hard
-
 "glob-parent@npm:^5.1.2, glob-parent@npm:~5.1.2":
   version: 5.1.2
   resolution: "glob-parent@npm:5.1.2"
@@ -2422,17 +2415,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lilconfig@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "lilconfig@npm:2.1.0"
-  checksum: 10c0/64645641aa8d274c99338e130554abd6a0190533c0d9eb2ce7ebfaf2e05c7d9961f3ffe2bfa39efd3b60c521ba3dd24fa236fe2775fc38501bf82bf49d4678b8
-  languageName: node
-  linkType: hard
-
 "lilconfig@npm:^3.0.0":
   version: 3.0.0
   resolution: "lilconfig@npm:3.0.0"
   checksum: 10c0/7f5ee7a658dc016cacf146815e8d88b06f06f4402823b8b0934e305a57a197f55ccc9c5cd4fb5ea1b2b821c8ccaf2d54abd59602a4931af06eabda332388d3e6
+  languageName: node
+  linkType: hard
+
+"lilconfig@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "lilconfig@npm:3.1.3"
+  checksum: 10c0/f5604e7240c5c275743561442fbc5abf2a84ad94da0f5adc71d25e31fa8483048de3dcedcb7a44112a942fed305fd75841cdf6c9681c7f640c63f1049e9a5dcc
   languageName: node
   linkType: hard
 
@@ -2538,41 +2531,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdownlint-cli@npm:0.42.0":
-  version: 0.42.0
-  resolution: "markdownlint-cli@npm:0.42.0"
+"markdownlint-cli@npm:0.43.0":
+  version: 0.43.0
+  resolution: "markdownlint-cli@npm:0.43.0"
   dependencies:
     commander: "npm:~12.1.0"
-    get-stdin: "npm:~9.0.0"
     glob: "npm:~11.0.0"
     ignore: "npm:~6.0.2"
     js-yaml: "npm:^4.1.0"
     jsonc-parser: "npm:~3.3.1"
     jsonpointer: "npm:5.0.1"
-    markdownlint: "npm:~0.35.0"
+    markdownlint: "npm:~0.36.1"
     minimatch: "npm:~10.0.1"
     run-con: "npm:~1.3.2"
-    smol-toml: "npm:~1.3.0"
+    smol-toml: "npm:~1.3.1"
   bin:
     markdownlint: markdownlint.js
-  checksum: 10c0/7e2aa6301e573dcf8dd64955c468b26d59cedbb7fcb8fdf4e5dcca2e91cb60376925bde38b595d8c1a37dad5dd99788f23fe865c90a5a85ecd8dc4df74ab2ecc
+  checksum: 10c0/55c7fab5f3558a73840228eb92c8ef56873c160a0fcf92d350db7c9ee62fc732c70590a68efed9d93cd99551d559b5330065dc91c0764c1e38d01233c5b9d64a
   languageName: node
   linkType: hard
 
-"markdownlint-micromark@npm:0.1.10":
-  version: 0.1.10
-  resolution: "markdownlint-micromark@npm:0.1.10"
-  checksum: 10c0/1a392a3d92c01093244c15f69a658e68eeffe26b96218189509184246e19be9f64c7937241a5911f1ff2bd721f0d60f32242a46a9b3b6ab505ef22b8dbb66918
+"markdownlint-micromark@npm:0.1.12":
+  version: 0.1.12
+  resolution: "markdownlint-micromark@npm:0.1.12"
+  checksum: 10c0/6833c2b9eb6fd63c43dde30aff8bc526cb97638b287535f8277e2c97015602df0670becdece639986dbe3ac2b279d7c1d308c0a65cb5d2aacc331ea768afa86e
   languageName: node
   linkType: hard
 
-"markdownlint@npm:~0.35.0":
-  version: 0.35.0
-  resolution: "markdownlint@npm:0.35.0"
+"markdownlint@npm:~0.36.1":
+  version: 0.36.1
+  resolution: "markdownlint@npm:0.36.1"
   dependencies:
     markdown-it: "npm:14.1.0"
-    markdownlint-micromark: "npm:0.1.10"
-  checksum: 10c0/32330f6e6c2a35e3505f4bdae5211c0b8bd9130604a0d93bb22506835447065a4efd9d3ecefaa7f7c6744628f8427fe98296b71948d2d1502a46917863235717
+    markdownlint-micromark: "npm:0.1.12"
+  checksum: 10c0/1f93a010c5421a9c9cbd51aeb4046c674b4797ef1c6ad55b0344e7a6ecec46dd38d526e623fd6a3d4c486fe594119c5161dad6033b6468f7719d3c69b5d0cea6
   languageName: node
   linkType: hard
 
@@ -3253,12 +3245,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.3.3":
-  version: 3.3.3
-  resolution: "prettier@npm:3.3.3"
+"prettier@npm:3.4.1":
+  version: 3.4.1
+  resolution: "prettier@npm:3.4.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/b85828b08e7505716324e4245549b9205c0cacb25342a030ba8885aba2039a115dbcf75a0b7ca3b37bc9d101ee61fab8113fc69ca3359f2a226f1ecc07ad2e26
+  checksum: 10c0/2d6cc3101ad9de72b49c59339480b0983e6ff6742143da0c43f476bf3b5ef88ede42ebd9956d7a0a8fa59f7a5990e8ef03c9ad4c37f7e4c9e5db43ee0853156c
   languageName: node
   linkType: hard
 
@@ -3591,10 +3583,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"smol-toml@npm:~1.3.0":
-  version: 1.3.0
-  resolution: "smol-toml@npm:1.3.0"
-  checksum: 10c0/442b4d033236ff6dd05bf91d57695fd9070a8221af080a5b2782cb2d9fad8bc31f698c61de5308a351907c1200202ba3ee51d52c5704f5349149e7c374f5fe90
+"smol-toml@npm:~1.3.1":
+  version: 1.3.1
+  resolution: "smol-toml@npm:1.3.1"
+  checksum: 10c0/bac5bf4f2655fd561fe41f9426d70ab68b486631beff97a7f127f5d2f811b5e247d50a06583be03d35a625dcb05b7984b94a61a81c68ea2810ac7a9bf4edc64d
   languageName: node
   linkType: hard
 
@@ -3777,9 +3769,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:3.4.15":
-  version: 3.4.15
-  resolution: "tailwindcss@npm:3.4.15"
+"tailwindcss@npm:3.4.16":
+  version: 3.4.16
+  resolution: "tailwindcss@npm:3.4.16"
   dependencies:
     "@alloc/quick-lru": "npm:^5.2.0"
     arg: "npm:^5.0.2"
@@ -3790,7 +3782,7 @@ __metadata:
     glob-parent: "npm:^6.0.2"
     is-glob: "npm:^4.0.3"
     jiti: "npm:^1.21.6"
-    lilconfig: "npm:^2.1.0"
+    lilconfig: "npm:^3.1.3"
     micromatch: "npm:^4.0.8"
     normalize-path: "npm:^3.0.0"
     object-hash: "npm:^3.0.0"
@@ -3806,7 +3798,7 @@ __metadata:
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: 10c0/709058837c5adf0b7e1386ba353983dcf2af3d390e8822fac8d53ecaaad0f6f040fd3050b1db636e2abd46ae775317a89b350ce925477ea96cca8f6c56d901df
+  checksum: 10c0/f716ff38e0ea6f25c2b3d811e0aaac07f627193e8527d8ad945d5088d4a188ac1eb1e8ee9aef76d8525e756ffbb8369d717013d3ffc2f49fabaa94cb1e6784c1
   languageName: node
   linkType: hard
 
@@ -4088,7 +4080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:3.5.13":
+"vue@npm:3.5.13, vue@npm:^3.5.13":
   version: 3.5.13
   resolution: "vue@npm:3.5.13"
   dependencies:
