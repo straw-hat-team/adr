@@ -1,9 +1,9 @@
 ---
-id: "3519904902"
+id: '3519904902'
 title: Enforcing Named Bindings in Ecto Queries
 state: Approved
 created: 2024-08-21
-tags: [ ecto, elixir, sql ]
+tags: [ecto, elixir, sql]
 category: Elixir
 ---
 

@@ -3,7 +3,7 @@ id: '6819030042'
 title: Acronyms Usage
 state: Approved
 created: 2024-09-27
-tags: [ naming, acronyms ]
+tags: [naming, acronyms]
 category: Platform
 ---
 
