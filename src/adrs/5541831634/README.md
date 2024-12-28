@@ -122,6 +122,8 @@ around `*.server`. That means that we should create `*.client` files.
 - You **MUST** use `*Client` suffix for Component's name to indicate that the
   component is a client-side component when the name overlaps with the
   server-side component.
+- You **MUST** use `[locale]` path parameter for app-specific internationalization
+  and localization.
 
 ### React Native Only
 
@@ -210,10 +212,10 @@ Related to Next.js projects only.
 - You **MUST** add `'use server;'` directive and `import 'server-only';` to the
   top of the files under `<fractalDir>/server`. Example:
 
-    ```typescript
-    'use server';
-    import 'server-only';
-    ```
+  ```typescript
+  'use server';
+  import 'server-only';
+  ```
 
 - You **MUST** use `<fractalDir>/server/actions` to store anything related to
   Next.js Server Actions.
