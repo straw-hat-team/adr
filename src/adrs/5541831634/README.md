@@ -206,8 +206,15 @@ A fractal pattern is a pattern that you could repeat over and over again.
 Related to Next.js projects only.
 
 - You **MUST** use `<fractalDir>/server` to store anything related to the
-  Next.js server-side code. You **MUST** add `'use server;'` directive to the
-  top of the files.
+  Next.js server-side code.
+- You **MUST** add `'use server;'` directive and `import 'server-only';` to the
+  top of the files under `<fractalDir>/server`. Example:
+
+    ```typescript
+    'use server';
+    import 'server-only';
+    ```
+
 - You **MUST** use `<fractalDir>/server/actions` to store anything related to
   Next.js Server Actions.
 
