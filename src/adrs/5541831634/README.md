@@ -62,6 +62,12 @@ the files to a common root directory that is a parent to the routes. Signaling
 that the files are shared between the routes and that the files are increasing
 the risk of the application.
 
+### Server vs. Client
+
+We should treat the server-side as the default rendering strategy, we opt-in to
+the client-side when we need to. Therefore, we discourage the naming convention
+around `*.server`. That means that we should create `*.client` files.
+
 ## Resolution
 
 - You **MUST** not import between routes. You **MUST** use colocate the
@@ -85,6 +91,8 @@ the risk of the application.
 - You **MUST** use `__tests__` for testing support files under `<rootDir>/src`.
 - You **MUST** colocate Component's Unit Test sibling to component file by using
   `[component name].test.[extension]`.
+- You **MUST** use `*.client.[extension]` to store client-side files.
+- You **MUST NOT** use `*.server.[extension]` suffix.
 
 ### Libraries Only
 
@@ -111,6 +119,9 @@ the risk of the application.
 - You **MUST NOT** import Server Action files from another Server Action file.
 - You **MUST NOT** call a Server Action function from another Server Action
   function.
+- You **MUST** use `*Client` suffix for Component's name to indicate that the
+  component is a client-side component when the name overlaps with the
+  server-side component.
 
 ### React Native Only
 
