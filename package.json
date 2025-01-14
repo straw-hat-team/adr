@@ -10,9 +10,9 @@
     "format:prettier": "prettier --ignore-unknown --no-error-on-unmatched-pattern --write '**/*'"
   },
   "dependencies": {
-    "fast-glob": "3.3.2",
+    "fast-glob": "3.3.3",
     "gray-matter": "4.0.3",
-    "vite": "6.0.6",
+    "vite": "6.0.7",
     "zod": "3.24.1"
   },
   "devDependencies": {
