@@ -59,7 +59,7 @@ or updating.
 The naming should make it easier to find the resolver you are looking for by
 looking at the graph.
 
-We have tried naming around the Node only in the past, such as:
+We have tried naming around the Node type only in the past, such as:
 
 - `List[Plural Resource Name]`
 - `Get[Singular Resource Name]`
