@@ -23,10 +23,10 @@ importers:
     devDependencies:
       '@straw-hat/prettier-config':
         specifier: 3.1.5
-        version: 3.1.5(prettier@3.5.0)(typescript@5.7.2)
+        version: 3.1.5(prettier@3.5.1)(typescript@5.7.2)
       '@vueuse/core':
-        specifier: 12.5.0
-        version: 12.5.0(typescript@5.7.2)
+        specifier: 12.7.0
+        version: 12.7.0(typescript@5.7.2)
       autoprefixer:
         specifier: 10.4.20
         version: 10.4.20(postcss@8.5.2)
@@ -40,11 +40,11 @@ importers:
         specifier: 8.5.2
         version: 8.5.2
       prettier:
-        specifier: 3.5.0
-        version: 3.5.0
+        specifier: 3.5.1
+        version: 3.5.1
       prettier-plugin-organize-imports:
         specifier: 4.1.0
-        version: 4.1.0(prettier@3.5.0)(typescript@5.7.2)
+        version: 4.1.0(prettier@3.5.1)(typescript@5.7.2)
       tailwindcss:
         specifier: 4.0.6
         version: 4.0.6
@@ -699,6 +699,9 @@ packages:
   '@vueuse/core@12.5.0':
     resolution: {integrity: sha512-GVyH1iYqNANwcahAx8JBm6awaNgvR/SwZ1fjr10b8l1HIgDp82ngNbfzJUgOgWEoxjL+URAggnlilAEXwCOZtg==}
 
+  '@vueuse/core@12.7.0':
+    resolution: {integrity: sha512-jtK5B7YjZXmkGNHjviyGO4s3ZtEhbzSgrbX+s5o+Lr8i2nYqNyHuPVOeTdM1/hZ5Tkxg/KktAuAVDDiHMraMVA==}
+
   '@vueuse/integrations@12.5.0':
     resolution: {integrity: sha512-HYLt8M6mjUfcoUOzyBcX2RjpfapIwHPBmQJtTmXOQW845Y/Osu9VuTJ5kPvnmWJ6IUa05WpblfOwZ+P0G4iZsQ==}
     peerDependencies:
@@ -743,8 +746,14 @@ packages:
   '@vueuse/metadata@12.5.0':
     resolution: {integrity: sha512-Ui7Lo2a7AxrMAXRF+fAp9QsXuwTeeZ8fIB9wsLHqzq9MQk+2gMYE2IGJW48VMJ8ecvCB3z3GsGLKLbSasQ5Qlg==}
 
+  '@vueuse/metadata@12.7.0':
+    resolution: {integrity: sha512-4VvTH9mrjXqFN5LYa5YfqHVRI6j7R00Vy4995Rw7PQxyCL3z0Lli86iN4UemWqixxEvYfRjG+hF9wL8oLOn+3g==}
+
   '@vueuse/shared@12.5.0':
     resolution: {integrity: sha512-vMpcL1lStUU6O+kdj6YdHDixh0odjPAUM15uJ9f7MY781jcYkIwFA4iv2EfoIPO6vBmvutI1HxxAwmf0cx5ISQ==}
+
+  '@vueuse/shared@12.7.0':
+    resolution: {integrity: sha512-coLlUw2HHKsm7rPN6WqHJQr18WymN4wkA/3ThFaJ4v4gWGWAQQGK+MJxLuJTBs4mojQiazlVWAKNJNpUWGRkNw==}
 
   algoliasearch@5.20.0:
     resolution: {integrity: sha512-groO71Fvi5SWpxjI9Ia+chy0QBwT61mg6yxJV27f5YFf+Mw+STT75K6SHySpP8Co5LsCrtsbCH5dJZSRtkSKaQ==}
@@ -1300,8 +1309,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier@3.5.0:
-    resolution: {integrity: sha512-quyMrVt6svPS7CjQ9gKb3GLEX/rl3BCL2oa/QkNcXv4YNVBC9olt3s+H7ukto06q7B1Qz46PbrKLO34PR6vXcA==}
+  prettier@3.5.1:
+    resolution: {integrity: sha512-hPpFQvHwL3Qv5AdRvBFMhnKo4tYxp0ReXiPn2bxkiohEX6mBeBwEpBSQTkD458RaaDKQMYSp4hX4UtfUTA5wDw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -1994,11 +2003,11 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.1': {}
 
-  '@straw-hat/prettier-config@3.1.5(prettier@3.5.0)(typescript@5.7.2)':
+  '@straw-hat/prettier-config@3.1.5(prettier@3.5.1)(typescript@5.7.2)':
     dependencies:
-      prettier: 3.5.0
-      prettier-plugin-organize-imports: 3.2.4(prettier@3.5.0)(typescript@5.7.2)
-      prettier-plugin-tailwindcss: 0.5.14(prettier-plugin-organize-imports@3.2.4(prettier@3.5.0)(typescript@5.7.2))(prettier@3.5.0)
+      prettier: 3.5.1
+      prettier-plugin-organize-imports: 3.2.4(prettier@3.5.1)(typescript@5.7.2)
+      prettier-plugin-tailwindcss: 0.5.14(prettier-plugin-organize-imports@3.2.4(prettier@3.5.1)(typescript@5.7.2))(prettier@3.5.1)
       typescript: 5.7.2
     transitivePeerDependencies:
       - '@ianvs/prettier-plugin-sort-imports'
@@ -2139,6 +2148,15 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@vueuse/core@12.7.0(typescript@5.7.2)':
+    dependencies:
+      '@types/web-bluetooth': 0.0.20
+      '@vueuse/metadata': 12.7.0
+      '@vueuse/shared': 12.7.0(typescript@5.7.2)
+      vue: 3.5.13(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
+
   '@vueuse/integrations@12.5.0(focus-trap@7.6.4)(typescript@5.7.2)':
     dependencies:
       '@vueuse/core': 12.5.0(typescript@5.7.2)
@@ -2151,7 +2169,15 @@ snapshots:
 
   '@vueuse/metadata@12.5.0': {}
 
+  '@vueuse/metadata@12.7.0': {}
+
   '@vueuse/shared@12.5.0(typescript@5.7.2)':
+    dependencies:
+      vue: 3.5.13(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
+
+  '@vueuse/shared@12.7.0(typescript@5.7.2)':
     dependencies:
       vue: 3.5.13(typescript@5.7.2)
     transitivePeerDependencies:
@@ -2783,23 +2809,23 @@ snapshots:
 
   preact@10.25.4: {}
 
-  prettier-plugin-organize-imports@3.2.4(prettier@3.5.0)(typescript@5.7.2):
+  prettier-plugin-organize-imports@3.2.4(prettier@3.5.1)(typescript@5.7.2):
     dependencies:
-      prettier: 3.5.0
+      prettier: 3.5.1
       typescript: 5.7.2
 
-  prettier-plugin-organize-imports@4.1.0(prettier@3.5.0)(typescript@5.7.2):
+  prettier-plugin-organize-imports@4.1.0(prettier@3.5.1)(typescript@5.7.2):
     dependencies:
-      prettier: 3.5.0
+      prettier: 3.5.1
       typescript: 5.7.2
 
-  prettier-plugin-tailwindcss@0.5.14(prettier-plugin-organize-imports@3.2.4(prettier@3.5.0)(typescript@5.7.2))(prettier@3.5.0):
+  prettier-plugin-tailwindcss@0.5.14(prettier-plugin-organize-imports@3.2.4(prettier@3.5.1)(typescript@5.7.2))(prettier@3.5.1):
     dependencies:
-      prettier: 3.5.0
+      prettier: 3.5.1
     optionalDependencies:
-      prettier-plugin-organize-imports: 3.2.4(prettier@3.5.0)(typescript@5.7.2)
+      prettier-plugin-organize-imports: 3.2.4(prettier@3.5.1)(typescript@5.7.2)
 
-  prettier@3.5.0: {}
+  prettier@3.5.1: {}
 
   property-information@6.5.0: {}
 
@@ -3010,7 +3036,7 @@ snapshots:
       '@vitejs/plugin-vue': 5.2.1(vite@5.4.14)(vue@3.5.13(typescript@5.7.2))
       '@vue/devtools-api': 7.7.0
       '@vue/shared': 3.5.13
-      '@vueuse/core': 12.5.0(typescript@5.7.2)
+      '@vueuse/core': 12.7.0(typescript@5.7.2)
       '@vueuse/integrations': 12.5.0(focus-trap@7.6.4)(typescript@5.7.2)
       focus-trap: 7.6.4
       mark.js: 8.11.1
