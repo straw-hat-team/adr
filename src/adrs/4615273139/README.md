@@ -82,6 +82,8 @@ resolver's purpose.
 - You **MUST** use `resolve/3` as the resolver function name.
 - You **MAY** use `Mutation.` or `Query.` module prefixes to separate the
   mutations and queries under two different modules.
+- You **MUST NOT** create subdirectories/namespace to group mutations or queries.
+  You **MUST** keep the modules under a flat structure.
 - You **MUST** use the `Batch` prefix for batch mutations.
 
 ### Example
