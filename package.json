@@ -12,8 +12,8 @@
   "dependencies": {
     "fast-glob": "3.3.3",
     "gray-matter": "4.0.3",
-    "vite": "6.3.4",
-    "zod": "3.24.3"
+    "vite": "6.3.5",
+    "zod": "3.24.4"
   },
   "devDependencies": {
     "@straw-hat/prettier-config": "3.1.5",
