@@ -6,16 +6,62 @@ created: 2022-11-3
 tags: [error]
 ---
 
-# IMPORTANT: focus on the data completeness, having the proper information.
-
-Right now, the document is not complete, and it is not ready to be used as a
-specification. The Context, Decision Drivers, and Resolution sections are
-incomplete and need to be filled with the proper information.
-The primary goal right now is to have the proper data that enables other parts
-of the ADRs and objectives to be completed.
-Navigate to the resolution section and see the TypeScript definition.
-
 # Universal Error Specification
+
+## Executive Summary
+
+This Architecture Decision Record (ADR) defines a standardized error format for use across all services and applications. The Universal Error Specification provides a consistent structure for error reporting that supports serialization, identity tracking, localization, and proper security handling. By adopting this specification, we achieve better observability, improved debugging capabilities, and enhanced user experiences across our distributed systems.
+
+## Context
+
+Structured error handling remains a challenge across modern distributed systems where services communicate across language, framework, and organizational boundaries. Current approaches suffer from several problems:
+
+- **Inconsistent formats**: Each team and technology stack defines its own error structures, making integration difficult
+- **Limited metadata**: Most error formats lack the structured context needed for automation and observability
+- **Poor correlation**: Tracing related errors across service boundaries is difficult without consistent identifiers
+- **Localization challenges**: Error messages are often hardcoded in English without proper translation support
+- **Security concerns**: Sensitive information in errors is frequently exposed to end-users inappropriately
+
+When examining our current systems, we found that developers spend significant time translating between error formats, parsing unstructured text for error details, and manually correlating errors across services.
+
+The intention is not to solve all computer science problems around errors but to achieve alignment across codebases by applying lessons learned and considering modern ways to build software.
+
+## Decision Drivers
+
+### Data-Oriented Approach
+
+Errors should be treated as data structures that can be serialized and deserialized across system boundaries. This enables consistent error handling regardless of programming language or transport mechanism. System exceptions should map to this structure, providing a uniform error model throughout the application stack.
+
+### Identity and Correlation
+
+In distributed systems where multiple actors (customers, customer service, developers, SREs) interact, having a stable error identity is crucial for communication and troubleshooting. This enables:
+
+- Cross-system error tracing and aggregation
+- Consistent error referencing between teams and systems
+- Improved debugging by connecting related errors
+
+The identity should combine multiple dimensions to balance consistency and context-specificity:
+
+- `domain`: The logical grouping (e.g., "com.myapp.iam")
+- `reason`: The specific error code within that domain (e.g., "INVALID_TOKEN")
+- `id`: A unique instance identifier (e.g., UUID) for the specific occurrence
+
+### Documentation and End-User Communication
+
+Errors are part of the API surface and should be properly documented. The specification supports:
+
+- Developer-focused error messages with adequate context
+- Links to detailed documentation
+- Localized messages for end-user presentation
+- Metadata for contextualizing the error
+
+### Validation and Input Handling
+
+Many errors relate to invalid input data. The specification supports detailed field-level validation errors through:
+
+- Subject pointers identifying problematic input fields
+- Nested error causes for batch operations
+- Structured metadata for validation rules and constraints
 
 ## Context
 
@@ -106,10 +152,10 @@ For example, having the following error:
 
 ```js
 const error = {
-  domain: "com.app.bank_transfer",
-  reason: "not_found",
-  data: {transfer_id: "709b4d54-04ee-4e82-89a3-4bdf07462809"}
-}
+  domain: 'com.app.bank_transfer',
+  reason: 'not_found',
+  data: { transfer_id: '709b4d54-04ee-4e82-89a3-4bdf07462809' },
+};
 ```
 
 You can now identify that the error happened in the `com.app.bank_transfer`
@@ -154,10 +200,10 @@ For example, imagine the following translation data:
 
 ```js
 const translations = {
-  "com.myapp.bank_transfer": {
-    "transfer_limit": "You have reached the transfer limit of {{transfer_limit}}."
-  }
-}
+  'com.myapp.bank_transfer': {
+    transfer_limit: 'You have reached the transfer limit of {{transfer_limit}}.',
+  },
+};
 ```
 
 When you receive the following error, you could translate it to the end-user
@@ -168,8 +214,8 @@ const error = {
   info: {
     domain: 'com.myapp.bank_transfer',
     reason: 'transfer_limit',
-    metadata: {transfer_limit: '2000'},
-  }
+    metadata: { transfer_limit: '2000' },
+  },
   // ommited data ...
 };
 
@@ -241,7 +287,7 @@ For example, imagine the following command:
 
 ```js
 const command = {
-  data: {amount: '1000', currency: 'CUP'}
+  data: { amount: '1000', currency: 'CUP' },
 };
 ```
 
@@ -261,7 +307,7 @@ const error = {
       info: {
         domain: 'com.mybussines.myapp',
         reason: 'invalid_currency',
-        metadata: {valid_currencies: ['USD']},
+        metadata: { valid_currencies: ['USD'] },
         // ommited data ...
       },
       // ommited data ...
@@ -274,7 +320,6 @@ You could group by the `subject` and present the error to the user in a more
 friendly way in the UI such as displaying the error message next to the input
 that caused the error. Since the `subject` is relative to the command payload,
 you may need to merge the `subject` when wrapping errors.
-
 
 ## Pending Concerns
 
@@ -337,7 +382,8 @@ enum Visibility {
    * The error can be shown to the client.
    */
   PUBLIC,
-}i
+}
+i;
 
 enum Code {
   CANCELLED,
@@ -355,7 +401,7 @@ enum Code {
   UNIMPLEMENTED,
   INTERNAL,
   UNAVAILABLE,
-  DATA_LOSS
+  DATA_LOSS,
 }
 
 /**
@@ -376,7 +422,6 @@ enum Code {
  */
 type MessageDescription = string;
 
-
 /**
  * Source is the source of the error event. It contains information about the
  * producer of the error event.
@@ -389,7 +434,7 @@ type Source = {
    * subject.
    */
   subject?: string;
-}
+};
 
 /**
  * IndeterministicInfo contains information that is not deterministic and
@@ -408,7 +453,7 @@ type IndeterministicInfo = {
    * Time timestamp of when the occurrence happened.
    */
   time: Timestamp;
-}
+};
 
 /**
  * Domain identifies the context in which an error happened.
@@ -436,7 +481,7 @@ type ErrorInfo = {
    * Additional structured details about this error.
    */
   metadata: Record<string, string>;
-}
+};
 
 type HelpLink = {
   /**
@@ -448,14 +493,14 @@ type HelpLink = {
    * The URL of the link.
    */
   url: string;
-}
+};
 
 type Help = {
   /**
    * URL(s) pointing to additional information on handling the current error.
    */
   links: Array<HelpLink>;
-}
+};
 
 /**
  * Stacktrace contains the stack trace of the error.
@@ -474,7 +519,7 @@ type DebugInfo = {
    * Additional debugging information provided by the server.
    */
   metadata: Record<string, string>;
-}
+};
 
 /**
  * Provides a localized error message that is safe to return to the user which
@@ -492,7 +537,7 @@ type LocalizedMessage = {
    * The localized error message in the above locale.
    */
   message: string;
-}
+};
 
 /**
  *
@@ -513,8 +558,7 @@ type RetryInfo = {
    * Clients should wait at least this long between retrying the same request.
    */
   retry_delay: Duration;
-}
-
+};
 
 type Int64 = number;
 type Int32 = number;
@@ -540,7 +584,7 @@ type Duration = {
    * to +999,999,999 inclusive.
    */
   nanos: Int32;
-}
+};
 ```
 
 ## Links
