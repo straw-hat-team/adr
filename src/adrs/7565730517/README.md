@@ -70,3 +70,10 @@ Treat `warning` the log level as an `400` error.
   patterns instead of relying on log statements.
 - You `MUST` use `info` or `debug` levels for logs that are purely
   observational and don’t require intervention.
+
+## Terminology
+
+### Error Reporter
+
+An Error Reporter would be a service like [Sentry](https://sentry.io/),
+[Datadog Error Tracking](https://www.datadoghq.com/product/error-tracking/).
