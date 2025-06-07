@@ -1,0 +1,618 @@
+---
+id: '0129349218'
+title: Universal Error Specification
+state: Draft
+created: 2022-11-3
+tags: [error]
+---
+
+# Universal Error Specification
+
+## Executive Summary
+
+This Architecture Decision Record (ADR) defines a standardized error format for use across all services and applications. The Universal Error Specification provides a consistent structure for error reporting that supports serialization, identity tracking, localization, and proper security handling. By adopting this specification, we achieve better observability, improved debugging capabilities, and enhanced user experiences across our distributed systems.
+
+## Context
+
+Structured error handling remains a challenge across modern distributed systems where services communicate across language, framework, and organizational boundaries. Current approaches suffer from several problems:
+
+- **Inconsistent formats**: Each team and technology stack defines its own error structures, making integration difficult
+- **Limited metadata**: Most error formats lack the structured context needed for automation and observability
+- **Poor correlation**: Tracing related errors across service boundaries is difficult without consistent identifiers
+- **Localization challenges**: Error messages are often hardcoded in English without proper translation support
+- **Security concerns**: Sensitive information in errors is frequently exposed to end-users inappropriately
+
+When examining our current systems, we found that developers spend significant time translating between error formats, parsing unstructured text for error details, and manually correlating errors across services.
+
+The intention is not to solve all computer science problems around errors but to achieve alignment across codebases by applying lessons learned and considering modern ways to build software.
+
+## Decision Drivers
+
+### Data-Oriented Approach
+
+Errors should be treated as data structures that can be serialized and deserialized across system boundaries. This enables consistent error handling regardless of programming language or transport mechanism. System exceptions should map to this structure, providing a uniform error model throughout the application stack.
+
+### Identity and Correlation
+
+In distributed systems where multiple actors (customers, customer service, developers, SREs) interact, having a stable error identity is crucial for communication and troubleshooting. This enables:
+
+- Cross-system error tracing and aggregation
+- Consistent error referencing between teams and systems
+- Improved debugging by connecting related errors
+
+The identity should combine multiple dimensions to balance consistency and context-specificity:
+
+- `domain`: The logical grouping (e.g., "com.myapp.iam")
+- `reason`: The specific error code within that domain (e.g., "INVALID_TOKEN")
+- `id`: A unique instance identifier (e.g., UUID) for the specific occurrence
+
+### Documentation and End-User Communication
+
+Errors are part of the API surface and should be properly documented. The specification supports:
+
+- Developer-focused error messages with adequate context
+- Links to detailed documentation
+- Localized messages for end-user presentation
+- Metadata for contextualizing the error
+
+### Validation and Input Handling
+
+Many errors relate to invalid input data. The specification supports detailed field-level validation errors through:
+
+- Subject pointers identifying problematic input fields
+- Nested error causes for batch operations
+- Structured metadata for validation rules and constraints
+
+## Context
+
+Regardless of the ecosystem, structured errors always have been a problem with
+little to no alignment on how we could structure an error that could satisfy as
+much some concerns that will be raised in the document.
+
+The intention is not to be perfect or fix the entire computer science problem
+around errors, but achieve a level of alignment in code bases that would be
+a decent level of craftsmanship compared to starting over all the time; applying
+lessons learned and taking into consideration moderns way to build software.
+
+### Out of Scope
+
+These are few things that are out of scope for this specification, but worth
+mentioning, this is not an exhaustive list, and we would like to hear your
+opinion about it.
+
+- Performance Considerations: The specification is not concerned about the
+  performance of the error handling, but it is expected that the error handling
+  will be fast enough to not be a bottleneck in the system. If every single
+  byte matters, you may want to consider a more compact representation of the
+  error.
+
+### Decision Drivers:
+
+#### Data-Oriented
+
+Starting the specification as if an error is a data structure that could be
+serialized and deserialized is a good way to start.
+
+System exceptions should be treated it the same. Although, wrapping system
+exceptions seems to be a lot of work, barely system exceptions are intended to
+be bubbled up to the end-user, but instead, they are meant to be handled by the
+application to provide a better user experience and also to provide more context
+to the error.
+
+Errors are just another Message in the system, agnostic of programming language
+or framework details.
+
+#### Identity
+
+In an era of distributed computing and software meant to be interactive across
+multiple actors such as Customers, Customer Services, Developers, SREs or even
+Cloud Providers.
+
+Somewhere in the chain communicating downstream closer to where the error
+happened will be inevitable and the communication among all those actors with a
+shared context having an identity is crucial since they could all point to the
+same entity that caused the issue or at least have a common understanding of
+what happened.
+
+This is also important for debugging purposes. Having a common identity for the
+error will allow you to search for it across multiple systems and have a better
+understanding of the impact of the error.
+
+Having an identity for the error will allow you to search for it across multiple
+systems and have a better understanding of the impact of the error.
+As well as opens the possibility to show the same error to the end-user and
+end-user sharing the identity of the error with the support team.
+
+The identity should avoid distributed systems coordination, as much as
+possible. The identity should be composed of multiple dimensions to allow you
+to have more consistency across systems without losing specificity of a given
+context.
+
+- `domain`: The logical grouping to which the "code" belongs. The error domain
+  is typically the registered service name of the tool or product that
+  generates the error. Example: "com.myapp.iam". If the error is
+  generated by some common infrastructure, the error domain must be a
+  globally unique value that identifies the infrastructure.
+- `reason`: The code of the error. This is a constant value that identifies
+  the proximate cause of the error. Error codes are unique within a particular
+  domain of errors.
+- `id`: The ID of an instance of the error. It could be a UUID, Nanoid, or any
+  other unique identifier that could be generated without coordination.
+
+When dealing Error Aggregation and Analysis the `domain` and `reason` fields
+will be used to identify the context in which the error happened and the `id`
+field will be used to identify the instance of the error.
+
+For example, you may decide that a `not_found` `reason` is will be used across
+all the domains. Such `reason` by itself is too generic, and you couldn't tell
+where the error happened, but when you combine it with the `domain` you can
+identify the context in which the error happened.
+
+For example, having the following error:
+
+```js
+const error = {
+  domain: 'com.app.bank_transfer',
+  reason: 'not_found',
+  data: { transfer_id: '709b4d54-04ee-4e82-89a3-4bdf07462809' },
+};
+```
+
+You can now identify that the error happened in the `com.app.bank_transfer`
+service (or domain), and the resource that was not found was the transfer with
+the id `709b4d54-04ee-4e82-89a3-4bdf07462809`.
+
+If you wish to add have some infrastructure tooling that map `not_found` to a
+404 HTTP status, you can do so without having to parse the error type, allowing
+you to have more flexibility in the future.
+
+Standardizing the `domain` and `reason` fields will allow you to have a common
+way to document errors across multiple systems and also have a common way to
+generate documentation for them. Such standardization is out of scope for this
+specification.
+
+#### Documentation
+
+Errors are part of the API surface, therefore, they should be documented.
+Having a common structure for errors will allow you to have a common way to
+document them. This will allow you to have a common way to document errors
+across multiple systems and also have a common way to generate documentation for
+them.
+
+Adding a `message` to make it more human-readable for programmers to understand
+the error and `info.metadata` to provide context to the error message.
+
+The error should have a `help` field that points to more detailed documentation
+about the error when possible.
+
+#### Localization
+
+> Note: details about translation services are out of scope for this
+> specification.
+
+Errors that are meant to be displayed to the end-user should be localized.
+
+Using the `domain`, `reason` and `metadata` fields should allow to translate the
+error message to the end-user language. Using `domain` and `reason` to identify
+the error and `metadata` to provide the context to the error message.
+
+For example, imagine the following translation data:
+
+```js
+const translations = {
+  'com.myapp.bank_transfer': {
+    transfer_limit: 'You have reached the transfer limit of {{transfer_limit}}.',
+  },
+};
+```
+
+When you receive the following error, you could translate it to the end-user
+language:
+
+```js
+const error = {
+  info: {
+    domain: 'com.myapp.bank_transfer',
+    reason: 'transfer_limit',
+    metadata: { transfer_limit: '2000' },
+  },
+  // ommited data ...
+};
+
+// ...
+translate({
+  key: error.info.domain + '.' + error.info.reason,
+  interpolate: error.metadata,
+});
+```
+
+The error `message` field should be used to provide a generic description of
+the error condition in English. It is intended for a human audience. Simple
+programs display the message directly to the end-user but the target audience
+is the developer role, strong internationalization is not required, but it is
+recommended.
+
+Developers should never rely on the `message` field to handle the error, but
+instead, they should rely on the `domain` and `reason` fields to handle the
+error.
+
+In case services want to provide a more human-readable error message to the
+end-user, they should use the `localized_message` field, which is has the
+message translated to the end-user language, as well as the locale used to
+translate the message.
+
+- Should I always include `localized_message` field?
+
+No, you should only include the `localized_message` field when the error is
+meant to be displayed to the end-user. Most likely the field will be added
+at the edge of the system, aka application layer, where you are aware of the
+end-user actor and the end-user language.
+It is anti-pattern to add the `localized_message` field at the core of the
+system, aka domain layer, where you are not aware of the end-user actor and
+the end-user language, unless you are building a system that is about
+translations.
+
+## Batching and Wrapping Errors
+
+Sometimes errors will happen in a batch, and you will need to wrap them in a
+single error to communicate upstream, or you may need to wrap an error to
+provide more context to the error message.
+
+For example, you want to batch errors that happened related to a command payload
+attributes and wrap them in a single error instead of sending a single error
+per attribute, so you can provide a better user experience.
+
+Or the error happened in a downstream system, and you want to wrap the error
+with more context to the error and have a better understanding of what happened.
+
+The `causes` field should be used to wrap errors. The `causes` field contains a
+list of errors that caused this error.
+
+#### Form/Params/Command/Input Validation
+
+Everything starts with sending a command to the system, therefore, some errors
+are about the validation of such inputs.
+
+Giving feedback to the caller about what exactly went wrong is important to
+achieve clarity and also better user experience when dealing with inputs without
+pushing too much complexity to the clients.
+
+Having a `subject` field that identifies the input that caused the error is
+crucial to achieve such clarity. The `subject` field could be a JSON pointer
+that points to the input that caused the error relative to the command that
+caused the error. That means that when wrapping errors, the `subject` field
+is not absolute, and it is not aware of the wrapping.
+
+For example, imagine the following command:
+
+```js
+const command = {
+  data: { amount: '1000', currency: 'CUP' },
+};
+```
+
+Which will produce the following error:
+
+```js
+const error = {
+  subject: '/data',
+  info: {
+    domain: 'com.mybussines.myapp',
+    reason: 'bad_request',
+  },
+  code: 'INVALID_ARGUMENT',
+  causes: [
+    {
+      subject: '/currency',
+      info: {
+        domain: 'com.mybussines.myapp',
+        reason: 'invalid_currency',
+        metadata: { valid_currencies: ['USD'] },
+        // ommited data ...
+      },
+      // ommited data ...
+    },
+  ],
+};
+```
+
+You could group by the `subject` and present the error to the user in a more
+friendly way in the UI such as displaying the error message next to the input
+that caused the error. Since the `subject` is relative to the command payload,
+you may need to merge the `subject` when wrapping errors.
+
+## Pending Concerns
+
+- Having infra-level `info` where you could use the `metadata` to identify the
+  context in which the error happened introduces a level of complexity that
+  it is desired to be avoided. The `domain` and `reason` fields should be enough
+  to identify the context in which the error happened. Example:
+  `googleapis.com` domain and `NOT_FOUND` reason. Most likely the `metadata`
+  field will be used to provide more context to the error message, example:
+  `resource_type`. If `id` must be unique across the entire domain, then
+  it becomes a coordination problem, and **it is desired to avoid it**.
+- Message placeholder comes from C# ecosystem, what is not desired here is to
+  introduce security vulnerabilities, look at what happened to Java log4j
+  vulnerability. So, is this desired?
+- Should Message Placeholder allow to replace with the `info` `metadata`?
+  Probably not, since whoever defines the `info` and its structure owns the
+  data, and the structure of the error
+- `source?: Source;` I am not sure about the naming.
+- Under `info.data`
+
+## Resolution
+
+- You **MUST** use the `application/universal-error+json` mime type
+  `content-type` HTTP header when sending the error over the wire as a JSON.
+
+```ts
+type UniversalError = {
+  specversion: SpecVersion;
+  code: Code;
+  message: MessageDescription;
+  info: ErrorInfo;
+  causes: UniversalError[];
+  visibility: Visibility;
+
+  //
+  // Optional Information
+  //
+  source?: Source;
+  indeterministic_info?: IndeterministicInfo;
+  help?: Help;
+  debug_info?: DebugInfo;
+  localized_message?: LocalizedMessage;
+  retry_info?: RetryInfo;
+};
+
+/**
+ * The version of the specification that the error uses.
+ * Monotonically increasing version numbers are used to identify the evolution
+ * of the error format. The version number is represented as a non-negative
+ * integer.
+ */
+type SpecVersion = integer;
+
+enum Visibility {
+  /**
+   * The error must not be shown to the client.
+   */
+  INTERNAL,
+  /**
+   * The error can be shown to the client.
+   */
+  PUBLIC,
+}
+i;
+
+enum Code {
+  CANCELLED,
+  UNKNOWN,
+  INVALID_ARGUMENT,
+  DEADLINE_EXCEEDED,
+  NOT_FOUND,
+  ALREADY_EXISTS,
+  PERMISSION_DENIED,
+  UNAUTHENTICATED,
+  RESOURCE_EXHAUSTED,
+  FAILED_PRECONDITION,
+  ABORTED,
+  OUT_OF_RANGE,
+  UNIMPLEMENTED,
+  INTERNAL,
+  UNAVAILABLE,
+  DATA_LOSS,
+}
+
+/**
+ * Message contains a generic description of the error condition in English.
+ *
+ * Warning: Error messages are not part of the API surface. They are subject to
+ * changes without notice. Application code must not have a hard dependency on
+ * error messages.
+ *
+ * It is intended for a human audience. Simple programs display the message
+ * directly to the end user if they encounter an error condition they don't
+ * know how or don't care to handle. Sophisticated programs with more
+ * exhaustive error handling and proper internationalization are more likely
+ * to ignore the error message.
+ *
+ * Messages MAY use {placeholders} to reference values provided in the
+ * `info.metadata` field. For example, "The {account_id} is not found.".
+ */
+type MessageDescription = string;
+
+/**
+ * Source is the source of the error event. It contains information about the
+ * producer of the error event.
+ */
+type Source = {
+  /**
+   * Subject describes the subject of the error event in the context of the
+   * error event producer (identified by domain). It MAY be a JSON-POINTER, or
+   * an application-specific scheme to create unique identifiers for the
+   * subject.
+   */
+  subject?: string;
+};
+
+/**
+ * IndeterministicInfo contains information that is not deterministic and
+ * could change over time. Critical for debugging purposes, but not critical
+ * for the end-user, unless they give the information to the support team.
+ */
+type IndeterministicInfo = {
+  /**
+   * ID identifies the error. The combination of info + id is unique for each
+   * distinct error event. Consumers MAY assume that error events with identical
+   * source and id are duplicates.
+   */
+  id: string;
+
+  /**
+   * Time timestamp of when the occurrence happened.
+   */
+  time: Timestamp;
+};
+
+/**
+ * Domain identifies the context in which an error happened.
+ */
+type ErrorInfo = {
+  /**
+   * The reason of the error. This is a constant value that identifies the
+   * proximate cause of the error. Error reasons are unique within a particular
+   * domain of errors. This should be at most 63 characters and match a regular
+   * expression of `[A-Z][A-Z0-9_]+[A-Z0-9]`, which represents UPPER_SNAKE_CASE.
+   */
+  reason: string;
+
+  /**
+   * The logical grouping to which the "reason" belongs. The error domain is
+   * typically the registered service name of the tool or product that generates
+   * the error. Example: "pubsub.googleapis.com". If the error is generated by
+   * some common infrastructure, the error domain must be a globally unique value
+   * that identifies the infrastructure. For Google API infrastructure, the error
+   * domain is "googleapis.com".
+   */
+  domain: string;
+
+  /**
+   * Additional structured details about this error.
+   */
+  metadata: Record<string, string>;
+};
+
+type HelpLink = {
+  /**
+   * Describes what the link offers.
+   */
+  description: string;
+
+  /**
+   * The URL of the link.
+   */
+  url: string;
+};
+
+type Help = {
+  /**
+   * URL(s) pointing to additional information on handling the current error.
+   */
+  links: Array<HelpLink>;
+};
+
+/**
+ * Stacktrace contains the stack trace of the error.
+ *
+ * You should not include the debug information to untrusted clients. In practices,
+ * you should only send the stacktrace to internal logging systems and remove the debug information
+ * when sending the error to the client.
+ */
+type DebugInfo = {
+  /**
+   * The stack trace entries indicating where the error occurred.
+   */
+  stack_entries: string[];
+
+  /**
+   * Additional debugging information provided by the server.
+   */
+  metadata: Record<string, string>;
+};
+
+/**
+ * Provides a localized error message that is safe to return to the user which
+ * can be attached to an RPC error.
+ */
+type LocalizedMessage = {
+  /**
+   * The locale used following the specification defined at
+   * https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   * Examples are: "en-US", "fr-CH", "es-MX"
+   */
+  locale: string;
+
+  /**
+   * The localized error message in the above locale.
+   */
+  message: string;
+};
+
+/**
+ *
+ * Describes when the clients can retry a failed request. Clients could ignore
+ * the recommendation here or retry when this information is missing from error
+ * responses.
+ * It's always recommended that clients should use exponential backoff when
+ * retrying.
+ * Clients should wait until `retry_delay` amount of time has passed since
+ * receiving the error response before retrying. If retrying requests also
+ * fail, clients should use an exponential backoff scheme to gradually increase
+ * the delay between retries based on `retry_delay`, until either a maximum
+ * number of retries have been reached or a maximum retry delay cap has been
+ * reached.
+ */
+type RetryInfo = {
+  /**
+   * Clients should wait at least this long between retrying the same request.
+   */
+  retry_delay: Duration;
+};
+
+type Int64 = number;
+type Int32 = number;
+/**
+ * String in the [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format.
+ */
+type Timestamp = string;
+
+type Duration = {
+  /**
+   * Signed seconds of the span of time. Must be from -315,576,000,000
+   * to +315,576,000,000 inclusive. Note: these bounds are computed from:
+   * 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+   */
+  seconds: Int64;
+
+  /**
+   * Signed fractions of a second at nanosecond resolution of the span
+   * of time. Durations less than one second are represented with a 0
+   * `seconds` field and a positive or negative `nanos` field. For durations
+   * of one second or more, a non-zero value for the `nanos` field must be
+   * of the same sign as the `seconds` field. Must be from -999,999,999
+   * to +999,999,999 inclusive.
+   */
+  nanos: Int32;
+};
+```
+
+## Links
+
+- [ADR#6860374633](../6860374633/README.md)
+
+- <https://google.aip.dev/193>
+- <https://www.twilio.com/docs/api/errors>
+- <https://docs.knock.app/reference#error-codes>
+- <https://plaid.com/docs/errors/>
+- <https://www.rfc-editor.org/rfc/rfc7807>
+- <https://github.com/public-apis/public-apis>
+- <https://github.com/github/rest-api-description>
+- <https://stripe.com/docs/api#errors>
+- <https://stripe.com/docs/error-handling>
+- <https://cloud.google.com/translate/docs/reference/rest/Shared.Types/ListOperationsResponse#Status>
+- <https://cloud.google.com/apis/design/errors>
+- <https://raw.githubusercontent.com/sendgrid/sendgrid-oai/main/oai.yaml>
+- <https://docs.sendgrid.com/api-reference/how-to-use-the-sendgrid-v3-api/errors>
+- <https://binance-docs.github.io/apidocs/spot/en/#general-api-information>
+- <https://docs.cloud.coinbase.com/exchange/docs/websocket-errors>
+- <https://develop.sentry.dev/sdk/event-payloads/exception/>
+- <https://develop.sentry.dev/sdk/event-payloads/>
+- <https://develop.sentry.dev/sdk/event-payloads/types/>
+- <https://datatracker.ietf.org/doc/html/rfc7807>
+- <https://cloud.google.com/storage/docs/json_api/v1/status-codes>
+- <https://laravel.com/docs/9.x/validation#validation-error-response-format>
+- <https://owasp.org/www-community/Improper_Error_Handling>
+- <https://owasp.org/www-project-developer-guide/draft/design/web_app_checklist/handle_errors_and_exceptions/>
+- <https://cheatsheetseries.owasp.org/cheatsheets/Error_Handling_Cheat_Sheet>
+- <https://top10proactive.owasp.org/v3/en/c10-errors-exceptions>
