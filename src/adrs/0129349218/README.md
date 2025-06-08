@@ -67,6 +67,10 @@ The combination of `domain` and `reason` provides context, while the `id` tracks
 
 This structure allows infrastructure to map errors to HTTP status codes (e.g., `NOT_FOUND` to 404) without parsing proprietary error types.
 
+### Source Identification
+
+To enhance traceability and debugging, we introduce a `source_id` field in the `UniversalError` structure. This field is an opaque value that helps pinpoint the location in the code where the error was constructed. While this identifier is not guaranteed to be unique, it should ideally be a stable reference to the error's origin. By including `source_id`, developers can more easily trace errors back to their source, improving debugging efficiency and reducing the time needed to identify the root cause.
+
 ### Documentation and End-User Communication
 
 Errors are part of the API surface and must be well-documented. The specification includes fields to support this:
@@ -192,11 +196,16 @@ type UniversalError = {
   help?: Help;
   debug_info?: DebugInfo;
   localized_message?: LocalizedMessage;
-  /**
-   * Describes when a client can retry a failed request.
-   */
   retry_info?: RetryInfo;
+  source_id?: SourceId;
 };
+
+/**
+ * An opaque value that helps pinpoint the location in the code where the error
+ * was constructed. While not guaranteed to be unique, it ideally provides a
+ * stable reference to the error's origin.
+ */
+type SourceId = string;
 
 /**
  * The version of the specification that the error uses.
