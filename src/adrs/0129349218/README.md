@@ -192,7 +192,8 @@ type UniversalError = {
   // Optional Information
   //
   subject?: Subject;
-  indeterministic_info?: IndeterministicInfo;
+  id?: Id;
+  time?: Time;
   help?: Help;
   debug_info?: DebugInfo;
   localized_message?: LocalizedMessage;
@@ -296,23 +297,18 @@ type MessageTemplate = string;
 type Subject = string;
 
 /**
- * IndeterministicInfo contains information that is not deterministic and
- * could change over time. Critical for debugging purposes, but not critical
- * for the end-user, unless they give the information to the support team.
+ * ID identifies the error. The combination of info + id is unique for each
+ * distinct error event. Consumers MAY assume that error events with identical
+ * source and id are duplicates. This ID can be provided to support teams as a
+ * reference to help identify and track specific error occurrences, enabling
+ * faster troubleshooting and resolution of issues.
  */
-type IndeterministicInfo = {
-  /**
-   * ID identifies the error. The combination of info + id is unique for each
-   * distinct error event. Consumers MAY assume that error events with identical
-   * source and id are duplicates.
-   */
-  id: string;
+type Id = string
 
-  /**
-   * Time timestamp of when the occurrence happened.
-   */
-  time: Timestamp;
-};
+/**
+ * Time timestamp of when the occurrence happened.
+ */
+type time = Timestamp;
 
 /**
  * Domain identifies the context in which an error happened.
