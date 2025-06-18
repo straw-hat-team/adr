@@ -303,7 +303,7 @@ type Subject = string;
  * reference to help identify and track specific error occurrences, enabling
  * faster troubleshooting and resolution of issues.
  */
-type Id = string
+type Id = string;
 
 /**
  * Time timestamp of when the occurrence happened.
@@ -317,8 +317,7 @@ type ErrorInfo = {
   /**
    * The reason of the error. This is a constant value that identifies the
    * proximate cause of the error. Error reasons are unique within a particular
-   * domain of errors. This should be at most 63 characters and match a regular
-   * expression of `[A-Z][A-Z0-9_]+[A-Z0-9]`, which represents UPPER_SNAKE_CASE.
+   * domain of errors.
    */
   reason: string;
 
@@ -504,3 +503,4 @@ type Duration = {
 - <https://github.com/open-telemetry/semantic-conventions/issues/2064>
 - <https://messagetemplates.org/>
 - <https://devguide.owasp.org/en/12-appendices/01-implementation-dos-donts/06-exception-error-handling/>
+- <https://developers.google.com/webmaster-tools/v1/errors>
