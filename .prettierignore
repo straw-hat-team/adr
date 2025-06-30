@@ -19,3 +19,4 @@ out
 .pnp.loader.mjs
 .vitepress/dist
 .vitepress/cache
+pnpm-lock.yaml
