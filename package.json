@@ -13,7 +13,7 @@
     "fast-glob": "3.3.3",
     "gray-matter": "4.0.3",
     "vite": "7.0.3",
-    "zod": "3.25.76"
+    "zod": "4.0.0"
   },
   "devDependencies": {
     "@straw-hat/prettier-config": "3.1.5",
