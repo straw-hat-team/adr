@@ -18,8 +18,8 @@ importers:
         specifier: 7.0.3
         version: 7.0.3(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.6.1)
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.0.0
+        version: 4.0.0
     devDependencies:
       '@straw-hat/prettier-config':
         specifier: 3.1.5
@@ -1799,8 +1799,8 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  zod@4.0.0:
+    resolution: {integrity: sha512-9diLdTPc/L7w/5jI4C3gHYNiGHDV9IZYxo1e5LSD8cabi65WVTWWb+g2BGPEpUUCOxR4D+6O5B0AzyMdUAXwrw==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -3492,6 +3492,6 @@ snapshots:
   yaml@2.6.1:
     optional: true
 
-  zod@3.25.76: {}
+  zod@4.0.0: {}
 
   zwitch@2.0.4: {}
