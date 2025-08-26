@@ -66,7 +66,7 @@ Each code represents a class of errors with specific HTTP status code mappings (
 | `ALREADY_EXISTS`      | 409         | Entity already exists                        |
 | `PERMISSION_DENIED`   | 403         | Client lacks permission for the operation    |
 | `RESOURCE_EXHAUSTED`  | 429         | Resource exhausted (e.g., rate limit, quota) |
-| `FAILED_PRECONDITION` | 422         | Precondition failed                          |
+| `FAILED_PRECONDITION` | 400         | Precondition failed                          |
 | `ABORTED`             | 409         | Operation aborted                            |
 | `OUT_OF_RANGE`        | 400         | Value out of valid range                     |
 | `UNIMPLEMENTED`       | 501         | Operation not implemented                    |
@@ -897,8 +897,6 @@ type Duration = string;
 This specification is designed to be compatible with Google RPC error handling patterns while providing additional flexibility for modern distributed systems. When integrating with Google APIs or systems that use the [Google RPC error model](https://github.com/googleapis/googleapis/tree/master/google/rpc), consider the following compatibility notes:
 
 ### Core Compatibility
-
-The specification intentionally differs from Google RPC in the HTTP mapping for `FAILED_PRECONDITION` (uses 422 Unprocessable Entity instead of 400 Bad Request) to provide more semantic precision in HTTP contexts.
 
 The Error specification aligns closely with Google RPC's error structure:
 
