@@ -80,10 +80,11 @@ resolver's purpose.
   field is nested under an object. You **MUST** use
   `[Field Name]Of[Parent Object Name]` as the module name.
 - You **MUST** use `resolve/3` as the resolver function name.
-- You **MAY** use `Mutation.` or `Query.` module prefixes to separate the
-  mutations and queries under two different modules.
+- You **MUST** use the `config/2` as the config function name for the Subscription.
+- You **MAY** use `Subscription.`, `Mutation.`, or `Query.` module prefixes to
+  separate the mutations and queries under two different modules.
 - You **MUST NOT** create subdirectories/namespace to group mutations or queries.
-  You **MUST** keep the modules under a flat structure.
+- You **MUST** keep the modules under a flat structure.
 - You **MUST** use the `Batch` prefix for batch mutations.
 
 ### Example

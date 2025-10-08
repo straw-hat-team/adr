@@ -1,16 +1,7 @@
 node_modules
 
-!.vscode/*
 !adrs/draft/.gitkeep
 !.tool-versions
-
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
 
 /.vitepress/dist/
 /.vitepress/cache
