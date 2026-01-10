@@ -86,6 +86,10 @@ resolver's purpose.
 - You **MUST NOT** create subdirectories/namespace to group mutations or queries.
 - You **MUST** keep the modules under a flat structure.
 - You **MUST** use the `Batch` prefix for batch mutations.
+- You **MUST NOT** use the `Of[Parent Object Name]` suffix when the field is
+  defined within an object that is intended to be flattened via `import_fields`.
+  The field name alone **MUST** be used as the module name since these fields
+  are imported into the parent schema and lose their original object context.
 
 ### Example
 
@@ -121,10 +125,20 @@ defmodule Umbrella.Web.Graphql.Schema do
     end
   end
 
+  # Object intended for import_fields - no "Of" suffix needed
+  object :banking_queries do
+    field :pending_transfers, list_of(:transfer) do
+      resolve &Query.PendingTransfers.resolve/3
+    end
+  end
+
   query do
     field :deposit_account, non_null(:deposit_account) do
       resolve &Query.DepositAccount.resolve/3
     end
+    
+    # Fields imported from banking_queries object
+    import_fields(:banking_queries)
   end
 
   mutation do
