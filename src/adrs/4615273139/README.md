@@ -136,7 +136,7 @@ defmodule Umbrella.Web.Graphql.Schema do
     field :deposit_account, non_null(:deposit_account) do
       resolve &Query.DepositAccount.resolve/3
     end
-    
+
     # Fields imported from banking_queries object
     import_fields(:banking_queries)
   end
