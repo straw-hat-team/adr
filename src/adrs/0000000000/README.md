@@ -22,6 +22,9 @@ is for these documents to serve as the source of truth for software-related
 documentation at Straw Hat Team and the way teams discuss and come to consensus
 on software development guidance.
 
+The concept of ADRs was originally introduced by
+[Michael Nygard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).
+
 ## Editors
 
 The editors are the set of people who make decisions on ADRs. The general goal
