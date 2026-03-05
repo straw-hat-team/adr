@@ -90,6 +90,13 @@ resolver's purpose.
   defined within an object that is intended to be flattened via `import_fields`.
   The field name alone **MUST** be used as the module name since these fields
   are imported into the parent schema and lose their original object context.
+- You **MUST** use the same `[Field Name]Of[Parent Object Name]` convention for
+  Dataloader modules that back those resolvers. Dataloaders assume the parent
+  shape (e.g. `deposit_account.account_id`) and batch by parent; the `Of` suffix
+  makes that contract explicit and avoids misuse with other parents.
+- You **MUST** use the `Of` suffix for nested fields on both resolvers and
+  dataloaders; the parent disambiguates when the same field name appears on
+  different objects.
 
 ### Example
 
