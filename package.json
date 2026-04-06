@@ -12,7 +12,7 @@
   "dependencies": {
     "fast-glob": "3.3.3",
     "gray-matter": "4.0.3",
-    "vite": "7.3.2",
+    "vite": "8.0.5",
     "zod": "4.3.6"
   },
   "devDependencies": {
