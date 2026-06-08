@@ -28,4 +28,5 @@ debate in the long-term.
 
 ## Resolution
 
-- You **MUST** use `Helper(s)` over `Util` across all the codebases.
+- You **MUST** use `Helpers` over `Util` across all the codebases.
+- You **MUST** use the plural `Helpers` as the preferred naming convention.
