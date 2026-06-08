@@ -1,7 +1,7 @@
 ---
 id: '7565730517'
 title: Logging Level and Error Reporting Usage
-state: Draft
+state: Approved
 created: 2025-03-31
 tags: [error-reporting, logging, sentry, observability]
 category: Platform
@@ -16,16 +16,18 @@ reducing the effectiveness of the tool for debugging and operations. Much of the
 logging noise stems from messages that do not require action, creating false
 alarms and distracting from actionable issues.
 
-### Sentry
+### Error Reporting
 
-Sentry should be a high-signal tool. All logs sent to Sentry must be actionable.
+Error Reporting tools (e.g., Sentry, Datadog Error, etc.) should be a
+high-signal tool. All logs sent to the error reporting tool must be actionable.
 
-- Do not log messages to Sentry unless they require immediate investigation or
-  fixing. Use the regular logger module for informational or ignorable issues.
-- If a Sentry issue is raised:
+- Do not log messages to the error reporting tool unless they require immediate
+  investigation or fixing. Use the regular logger module for informational or
+  ignorable issues.
+- If an error issue is raised:
   - Immediately assign it to yourself.
   - Fix it promptly. If unsure how to proceed, ask for help immediately.
-- The long-term goal is to have a silent Sentry.
+- The long-term goal is to have a silent Error Reporting tool.
 
 ### Logger
 
@@ -56,7 +58,8 @@ Treat `warning` the log level as an `400` error.
 
 ## Resolution
 
-- You `MUST NOT` log to Sentry unless the issue is actionable and needs fixing.
+- You `MUST NOT` log to the error reporting tool unless the issue is actionable
+  and needs fixing.
 - You `MUST` treat `error` logs as production issues to be fixed. You `SHOULD`
   validate log level usage as part of code reviews. PRs introducing `error` or
   higher logs must justify them.
