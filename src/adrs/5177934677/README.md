@@ -107,6 +107,9 @@ Keys follow the Kubernetes label key syntax, by reference:
     `MAY` filter on a per-rule basis.
 - `transient_annotations`
   - Are attached at write time for the lifetime of the delivery.
+  - Describe the operation, not an individual record: an operation that
+    writes multiple records `MUST` attach the same entries to every
+    record it writes.
   - `MUST NOT` be projected onto downstream resources by default.
   - `MAY` be persisted alongside the record for replay and audit purposes.
     Persistence `MAY` be opted out of per stream or per system when the
@@ -130,12 +133,14 @@ The two fields have opposite defaults:
   entry forward when the fact it records is also true of the new record.
 - `transient_annotations` travel with the write path. A consumer that
   emits records as a result of processing an incoming record `SHOULD`
-  propagate the incoming `transient_annotations` onto the resulting
-  records, so that context spanning a causation chain (for example,
-  correlating the deliveries of a workflow end to end) survives every hop
-  without becoming part of any record's projected representation.
-  Consumers `MAY` filter or add entries when propagating, subject to the
-  ownership rules above.
+  propagate the incoming `transient_annotations` onto all of the records
+  the resulting operation emits, not a chosen subset, so that context
+  spanning a causation chain (for example, correlating the deliveries of
+  a workflow end to end) survives every hop without becoming part of any
+  record's projected representation. Consumers `MAY` filter or add
+  entries when propagating, subject to the ownership rules above;
+  filtering is per entry and applies uniformly across the operation's
+  resulting records.
 
 Propagation terminates where projection begins: resources never expose
 transient annotations, regardless of how many hops an entry traveled.
@@ -171,8 +176,10 @@ consumers.
 - Projectors `MUST NOT` copy `transient_annotations` to resources by
   default.
 - Consumers that emit records as a result of processing an incoming
-  record `SHOULD` propagate the incoming `transient_annotations` onto the
-  resulting records.
+  record `SHOULD` propagate the incoming `transient_annotations` onto all
+  of the resulting records.
+- An operation that writes multiple records `MUST` attach the same
+  `transient_annotations` to every record it writes.
 - You `MUST NOT` rely on `annotations` propagating to resulting records;
   each writer attaches its own.
 - Storage `MUST` persist `annotations` whenever the underlying record is
