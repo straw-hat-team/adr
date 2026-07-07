@@ -105,6 +105,27 @@ Keys follow the Kubernetes label key syntax, by reference:
   is not authorship and is permitted for keys the propagator does not
   own.
 
+### Prefix identity and stability
+
+A prefix is an opaque identifier that borrows DNS syntax for
+decentralized uniqueness. It is not a live pointer to a DNS record:
+
+- A prefix does not need to resolve. Ownership is established when the
+  prefix is first documented, per the reservation rules above, not by
+  holding the DNS registration.
+- Teams do not need their own domain. Ownership delegates the way DNS
+  does: a team `MAY` mint a prefix under a domain its organization owns
+  (for example, `payments.example.com/`).
+- Once a key under a prefix has been written, the prefix is permanent.
+  Renaming, losing, or selling the domain later does not transfer or
+  invalidate the prefix, and registering a lapsed domain grants no claim
+  over keys already documented by another writer.
+- Because persisted records are immutable, writers `SHOULD` mint
+  prefixes on the most stable name available, such as a product or
+  system name rather than corporate branding. Migrating to a new prefix
+  means writing new keys going forward; keys under the old prefix remain
+  valid in persisted records forever and `MUST NOT` be rewritten.
+
 ### Lifetime contract
 
 An **operation** is a single logical write performed in response to one
@@ -198,6 +219,8 @@ consumers.
 - You `MUST` use a prefix you own, or no prefix at all. You `MUST NOT`
   write to a prefix you do not own; propagating an existing entry
   verbatim is not writing.
+- A prefix, once used, is a permanent identifier. You `MUST NOT` rewrite
+  persisted keys when the domain behind a prefix changes or lapses.
 - You `MUST` encode non-string values as strings.
 - You `MUST NOT` use annotations as a typed payload escape hatch. If
   consumers need typed semantics, define a dedicated field or schema instead.
