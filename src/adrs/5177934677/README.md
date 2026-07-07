@@ -73,6 +73,9 @@ transient_annotations: { <key>: <string>, ... }
   equivalent open-ended JSON value maps as the platform contract. Typed
   domain data belongs in first-class fields or separately governed schemas.
 - Both fields are optional. Absence and an empty map are equivalent.
+- This specification defines no size or count limits. Systems `MAY`
+  impose documented limits, and propagating consumers `MAY` filter
+  entries to stay within them.
 
 ### Key syntax
 
@@ -97,12 +100,24 @@ Keys follow the Kubernetes label key syntax, by reference:
   the platform component that owns the key.
 - Additional reserved prefixes `MUST` be documented by the system that owns
   them before they are used.
+- Ownership governs authorship: creating, modifying, or removing an
+  entry. Carrying an existing entry forward verbatim during propagation
+  is not authorship and is permitted for keys the propagator does not
+  own.
 
 ### Lifetime contract
+
+An **operation** is a single logical write performed in response to one
+processing occasion, such as handling one command, one consumed delivery,
+or one API request, regardless of how many records or streams it writes
+to.
 
 - `annotations`
   - `MUST` be persisted as part of the record's permanent representation
     when the record is persisted.
+  - Follow the mutability of the record they are attached to: immutable
+    on immutable records such as events, updatable on mutable records
+    such as resources, subject to the ownership rules above.
   - `SHOULD` be projected onto downstream resources by default. Projectors
     `MAY` filter on a per-rule basis.
 - `transient_annotations`
@@ -114,6 +129,9 @@ Keys follow the Kubernetes label key syntax, by reference:
   - `MAY` be persisted alongside the record for replay and audit purposes.
     Persistence `MAY` be opted out of per stream or per system when the
     cost is not justified; the default is to persist.
+  - Are best-effort context. Because persistence can be opted out and
+    propagation can filter, consumers `MUST NOT` depend on an entry
+    being present for correctness.
 - Resources and projections `MUST NOT` expose a `transient_annotations`
   field.
 
@@ -142,6 +160,19 @@ The two fields have opposite defaults:
   filtering is per entry and applies uniformly across the operation's
   resulting records.
 
+Key collisions during propagation resolve as follows:
+
+- When an operation processes multiple incoming records whose
+  `transient_annotations` conflict on a key, the consumer `MUST` resolve
+  the conflict deterministically. Dropping the conflicting key is the
+  safe default; a wrong value is worse than an absent one.
+- When a propagated entry collides with an entry the consumer attaches
+  itself, the consumer's own entry wins: the author of the operation
+  outranks inherited context.
+- Propagation carries unprefixed keys across writer boundaries, where
+  they can collide with another writer's unprefixed keys. Callers that
+  need collision-free keys across a chain `SHOULD` use a prefix.
+
 Propagation terminates where projection begins: resources never expose
 transient annotations, regardless of how many hops an entry traveled.
 
@@ -165,7 +196,8 @@ consumers.
   `transient_annotations`. You `MUST NOT` introduce parallel ad-hoc fields
   for the same purpose.
 - You `MUST` use a prefix you own, or no prefix at all. You `MUST NOT`
-  write to a prefix you do not own.
+  write to a prefix you do not own; propagating an existing entry
+  verbatim is not writing.
 - You `MUST` encode non-string values as strings.
 - You `MUST NOT` use annotations as a typed payload escape hatch. If
   consumers need typed semantics, define a dedicated field or schema instead.
@@ -182,6 +214,8 @@ consumers.
   `transient_annotations` to every record it writes.
 - You `MUST NOT` rely on `annotations` propagating to resulting records;
   each writer attaches its own.
+- You `MUST NOT` depend on a `transient_annotations` entry being present
+  for correctness.
 - Storage `MUST` persist `annotations` whenever the underlying record is
   persisted.
 
