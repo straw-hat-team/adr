@@ -114,14 +114,42 @@ Keys follow the Kubernetes label key syntax, by reference:
 - Resources and projections `MUST NOT` expose a `transient_annotations`
   field.
 
+### Propagation
+
+Projection and propagation are distinct behaviors. Projection copies
+metadata from a record onto a downstream resource (a read model), and is
+governed by the lifetime contract above. Propagation copies metadata from
+an incoming record onto the new records emitted as a result of processing
+it, such as a workflow consuming an event and writing the events that
+result from it.
+
+The two fields have opposite defaults:
+
+- `annotations` describe the record they are attached to and do not
+  propagate by default. The writer of a resulting record `MAY` copy an
+  entry forward when the fact it records is also true of the new record.
+- `transient_annotations` travel with the write path. A consumer that
+  emits records as a result of processing an incoming record `SHOULD`
+  propagate the incoming `transient_annotations` onto the resulting
+  records, so that context spanning a causation chain (for example,
+  correlating the deliveries of a workflow end to end) survives every hop
+  without becoming part of any record's projected representation.
+  Consumers `MAY` filter or add entries when propagating, subject to the
+  ownership rules above.
+
+Propagation terminates where projection begins: resources never expose
+transient annotations, regardless of how many hops an entry traveled.
+
 ### Choosing between the two
 
 The writer decides at attach time:
 
 - If the entry is a fact about the record that should remain true forever,
   it belongs in `annotations`.
-- If the entry is meaningful only for this delivery or this processing
-  moment, it belongs in `transient_annotations`.
+- If the entry is meaningful only for the delivery and processing of the
+  record, it belongs in `transient_annotations`. Transient does not mean
+  single-hop: an entry can propagate across an entire processing chain
+  (see Propagation) and still never surface on a resource.
 
 This decision is local to the writer and does not require coordination with
 consumers.
@@ -142,6 +170,11 @@ consumers.
   First-class envelope fields are governed separately.
 - Projectors `MUST NOT` copy `transient_annotations` to resources by
   default.
+- Consumers that emit records as a result of processing an incoming
+  record `SHOULD` propagate the incoming `transient_annotations` onto the
+  resulting records.
+- You `MUST NOT` rely on `annotations` propagating to resulting records;
+  each writer attaches its own.
 - Storage `MUST` persist `annotations` whenever the underlying record is
   persisted.
 
