@@ -13,7 +13,7 @@ category: Platform
 
 Records that move through our systems (events, commands, requests,
 projections, resources) need a place to carry caller-attached metadata that the
-platform itself does not interpret. Examples of the *shape* of need (not an
+platform itself does not interpret. Examples of the _shape_ of need (not an
 enumeration of keys) include: cross-cutting observability context, write-time
 plumbing, caller-owned domain tags, and platform cross-cutting concerns that
 are not first-class envelope fields.
@@ -68,6 +68,10 @@ transient_annotations: { <key>: <string>, ... }
 - Values are **opaque to the platform**. The platform does not parse,
   validate, or interpret values. Callers that need structured values
   `MUST` encode them as strings (for example, JSON-encoded).
+- Annotation values `MUST NOT` use typed dynamic containers such as
+  `map<string, google.protobuf.Value>`, `google.protobuf.Struct`, or
+  equivalent open-ended JSON value maps as the platform contract. Typed
+  domain data belongs in first-class fields or separately governed schemas.
 - Both fields are optional. Absence and an empty map are equivalent.
 
 ### Key syntax
@@ -88,8 +92,11 @@ Keys follow the Kubernetes label key syntax, by reference:
   written by the platform.
 - Keys under a platform-owned prefix are reserved for that platform.
   Consumers `MUST NOT` write to a prefix they do not own.
-- This ADR does not enumerate reserved keys. Reserved keys live in the
-  systems that define them.
+- `trogondb.com/` is reserved for TrogonDB platform-written annotations.
+  Callers `MUST NOT` write keys under this prefix unless they are acting as
+  the platform component that owns the key.
+- Additional reserved prefixes `MUST` be documented by the system that owns
+  them before they are used.
 
 ### Lifetime contract
 
@@ -127,6 +134,8 @@ consumers.
 - You `MUST` use a prefix you own, or no prefix at all. You `MUST NOT`
   write to a prefix you do not own.
 - You `MUST` encode non-string values as strings.
+- You `MUST NOT` use annotations as a typed payload escape hatch. If
+  consumers need typed semantics, define a dedicated field or schema instead.
 - You `MUST` choose `annotations` vs `transient_annotations` based on
   lifetime intent, not on the topical category of the entry.
 - You `MUST NOT` move platform-interpreted concerns into annotations.
@@ -138,6 +147,6 @@ consumers.
 
 ## Links
 
-* [Kubernetes: Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
-* [Kubernetes: Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
-* [CloudEvents specification](https://github.com/cloudevents/spec)
+- [Kubernetes: Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+- [Kubernetes: Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
+- [CloudEvents specification](https://github.com/cloudevents/spec)
