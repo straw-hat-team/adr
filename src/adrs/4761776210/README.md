@@ -47,9 +47,9 @@ remain the right substrate for membership.
 **Structure encoded in the string (paths or prefixes).** Placement as a
 path such as `acme/backend/ml`: walk-up is segment-stripping, flow-down is
 prefix matching, and no tree needs to exist. Rejected: a rename or move
-invalidates every pointer (impossible to repair under immutable events;
-with opaque ids one `NodeMoved` event rearranges everything and no pointer
-changes); there is no authoritative structure to validate against, so a
+invalidates every pointer (unrepairable wherever history is immutable;
+with opaque ids a single recorded move rearranges everything and no
+pointer changes); there is no authoritative structure to validate against, so a
 typo silently mints a phantom branch and restructures leave no audit
 trail; and policy bound to a prefix detaches silently on rename. The
 chosen design keeps the pointer an opaque string and moves the structure
@@ -91,17 +91,19 @@ opposite moods, and a design needs both.
 
 ## Resolution
 
-Chosen option: one event-sourced hierarchy of untyped places per tenant,
-because it is the only pattern that survived at scale across three
-independent cloud vendors, and it removes every platform guess about
-tenant org charts.
+Chosen option: one hierarchy of untyped places per tenant, because it is
+the only pattern that survived at scale across three independent cloud
+vendors, and it removes every platform guess about tenant org charts.
 
 **A container is a named place in the tenant's tree, not a thing.**
 Nothing is stored inside one; resources point at it. The rules:
 
 1. Each tenant has one tree. Its nodes ("containers") are opaque ids.
-   The tree is an event stream (`NodeAdded`, `NodeMoved`, `NodeRemoved`);
-   the current tree is a projection. There is no container record.
+   The tree changes only through three audited operations (add, move,
+   remove), each validated against the whole tree; the current tree is
+   derived from that history. There is no container record. How the
+   history is stored (event stream, audited table) is an implementation
+   choice per service.
 2. Every resource carries exactly one `container` id (placement) and one
    `owner` principal (accountability). Neither derives from the other.
 3. `kind` and display names are labels and API-surface slugs on the node
