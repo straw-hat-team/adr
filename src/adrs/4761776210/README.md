@@ -44,6 +44,25 @@ Rejected for placement: resources lose a single unambiguous home, and
 "which `pr-reviewer` do I get here?" has no defined answer. Relations
 remain the right substrate for membership.
 
+**Structure encoded in the string (paths or prefixes).** Placement as a
+path such as `acme/backend/ml`: walk-up is segment-stripping, flow-down is
+prefix matching, and no tree needs to exist. Rejected: a rename or move
+invalidates every pointer (impossible to repair under immutable events;
+with opaque ids one `NodeMoved` event rearranges everything and no pointer
+changes); there is no authoritative structure to validate against, so a
+typo silently mints a phantom branch and restructures leave no audit
+trail; and policy bound to a prefix detaches silently on rename. The
+chosen design keeps the pointer an opaque string and moves the structure
+into events.
+
+**Multiple placements per resource.** Rejected: placement exists to answer
+which policy chain governs a resource and where name resolution starts;
+two parents give two ceilings and two shadowing orders with no defined
+winner. All three clouds are single-parent for the same reason (AIP-124:
+at most one canonical parent). The need to appear in several groupings is
+served by labels (unlimited), and cross-place access by shares; one
+placement for governance, many labels for queries.
+
 **A container entity with fields.** Two drafts died under review:
 `{ id, tenant, parentId?, kind, name }` (tenant is derivable, kind is an
 uninterpreted label, name is an API-surface slug) and then
