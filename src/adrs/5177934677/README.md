@@ -1,7 +1,7 @@
 ---
 id: '5177934677'
 title: Annotations and Transient Annotations
-state: Draft
+state: Reviewing
 created: 2026-06-28
 tags: [annotations, metadata, event-sourcing, eda]
 category: Platform
@@ -29,10 +29,14 @@ Existing precedents were considered:
 
 - Kubernetes splits metadata into `labels` (selectable, indexed) and
   `annotations` (opaque, free-form). The split exists because the API server
-  is the selector engine and has to index a bounded namespace cheaply. We do
-  not have a platform-level selector engine, and we do not know our query
-  patterns up front. Adopting the `labels`/`annotations` split would be
-  ceremony without a corresponding system behavior.
+  is the selector engine and has to index a bounded namespace cheaply, and
+  because selector values need bounded, matchable syntax. The split earns
+  its keep exactly where such an engine exists. This ADR does not assume
+  one: it governs the opaque namespace. A system that does operate a
+  selector engine (resolving routing or binding selectors against
+  metadata) `MAY` add a separate selectable field for those keys as a
+  downstream decision; that field is out of this ADR's scope and does not
+  change the rules here.
 - CloudEvents, NATS headers, Kafka headers, AMQP application properties, and
   HTTP headers all use a single flat map with a reserved-prefix convention.
 - Event-sourced systems consistently distinguish between metadata that is
@@ -73,6 +77,8 @@ transient_annotations: { <key>: <string>, ... }
   equivalent open-ended JSON value maps as the platform contract. Typed
   domain data belongs in first-class fields or separately governed schemas.
 - Both fields are optional. Absence and an empty map are equivalent.
+- Caller-attached opaque metadata `MUST` live in these two fields. Records
+  `MUST NOT` grow parallel ad-hoc fields for the same purpose.
 - This specification defines no size or count limits. Systems `MAY`
   impose documented limits, and propagating consumers `MAY` filter
   entries to stay within them.
@@ -211,36 +217,19 @@ The writer decides at attach time:
 This decision is local to the writer and does not require coordination with
 consumers.
 
-### Normative rules
+## Consequences
 
-- You `MUST` place caller-attached opaque metadata in `annotations` or
-  `transient_annotations`. You `MUST NOT` introduce parallel ad-hoc fields
-  for the same purpose.
-- You `MUST` use a prefix you own, or no prefix at all. You `MUST NOT`
-  write to a prefix you do not own; propagating an existing entry
-  verbatim is not writing.
-- A prefix, once used, is a permanent identifier. You `MUST NOT` rewrite
-  persisted keys when the domain behind a prefix changes or lapses.
-- You `MUST` encode non-string values as strings.
-- You `MUST NOT` use annotations as a typed payload escape hatch. If
-  consumers need typed semantics, define a dedicated field or schema instead.
-- You `MUST` choose `annotations` vs `transient_annotations` based on
-  lifetime intent, not on the topical category of the entry.
-- You `MUST NOT` move platform-interpreted concerns into annotations.
-  First-class envelope fields are governed separately.
-- Projectors `MUST NOT` copy `transient_annotations` to resources by
-  default.
-- Consumers that emit records as a result of processing an incoming
-  record `SHOULD` propagate the incoming `transient_annotations` onto all
-  of the resulting records.
-- An operation that writes multiple records `MUST` attach the same
-  `transient_annotations` to every record it writes.
-- You `MUST NOT` rely on `annotations` propagating to resulting records;
-  each writer attaches its own.
-- You `MUST NOT` depend on a `transient_annotations` entry being present
-  for correctness.
-- Storage `MUST` persist `annotations` whenever the underlying record is
-  persisted.
+- Every record type answers "where does caller metadata go?" the same
+  way, and a reader checks exactly two fields to find it.
+- Correlating a causation chain end to end works without polluting any
+  resource's projected representation, because propagation and projection
+  have opposite defaults.
+- Prefix ownership makes cross-team key collisions a naming violation
+  rather than a runtime surprise, and lint can enforce the syntax.
+- Two doors are deliberately left open for downstream decisions: key
+  registries (enumerating well-known keys per system) and a separate
+  selectable field for systems that operate a selector engine. Neither
+  changes this spec.
 
 ## Links
 
