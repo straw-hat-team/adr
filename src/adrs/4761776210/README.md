@@ -86,9 +86,18 @@ survived at scale across three independent cloud vendors, it removes every
 platform guess about tenant org charts, and it keeps the platform's
 interpretation surface minimal and provable.
 
-The model, reduced to what the mechanism actually needs: **there is no
-container entity at all**. A container is an id that appears in its
-tenant's hierarchy, and the hierarchy is the entity:
+**Definition, first: a container is a named place in the tenant's tree,
+not a thing.** Resources point at a place (`container: "cont_backend"`),
+policies attach to a place, people stand at a place through membership.
+Nothing is ever stored "inside" one: containment is by reference, and
+"what is in this container?" is a query over resources that point at it,
+the same way a tag works. The word is kept because the industry calls
+these folders, OUs, and management groups; the mechanics are a tag with a
+tree.
+
+Given that, the model reduces to what the mechanism actually needs:
+**there is no container entity at all**. A container is an id that
+appears in its tenant's hierarchy, and the hierarchy is the entity:
 
 ```
 Hierarchy (one per tenant, event-sourced):
