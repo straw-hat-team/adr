@@ -1,7 +1,7 @@
 ---
 id: '4761776210'
 title: Resource placement via untyped recursive containers
-state: Draft
+state: Reviewing
 created: 2026-07-09
 tags: [multi-tenancy, hierarchy, authorization, platform-design]
 category: Platform
@@ -52,8 +52,8 @@ built the same architecture:
 Three properties recur:
 
 1. The middle of the hierarchy is untyped and recursive. None of them ship
-   a "team" or "department" concept; customers model themselves. Depth is
-   capped at single digits everywhere.
+   a "team" or "department" concept; customers model themselves. Every
+   vendor imposes a small fixed nesting limit rather than unbounded depth.
 2. Exactly one container kind is promoted: the level where billing and
    isolation anchor (Project, Account, Subscription). Fully generic
    hierarchies do not exist in production, and fully enumerated ones do
@@ -116,8 +116,10 @@ Everything else is derivable, decorative, or a surface concern:
 - Every resource carries a single `container` reference (one canonical
   node id, its placement) plus a separate `owner` principal (its
   accountability). Neither is derivable from the other.
-- Depth is capped at single digits, matching industry practice, enforced
-  as a tree invariant at the point of change.
+- Depth is capped at a fixed limit of 10 levels, enforced as a tree
+  invariant at the point of change. The number is deliberately deeper than
+  any observed tenant need while keeping walk-up bounded; changing it
+  later only relaxes or tightens a validation, never the model.
 
 The platform interprets the tree through exactly two operations:
 
@@ -133,11 +135,50 @@ The platform interprets the tree through exactly two operations:
    - ceiling for budgets and limits (the AWS SCP mood): ancestors bound
      descendants.
 
+Three clarifications complete the semantics:
+
+- **Queries are projections, not a third operation.** Listing or selecting
+  resources across a subtree (for example, routing work to any agent
+  matching a label under a given node) is a read-model query that may
+  traverse the projected tree in either direction. The two operations
+  above are the only *semantic* interpretations the platform defines;
+  everything else reads the projection.
+- **Membership is not hierarchy data.** Principals relate to node ids
+  through relation tuples (`member-of`) held by the authorization system,
+  in the Zanzibar style. The hierarchy stream owns structure only.
+  Effective visibility composes the two: membership says where you stand;
+  walk up says what you can reach from there.
+- **Moves are rare, human-only, and take effect prospectively.**
+  `NodeMoved` revalidates tree invariants and repositions the whole
+  subtree; inherited stances (grants, ceilings) are positional, so they
+  re-evaluate from the new position at their next evaluation. This is
+  consistent with the platform rule that definitions pin while
+  authorization never pins: nothing that referenced a node id breaks,
+  because ids are stable and only the arrangement changed.
+
 Promotion rule, the escape hatch: if the platform ever must genuinely
 interpret a kind (for example, billing rolls up per "project"), that one
 kind is promoted to a real concept at that time. Promotion is cheap;
 demotion is a breaking change. The tenant anchor is the only promotion
 made up front, matching the one promotion all three clouds made.
+
+### How the model shrank (decision journey)
+
+The recorded drafts, each rejected on challenge, are part of this
+decision:
+
+1. `Container { id, tenant, parentId?, kind, name }`. Rejected: `tenant`
+   is derivable (the root ancestor), `kind` is an uninterpreted label
+   (belongs in the labels map), `name` is an API-surface slug.
+2. `Container { id, parentId? }`. Rejected: the parent relationship is not
+   a node property. The commands that change the tree validate tree-wide
+   invariants (parent exists, no cycle, depth), so the tree is the
+   consistency unit and the event stream; a node owns nothing.
+3. Final: no container entity. A container is an opaque id whose meaning
+   accrues from the planes that mention it: hierarchy events arrange it,
+   labels decorate it, policy bindings select it, resources reference it.
+   Validity of an id is checked where it is used, against the hierarchy
+   projection, never inside consumers.
 
 What this rejects:
 
