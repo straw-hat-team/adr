@@ -27,13 +27,27 @@ agent delegated by an agent). Could `parent` mean two things?
 that runs workloads; `scope` and `location` carry established meanings in
 cloud APIs (auth scopes, regions).
 
-Industry evidence, verified against primary sources: the GCP Project
-resource has a field named `parent` ("A reference to a parent Resource.
-eg., `organizations/123` or `folders/876`") and a `projects.move` method;
-AWS Organizations speaks Parent throughout (`ListParents`,
-`MoveAccount(SourceParentId, DestinationParentId)`); Kubernetes HNC uses
-`spec.parent`. The explicit field appears exactly on movable resources,
-which is what our resources are. GCP's value is a typed reference, so the
+Industry evidence, verified against primary sources (linked below):
+
+- **Google Cloud**: the Project resource has a field named `parent`,
+  documented as "A reference to a parent Resource. eg.,
+  `organizations/123` or `folders/876`", plus a `projects.move` method
+  ("Move a project to another place in your resource hierarchy, under a
+  new resource parent").
+- **AWS**: Organizations speaks Parent throughout: `ListParents` ("Lists
+  the root or organizational units (OUs) that serve as the immediate
+  parent of the specified child"), `MoveAccount(AccountId,
+  SourceParentId, DestinationParentId)`. Its docs also state the single
+  canonical parent outright: "In the current release, a child can have
+  only a single parent."
+- **Azure**: the ManagementGroup resource carries
+  `properties.details.parent` (`ParentGroupInfo`: "The ID of the parent
+  management group", with `id`, `name`, `displayName`).
+- **Kubernetes HNC**: "The parent is defined by the `.spec.parent` field"
+  of each namespace's `HierarchyConfiguration` object.
+
+The explicit field appears exactly on movable resources, which is what
+our resources are. GCP's and Azure's values are typed references, so the
 value states what kind of node the parent is.
 
 Compound alternatives were considered and each carries a wart:
@@ -70,6 +84,8 @@ arise under the qualification rule below.
 ## Links
 
 - [ADR 4761776210: Resource placement via untyped recursive containers](../4761776210/README.md)
-- [GCP Project resource (`parent` field, `projects.move`)](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects)
-- [AWS Organizations MoveAccount](https://docs.aws.amazon.com/organizations/latest/APIReference/API_MoveAccount.html)
-- [Kubernetes HNC](https://github.com/kubernetes-sigs/hierarchical-namespaces)
+- [GCP Project resource: `parent` field and `projects.move`](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects)
+- [AWS Organizations ListParents ("a child can have only a single parent")](https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListParents.html)
+- [AWS Organizations MoveAccount (`SourceParentId`, `DestinationParentId`)](https://docs.aws.amazon.com/organizations/latest/APIReference/API_MoveAccount.html)
+- [Azure Management Groups Get (`properties.details.parent`)](https://learn.microsoft.com/en-us/rest/api/managementgroups/management-groups/get)
+- [Kubernetes HNC concepts (`.spec.parent`)](https://github.com/kubernetes-sigs/hierarchical-namespaces/blob/master/docs/user-guide/concepts.md)
