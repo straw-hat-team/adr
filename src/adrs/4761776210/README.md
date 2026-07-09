@@ -1,7 +1,7 @@
 ---
 id: '4761776210'
 title: Resource placement via untyped recursive containers
-state: Reviewing
+state: Approved
 created: 2026-07-09
 tags: [multi-tenancy, hierarchy, authorization, platform-design]
 category: Platform
