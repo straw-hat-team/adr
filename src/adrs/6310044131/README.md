@@ -1,7 +1,7 @@
 ---
 id: '6310044131'
 title: Placement is referenced by a bare parent field
-state: Reviewing
+state: Approved
 created: 2026-07-09
 tags: [naming, multi-tenancy, hierarchy, api-design]
 category: Platform
