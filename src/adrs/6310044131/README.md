@@ -90,12 +90,17 @@ arise under the qualification rule below.
    holding kinship is a review defect.
 3. Parent values are typed references (the id carries its kind, in the
    manner of `folders/876`), so the value documents what the parent is.
-4. The spellings `parentId` and `parent_id` are disallowed. Placement is
-   spelled exactly `parent` (the `Id` suffix adds nothing to a self-typed
-   value, and two spellings of one concept defeat search and tooling).
-   Kinship keeps the suffix with its qualifier: `parentSessionId`,
-   `parentAgentId`. The naming itself then carries the semantics:
-   unsuffixed means placement, type-plus-Id means kinship, and the bare
+4. The spellings `parentId` and `parent_id` are disallowed. In the
+   convention this ADR adopts, the suffix encodes what the value is: a
+   bare reference field holds a full typed reference (`folders/876`; our
+   ids carry their kind the same way), while an `_id` suffix promises a
+   raw untyped segment (AIP-133 uses `book_id` for exactly that). Our
+   placement values are typed references, so `parent` is the honest name
+   and `parent_id` would promise a value shape we do not store. The
+   `_id`-as-foreign-key instinct is correct in plain SQL schemas; these
+   are reference-typed events. Kinship keeps the suffix with its
+   qualifier (`parentSessionId`, `parentAgentId`), so suffixed-versus-
+   bare also separates kinship from placement at a glance, and the bare
    middle form, which looks like both and satisfies neither, cannot be
    written.
 
