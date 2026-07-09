@@ -46,9 +46,28 @@ Industry evidence, verified against primary sources (linked below):
 - **Kubernetes HNC**: "The parent is defined by the `.spec.parent` field"
   of each namespace's `HierarchyConfiguration` object.
 
-The explicit field appears exactly on movable resources, which is what
-our resources are. GCP's and Azure's values are typed references, so the
-value states what kind of node the parent is.
+**An honest caveat about this evidence.** The four attestations above sit
+on org-structure objects (OUs, folders, management groups, projects), not
+on arbitrary resources placed inside the structure, which is our case.
+For placed leaf resources the picture differs: GCP leaves carry no stored
+parent field (placement is encoded in the resource name), AWS leaves have
+no hierarchy (tags), and Kubernetes, the one platform with a stored
+placement field on every object, calls it `namespace`. The convention
+still transfers to our case on three narrower grounds:
+
+1. Movability is the real dividing line, not org-versus-resource: GCP's
+   stored `parent` field appears exactly on things that move (Project,
+   Folder) and not on things that don't. Our resources are movable, so
+   the Project precedent is a case match.
+2. `parent` is Google's universal request vocabulary for placing any
+   resource, not just org nodes: every AIP-133 create is
+   `Create<Thing>(parent: ...)` for books and topics as much as folders.
+3. The honest counter-candidate from the leaf-resource world,
+   `namespace`, names a flat concept; importing it onto a recursive
+   tenant-drawn tree would mislead the engineers it is meant to help.
+
+GCP's and Azure's parent values are typed references, so the value states
+what kind of node the parent is.
 
 Compound alternatives were considered and each carries a wart:
 `parent_id` does not say which parent; `parent_container` reintroduces the
