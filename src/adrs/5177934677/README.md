@@ -58,12 +58,14 @@ platform-interpreted fields) are out of scope and are governed elsewhere.
 
 ## Resolution
 
-Records expose two sibling fields with identical shape and identical key
-rules, distinguished only by lifetime:
+Written records (events, commands, requests) expose two sibling fields
+with identical shape and identical key rules, distinguished only by
+lifetime. Resources and projections expose only the first; they never
+carry a `transient_annotations` field (see Lifetime contract):
 
 ```
 annotations:           { <key>: <string>, ... }
-transient_annotations: { <key>: <string>, ... }
+transient_annotations: { <key>: <string>, ... }   # written records only
 ```
 
 ### Shape
@@ -152,7 +154,8 @@ to.
   - Describe the operation, not an individual record: an operation that
     writes multiple records `MUST` attach the same entries to every
     record it writes.
-  - `MUST NOT` be projected onto downstream resources by default.
+  - `MUST NOT` be projected onto downstream resources. This is absolute,
+    not a default: the field does not exist on resources.
   - `MAY` be persisted alongside the record for replay and audit purposes.
     Persistence `MAY` be opted out of per stream or per system when the
     cost is not justified; the default is to persist.
