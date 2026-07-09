@@ -86,28 +86,38 @@ survived at scale across three independent cloud vendors, it removes every
 platform guess about tenant org charts, and it keeps the platform's
 interpretation surface minimal and provable.
 
-The model, reduced to what the mechanism actually needs:
+The model, reduced to what the mechanism actually needs: **there is no
+container entity at all**. A container is an id that appears in its
+tenant's hierarchy, and the hierarchy is the entity:
 
 ```
-Container { id, parentId? }
+Hierarchy (one per tenant, event-sourced):
+  NodeAdded   { nodeId, parentId }
+  NodeMoved   { nodeId, fromParent, toParent }
+  NodeRemoved { nodeId }
 ```
 
-A node and its parent. Everything else is derivable, decorative, or a
-surface concern:
+The current tree is a projection of those events. This placement of the
+parent relationship follows from the commands themselves: adding or moving
+a node validates tree invariants (parent exists, no cycle, depth cap), so
+the tree is the unit of consistency, not the node. Nodes carry no fields;
+a `parentId` is event data, not a node property.
 
-- The tenant is the root ancestor. The wall is the node with no parent;
-  implementations may denormalize a tenant column for query efficiency,
-  but it is not model.
+Everything else is derivable, decorative, or a surface concern:
+
+- The tenant is the tree; the wall needs no field anywhere.
 - `kind` (`project`, `team`, `user-home`) is an entry in the standard
-  labels map that every entity already carries. A value the platform never
-  interprets does not deserve a schema field.
+  labels map, attached to the node id like labels on any entity. A value
+  the platform never interprets does not deserve schema.
 - A human-readable name or slug (unique among siblings) belongs to the
-  API-surface layer that renders path-style resource names, not to the
-  core model.
+  API-surface layer that renders path-style resource names. Exposing a
+  parent pointer on read models (as GCP folders and Kubernetes HNC do) is
+  a projection choice, not model.
 - Every resource carries a single `container` reference (one canonical
-  parent, its placement) plus a separate `owner` principal (its
+  node id, its placement) plus a separate `owner` principal (its
   accountability). Neither is derivable from the other.
-- Depth is capped at single digits, matching industry practice.
+- Depth is capped at single digits, matching industry practice, enforced
+  as a tree invariant at the point of change.
 
 The platform interprets the tree through exactly two operations:
 
