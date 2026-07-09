@@ -96,33 +96,43 @@ the only pattern that survived at scale across three independent cloud
 vendors, and it removes every platform guess about tenant org charts.
 
 **A container is a named place in the tenant's tree, not a thing.**
-Nothing is stored inside one; resources point at it. The rules:
+Nothing is stored inside one; resources point at it.
 
-1. Each tenant has one tree. Its nodes ("containers") are opaque ids.
-   The tree changes only through three audited operations (add, move,
-   remove), each validated against the whole tree; the current tree is
-   derived from that history. There is no container record. How the
-   history is stored (event stream, audited table) is an implementation
-   choice per service.
-2. Every resource carries exactly one `container` id (placement) and one
-   `owner` principal (accountability). Neither derives from the other.
-3. `kind` and display names are labels and API-surface slugs on the node
-   id. The platform has no code path conditioned on them.
-4. **Resolution walks up.** Finding a resource by name searches the
-   starting place, then its ancestors; nearest match wins.
-5. **Policy flows down.** A stance attached to a place governs its whole
-   subtree: permissions and grants inherit additively; budgets and limits
-   inherit as ceilings.
-6. Queries ("what is in this place?") are computed from resource
-   pointers; the tree stores no contents. Membership (who stands where)
-   lives in the authorization system, not in the tree.
-7. Moves are human-only tree operations. Inherited stances are positional and
-   re-evaluate from the new position; ids are stable, so references never
-   break. Tree invariants (parent exists, no cycles, depth cap of 10) are
-   enforced by the tree's command handler at the point of change.
-8. The tenant is the only promoted concept. Any other kind gets promoted
-   only when the platform must genuinely interpret it (promotion is
-   cheap; demotion is breaking).
+The decision, five rules:
+
+1. Each tenant has one tree of places. A place is an opaque id. The tree
+   changes only through three audited operations (add, move, remove),
+   each validated against the whole tree (parent exists, no cycles, depth
+   cap of 10). There is no container record; the current tree is derived
+   from the history of those operations.
+2. Every resource carries exactly one `container` id (where it lives) and
+   one `owner` principal (which human answers for it). Neither derives
+   from the other.
+3. The platform never interprets what a place *means*. Words like
+   "project" or "team" are labels on the id; display names are
+   API-surface slugs. No code path is conditioned on them.
+4. **Finding walks up.** Looking up a resource by name searches the
+   starting place, then its ancestors toward the root; the nearest match
+   wins.
+5. **Rules flow down.** A policy attached to a place governs everything
+   at or below it. Permissions accumulate downward (a child can gain,
+   never lose); limits bound downward (a parent caps everything below).
+
+## Consequences
+
+- "What is in this place?" is a query over resource pointers; the tree
+  itself stores nothing.
+- Who belongs to a place (membership) is authorization data, kept in the
+  authorization system, not in the tree.
+- Moving a place is one audited operation; ids never change, so nothing
+  that references a place breaks. Policies apply from the new position
+  going forward.
+- If the platform ever needs to treat one kind of place specially (for
+  example, billing per "project"), that kind is promoted to a real
+  concept at that moment, by a new decision. Until then, everything stays
+  a label.
+- How each service stores the tree history (event stream, audited table)
+  is that service's implementation choice.
 
 ## Links
 
