@@ -99,6 +99,18 @@ arise under the qualification rule below.
   services; qualified kinship never pollutes the result.
 - Moving a resource is a change of `parent`, which keeps move APIs
   uniform (`sourceParent`, `destinationParent`) across services.
+- The rule is enforced in schema tooling, not review vigilance: the
+  protobuf lint pipeline rejects a field named exactly `parent` that is
+  not typed as a hierarchy-node reference, and flags `parent`-prefixed
+  fields missing a type qualifier (the machine-checkable analog of
+  Google's `google.api.resource_reference` annotations on parent fields).
+- Domains that own a tree of same-kind resources qualify with their own
+  type (`parentTaskId`, `parentCommentId`). The hierarchy service's own
+  events are the one near-bare use (`parentId` on a node), which is
+  consistent: there the parent is placement.
+- Foreign protocols keep their names at the boundary. If an external
+  standard uses bare `parent` for kinship, adapters translate at the
+  edge; this ADR governs our stored schemas and events only.
 
 ## Links
 
