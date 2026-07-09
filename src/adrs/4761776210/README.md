@@ -53,7 +53,7 @@ pointer changes); there is no authoritative structure to validate against, so a
 typo silently mints a phantom branch and restructures leave no audit
 trail; and policy bound to a prefix detaches silently on rename. The
 chosen design keeps the pointer an opaque string and moves the structure
-into events.
+into audited tree operations.
 
 **Multiple placements per resource.** Rejected: placement exists to answer
 which policy chain governs a resource and where name resolution starts;
@@ -116,7 +116,7 @@ Nothing is stored inside one; resources point at it. The rules:
 6. Queries ("what is in this place?") are read-model projections over
    resource pointers. Membership is relation tuples in the authorization
    system, not tree data.
-7. Moves are human-only tree events. Inherited stances are positional and
+7. Moves are human-only tree operations. Inherited stances are positional and
    re-evaluate from the new position; ids are stable, so references never
    break. Tree invariants (parent exists, no cycles, depth cap of 10) are
    enforced by the tree's command handler at the point of change.
