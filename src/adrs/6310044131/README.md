@@ -90,6 +90,14 @@ arise under the qualification rule below.
    holding kinship is a review defect.
 3. Parent values are typed references (the id carries its kind, in the
    manner of `folders/876`), so the value documents what the parent is.
+4. The spellings `parentId` and `parent_id` are disallowed. Placement is
+   spelled exactly `parent` (the `Id` suffix adds nothing to a self-typed
+   value, and two spellings of one concept defeat search and tooling).
+   Kinship keeps the suffix with its qualifier: `parentSessionId`,
+   `parentAgentId`. The naming itself then carries the semantics:
+   unsuffixed means placement, type-plus-Id means kinship, and the bare
+   middle form, which looks like both and satisfies neither, cannot be
+   written.
 
 ## Consequences
 
@@ -100,10 +108,12 @@ arise under the qualification rule below.
 - Moving a resource is a change of `parent`, which keeps move APIs
   uniform (`sourceParent`, `destinationParent`) across services.
 - The rule is enforced in schema tooling, not review vigilance: the
-  protobuf lint pipeline rejects a field named exactly `parent` that is
-  not typed as a hierarchy-node reference, and flags `parent`-prefixed
-  fields missing a type qualifier (the machine-checkable analog of
-  Google's `google.api.resource_reference` annotations on parent fields).
+  protobuf lint pipeline accepts exactly two shapes and rejects the rest.
+  A field named exactly `parent` must reference a hierarchy node; a field
+  matching `parent<Type>Id` is kinship and must carry the qualifier;
+  every other `parent*` spelling (including `parentId` and `parent_id`)
+  is rejected (the machine-checkable analog of Google's
+  `google.api.resource_reference` annotations on parent fields).
 - Domains that own a tree of same-kind resources qualify with their own
   type (`parentTaskId`, `parentCommentId`). The hierarchy service's own
   events are the one near-bare use (`parentId` on a node), which is
