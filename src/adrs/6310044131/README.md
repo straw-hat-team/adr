@@ -11,8 +11,8 @@ category: Platform
 
 ## Context
 
-ADR 4761776210 places every resource at exactly one node of its tenant's
-container tree. Each service now needs a field on its resources that
+[ADR#4761776210](../4761776210/README.md) places every resource at
+exactly one node of its tenant's container tree. Each service now needs a field on its resources that
 references that node, and without a shared convention each service will
 invent its own (`folder`, `scope`, `container`, `parentId`), which makes
 cross-service reading and tooling needlessly hard.
@@ -83,7 +83,7 @@ arise under the qualification rule below.
 
 ## Links
 
-- [ADR 4761776210: Resource placement via untyped recursive containers](../4761776210/README.md)
+- [ADR#4761776210](../4761776210/README.md): Resource placement via untyped recursive containers
 - [GCP Project resource: `parent` field and `projects.move`](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects)
 - [AWS Organizations ListParents ("a child can have only a single parent")](https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListParents.html)
 - [AWS Organizations MoveAccount (`SourceParentId`, `DestinationParentId`)](https://docs.aws.amazon.com/organizations/latest/APIReference/API_MoveAccount.html)
