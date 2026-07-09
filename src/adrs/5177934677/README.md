@@ -1,7 +1,7 @@
 ---
 id: '5177934677'
 title: Annotations and Transient Annotations
-state: Reviewing
+state: Approved
 created: 2026-06-28
 tags: [annotations, metadata, event-sourcing, eda]
 category: Platform
