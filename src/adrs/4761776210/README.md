@@ -86,20 +86,28 @@ survived at scale across three independent cloud vendors, it removes every
 platform guess about tenant org charts, and it keeps the platform's
 interpretation surface minimal and provable.
 
-The model:
+The model, reduced to what the mechanism actually needs:
 
 ```
-Container { id, tenant, parentId?, kind, name }
+Container { id, parentId? }
 ```
 
-- Every tenant has a root container. Tenants build arbitrary trees under
-  it. Depth is capped at single digits, matching industry practice.
+A node and its parent. Everything else is derivable, decorative, or a
+surface concern:
+
+- The tenant is the root ancestor. The wall is the node with no parent;
+  implementations may denormalize a tenant column for query efficiency,
+  but it is not model.
+- `kind` (`project`, `team`, `user-home`) is an entry in the standard
+  labels map that every entity already carries. A value the platform never
+  interprets does not deserve a schema field.
+- A human-readable name or slug (unique among siblings) belongs to the
+  API-surface layer that renders path-style resource names, not to the
+  core model.
 - Every resource carries a single `container` reference (one canonical
   parent, its placement) plus a separate `owner` principal (its
   accountability). Neither is derivable from the other.
-- `kind` is a label, not a schema. Values like `project`, `team`, and
-  `user-home` are display vocabulary. The platform has no code path
-  conditioned on `kind`.
+- Depth is capped at single digits, matching industry practice.
 
 The platform interprets the tree through exactly two operations:
 
