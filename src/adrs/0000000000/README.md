@@ -110,7 +110,29 @@ In general, API producers should rely primarily on ADRs in the "approved" state.
 The following workflow describes the process for proposing an ADR, and moving an
 ADR from proposal to implementation to final acceptance.
 
-![Workflow](./workflow.png)
+```mermaid
+flowchart LR
+    Draft --> Reviewing
+    Draft --> Withdrawn
+    Draft --> Rejected
+    Reviewing --> Withdrawn
+    Reviewing --> Approved
+    Reviewing --> Rejected
+    Reviewing --> Deferred
+    Approved --> Replaced
+
+    classDef orange fill:#f2994a,stroke:#f2994a,color:#000
+    classDef cyan fill:#56ccf2,stroke:#56ccf2,color:#000
+    classDef green fill:#6fcf97,stroke:#6fcf97,color:#000
+    classDef pink fill:#f8c8dc,stroke:#f8c8dc,color:#000
+    classDef blue fill:#9ac2e8,stroke:#9ac2e8,color:#000
+
+    class Draft orange
+    class Reviewing cyan
+    class Approved green
+    class Withdrawn,Rejected pink
+    class Deferred,Replaced blue
+```
 
 ### Proposing an ADR
 
