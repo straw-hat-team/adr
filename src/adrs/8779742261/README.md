@@ -66,9 +66,13 @@ Channels are orthogonal to actors and must never be confused with them:
 
 | Channel | Meaning |
 | --- | --- |
-| `config` | Declared deployment configuration, converged by `system` |
+| `declaration` | The deployment declares desired state and `system` converges it. Transport-agnostic on purpose: env vars, values files, a declared public key, or federation trust are all declarations. Rejected names for this channel: `file` (Grafana's word; misleading, a declaration need not be a file), `config` (names an overloaded artifact, not the way a write arrives), `provisioning`/`provisioned` (collides with SCIM user provisioning, which is the `sync` channel) |
 | `api` | The single governed management surface; every management client (console, CLI appliers, Terraform/Crossplane providers) is a client of it, never a backdoor |
 | `sync` | Inbound replication from an `external` system of record |
+
+Note the axis discipline this table enforces: `declaration` was rejected
+as an authority value (it names how, not who), yet it is exactly right as
+a channel name, where "how" is the axis being named.
 
 ### Reserved words (one meaning each)
 
