@@ -150,6 +150,57 @@ taxonomy dictates its value structure:
   `system` rows, converge logic writes them freely, database triggers
   make `managed_by` immutable and `system` rows undeletable.
 
+### Value shape: bare tokens versus structured identifiers
+
+A closed authority enum takes **bare tokens** (`system`, `principal`),
+never path- or URI-shaped values (`/system`, `system://...`). GCP's
+identifier grammar, the richest in the survey, exists to solve two
+problems a closed enum does not have, and GCP itself goes bare the moment
+those problems disappear:
+
+1. **Typed prefixes disambiguate type in an open field.** The IAM policy
+   binding field carries an open set of identities of different kinds, so
+   each value declares its type: `user:alice@example.com`,
+   `serviceAccount:sa@project.iam.gserviceaccount.com`. The prefix exists
+   because the set is open and heterogeneous.
+2. **URI schemes address instances and classes in federated pools:**
+   `principal://iam.googleapis.com/.../workloadIdentityPools/POOL/subject/S`
+   names one external identity, `principalSet://.../group/G` names a
+   matching class. Structure exists to *address* things.
+3. **Resource names address instances across services** (AIP-122): the
+   full resource name is "a schemeless URI with the owning API's service
+   name, followed by the relative resource name":
+   `//library.googleapis.com/publishers/123/books/les-miserables`, with
+   components alternating collection identifiers and resource IDs.
+   Structure again exists to address an open set.
+4. **And the counter-case that proves the rule:** inside that same
+   prefixed, URI-bearing binding field, GCP's closed specials are bare
+   literals: `allUsers` and `allAuthenticatedUsers` carry no prefix and
+   no scheme, because a closed reserved value has no type ambiguity to
+   resolve and nothing to address.
+
+An authority enum is case 4 everywhere: a closed set, CHECK-constrained,
+compared byte-for-byte by database triggers and pattern matches. Every
+authority enum in the survey is bare (`AWS`, `CUSTOMER`, `Local`,
+`BuiltIn`, `Custom`, `Static`, `MANAGED`, `SELF_MANAGED`,
+`EnvironmentRole`, `SystemAssigned`); no surveyed product uses a
+path-shaped enum value.
+
+The corollary for **instance attribution**: when an authority class later
+needs to say *which* manager (which sync connection, which managing
+resource), the precedented shape is a companion reference field, never a
+composite enum value. Azure keeps `type: BuiltInRole` (closed enum)
+separate from `managedBy` (a resource ID); AWS keeps Config's
+`Source.Owner` (closed enum) separate from Secrets Manager's
+`OwningService` (service identifier). So a future synced row is
+`managed_by: external` plus a `managing_connection_id` reference, not
+`managed_by: external:scim:conn_123`. If such a reference must address
+resources across services, AIP-122 full resource names are the
+precedented value format for the *reference field*, which is exactly
+where structured identifiers belong. (Reserved lexical prefixes like
+`goog-` labels and `aws:` tags are a third mechanism again: namespacing
+inside user-writable open fields, irrelevant to closed enums.)
+
 ### Precedent survey (2026-08-03)
 
 | Product | Field | Values | Behavior |
@@ -304,6 +355,7 @@ never as a bare `system` enum token.
 - [GCP IAM overview (members renamed to principals)](https://docs.cloud.google.com/iam/docs/overview)
 - [GCP service agents](https://docs.cloud.google.com/iam/docs/service-agents)
 - [GKE Autopilot managed-namespace enforcement](https://docs.cloud.google.com/kubernetes-engine/security/autopilot-cluster-policies-standard)
+- [GCP resource names (AIP-122)](https://google.aip.dev/122)
 - [Okta policy API (`system` attribute)](https://developer.okta.com/docs/api/openapi/okta-management/management/tags/policy/)
 - [Grafana alerting provisioning (`provenance`)](https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/)
 - [AWS KMS `KeyManager`](https://docs.aws.amazon.com/kms/latest/APIReference/API_KeyMetadata.html)
