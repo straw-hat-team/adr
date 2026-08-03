@@ -1,7 +1,7 @@
 ---
 id: '0289186035'
 title: Built-In Resources and Their Modes
-state: Reviewing
+state: Approved
 created: 2026-08-03
 tags: [naming, taxonomy, schema, built-in, defaults, lifecycle]
 category: Platform

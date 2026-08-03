@@ -1,7 +1,7 @@
 ---
 id: '8779742261'
 title: Actor and Authority Taxonomy for Managed Systems
-state: Reviewing
+state: Approved
 created: 2026-08-03
 tags: [naming, taxonomy, schema, authorization, gitops, identity]
 category: Platform
@@ -99,10 +99,10 @@ a channel name, where "how" is the axis being named.
 
 ### Naming rules derived from the taxonomy
 
-1. Name fields for the axis they check: an authority field names actors
-   (or the actor-channel shorthand below), a transport field names
-   channels, a scope field names boundaries. Never mix axes in one enum
-   without noticing you are doing it.
+1. Name fields for the axis they check: an authority field names actors,
+   a transport field names channels, a scope field names boundaries.
+   Never mix axes in one enum; an enum headed by an actor value takes
+   actor values throughout.
 2. A value must be true for every row in its class. Corollary: a class
    that is the union of several ladder rungs cannot be named after any
    single rung; it must be named by what the union shares.
@@ -125,29 +125,30 @@ taxonomy dictates its value structure:
 - The other class is the union of rungs 2, 3, and 4 (platform, tenant,
   and user principals all mutate through the same governed surface). By
   rule 2 it cannot be called `platform`, `customer`, or `user`; the only
-  honest names are what the union shares: **`api`** (the channel every
-  member acts through, per the single-management-surface rule) or
-  **`principal`** (the actor category every member belongs to). Industry
-  precedent exists only for the channel word (Grafana Alerting's
-  `provenance` enum uses the literal value `api` for this class; Okta
-  marks the converged class with `system`); `principal` is the
-  grammatically agent-shaped alternative with no precedent.
+  honest names are what the union shares. The chosen value is
+  **`principal`**: the actor category every member belongs to, and the
+  taxonomy's own reserved word for exactly this union, so the enum reads
+  directly off the ladder (`system | principal`, later joined by
+  `external`) and stays on one axis end to end. `principal` is the
+  official umbrella actor term at all three major clouds (AWS glossary,
+  Azure "security principal", GCP's explicit members-to-principals
+  rename).
+- The rejected runner-up was **`api`**, the channel every member acts
+  through. It carries the only exact-position precedent (Grafana
+  Alerting's `provenance` enum uses the literal value `api` for this
+  class), but that precedent does not transplant: Grafana's enum is
+  channel-consistent (`none | api | file`, all channels), whereas this
+  enum is actor-headed (`system`) and its known future value (`external`)
+  is also an actor, so importing `api` would mix axes in exactly the way
+  rule 1 of this ADR forbids. Repeated reader confusion ("managed by
+  api reads as transport, not authority") was the empirical symptom of
+  that axis mix.
 - Future authorities join as values, per rule 3: directory-synced rows
   arrive as `managed_by: external` (or a finer-grained `scim`), not as a
   stretched reading of an existing value.
 - Enforcement keys off the field at every layer: API writes rejected on
   `system` rows, converge logic writes them freely, database triggers
   make `managed_by` immutable and `system` rows undeletable.
-
-Open point while this ADR is in review: the api-side value, `api`
-(channel word, precedented by Grafana's literal `provenance: api` value)
-versus `principal` (actor word). The taxonomy proves these are the only
-two candidates. The cloud deep survey (below) shifted the evidence:
-`principal` is the official umbrella actor term at all three major clouds
-(AWS glossary, Azure "security principal", GCP's explicit
-members-to-principals rename), so it is no longer unprecedented as
-vocabulary, only as an enum value in a managed-by field. `api` retains
-the only exact-position precedent.
 
 ### Precedent survey (2026-08-03)
 
