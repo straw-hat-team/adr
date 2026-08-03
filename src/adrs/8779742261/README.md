@@ -53,6 +53,13 @@ Two structural notes:
   rows read-only through the product's own surfaces, for opposite
   reasons).
 
+A sibling authority sits beside the ladder rather than on it: the
+**release** (resources defined by the software itself: default roles,
+sentinel rows, reserved permissions). Built-in resources are documented
+separately in [ADR#0289186035](../0289186035/README.md), including the
+six modes in which built-in-ness applies and when a `builtin` value joins
+a `managed_by`-style enum.
+
 ### The channel axis (how a write arrives)
 
 Channels are orthogonal to actors and must never be confused with them:
