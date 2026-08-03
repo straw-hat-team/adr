@@ -129,9 +129,14 @@ taxonomy dictates its value structure:
   make `managed_by` immutable and `system` rows undeletable.
 
 Open point while this ADR is in review: the api-side value, `api`
-(precedented channel word) versus `principal` (unprecedented actor word).
-The taxonomy proves these are the only two candidates; it does not pick
-between them.
+(channel word, precedented by Grafana's literal `provenance: api` value)
+versus `principal` (actor word). The taxonomy proves these are the only
+two candidates. The cloud deep survey (below) shifted the evidence:
+`principal` is the official umbrella actor term at all three major clouds
+(AWS glossary, Azure "security principal", GCP's explicit
+members-to-principals rename), so it is no longer unprecedented as
+vocabulary, only as an enum value in a managed-by field. `api` retains
+the only exact-position precedent.
 
 ### Precedent survey (2026-08-03)
 
@@ -163,8 +168,130 @@ locks, missing endpoints, config-time auth with no data marking); a single
 inspectable, trigger-enforceable column is more general than any surveyed
 implementation.
 
+### Cloud-provider deep survey (AWS, GCP, Azure; primary sources, verified 2026-08-03)
+
+A second research pass fetched official API references directly. Every
+row below is verbatim-verified against the cited page; claims that could
+not be confirmed verbatim were dropped or are marked as such.
+
+#### AWS
+
+| Where | Field | Exact values | Enforcement |
+| --- | --- | --- | --- |
+| KMS `KeyMetadata` | `KeyManager` | `AWS`, `CUSTOMER` | AWS-managed keys: no property changes, no policy changes, no deletion scheduling, rotation fixed |
+| IAM `ListPolicies` | `Scope` | `All`, `AWS`, `Local` | "You cannot change the permissions defined in AWS managed policies" |
+| IAM service-linked roles | path `/aws-service-role/` | structural | admins "can view, but not edit the permissions"; deletion only via the dedicated `DeleteServiceLinkedRole` API |
+| EventBridge `DescribeRule` | `ManagedBy` | service principal name | "created by an AWS service on your behalf... displays the principal name of the AWS service that created the rule"; `DisableRule`, `EnableRule`, `PutRule`, `PutTargets`, `TagResource`, `UntagResource` are rejected with no override; only `DeleteRule`/`RemoveTargets` accept an explicit `Force` |
+| Config `Source` | `Owner` | `AWS`, `CUSTOM_LAMBDA`, `CUSTOM_POLICY` | "Indicates whether AWS or the customer owns and manages the AWS Config rule" |
+| Organizations `PolicySummary` | `AwsManaged` | boolean | "you can attach the policy... but you cannot edit it" |
+| Secrets Manager | `OwningService` | service id string | "Managed secrets can only be created by the AWS service that manages them"; `DeleteSecret` raises `InvalidRequestException` |
+| EC2 managed prefix lists | owner | `AWS` | "You cannot create, modify, share, or delete an AWS-managed prefix list" |
+| Cross-service tags | reserved `aws:` key prefix | prefix | "you can't edit or delete the tag's key or value" |
+
+Actor vocabulary: IAM's glossary makes **Principal** the umbrella term
+("An AWS account root user, IAM user or an IAM role... Principals include
+human users, workloads, federated principals, and assumed roles"), with
+**service principal** (`{service}.amazonaws.com`) as the named form for
+software actors.
+
+#### GCP
+
+| Where | Field / mechanism | Exact values | Enforcement |
+| --- | --- | --- | --- |
+| Compute `sslCertificates` | `type` | `MANAGED`, `SELF_MANAGED` ("Google-managed SSLCertificate." / "Certificate uploaded by user.") | `managed.status` output-only |
+| Certificate Manager | union `managed` / `selfManaged` / `managedIdentity` | structural | managed cert `domains`, `dnsAuthorizations`, `issuanceConfig` marked "Immutable" |
+| Storage/BigQuery encryption tiers | field presence (`kmsKeyName`, `customerEncryption`) | none | Google-managed is the absence of both; no enum anywhere |
+| IAM predefined roles | `roles/*` namespace | structural | predefined/basic roles "always have the ETag `AA==`" |
+| Cloud Logging | bucket ids `_Required`, `_Default` | structural | "You can't change the retention period of the `_Required` log bucket" |
+| Org Policy | "managed constraints" vs custom | prose | custom constraints "are managed by your organization instead of by Google" |
+| Dataproc | reserved `goog-dataproc-*` label keys | structural | auto-applied; overriding "not recommended" |
+| App Engine | default service | none | "You can't delete the default app" |
+| GKE Autopilot | "GKE Warden" admission | denial message | `GKE Warden authz [denied by managed-namespaces-limitation]` on GKE-managed namespaces |
+| Literal `managedBy` field | searched Filestore, Cloud SQL, GKE NodePool schemas | absent | GCP has no literal `managedBy` API field; the `app.kubernetes.io/managed-by` label is an upstream Kubernetes convention, not a GCP schema field |
+
+Actor vocabulary: GCP's IAM docs use **principals** as the umbrella and
+say so explicitly ("In the past, principals were referred to as
+_members_. Some APIs still use that term"); workload/workforce federation
+identifies actors by `principal://` and `principalSet://` URIs. Note the
+prose/schema divergence: the Policy binding field is still literally
+`members`. Service agents are marked only by a naming convention
+(`service-PROJECT_NUMBER@gcp-sa-*`), with no schema field, and the docs
+warn their role permissions "can change without notice".
+
+#### Azure / Entra
+
+| Where | Property | Exact values | Enforcement |
+| --- | --- | --- | --- |
+| ARM resources and resource groups | `managedBy` | resource id | "ID of the resource that manages this resource"; enforcement is delivered separately via deny assignments, not by the field itself |
+| Deny assignments | `isSystemProtected` | boolean | "You can't directly create your own deny assignments. Deny assignments are created and managed by Azure"; "created by Azure and cannot be edited or deleted"; currently all deny assignments are system protected |
+| Azure Policy definitions | `policyType` | `NotSpecified`, `BuiltIn`, `Custom`, `Static` | "The policyType property can't be set" (server-assigned); `Static` denotes Microsoft ownership |
+| RBAC role definitions | `type`/`roleType` | `BuiltInRole`, `CustomRole` | built-ins copied, not edited |
+| Graph `servicePrincipal` | `servicePrincipalType` | `Application`, `ManagedIdentity`, `Legacy`, `ServiceIdentity`, `SocialIdp` | `ManagedIdentity`: "can be granted access and permissions, but can't be updated or modified directly" |
+| ARM `identity` | `type` | `SystemAssigned`, `UserAssigned`, `SystemAssigned, UserAssigned`, `None` | system-assigned lifecycle tied to the resource; "Azure automatically deletes the service principal for you" |
+| Graph `user` | `onPremisesSyncEnabled` + synced attributes | boolean | "the source of authority for this set of properties is the on-premises and is read-only" |
+| Entra hybrid identity | **Source of Authority (SOA)** | concept + per-object conversion | converting Group/User SOA to cloud makes the object cloud-editable: a first-party precedent for authority *transfer* |
+| Graph `unifiedRoleDefinition` | `isBuiltIn` | boolean | "Read-only"; cascades read-only onto description, permissions, scopes when true |
+| Graph `user` | `creationType` | `null`, `Invitation`, `LocalAccount`, `EmailVerified`, `SelfServiceSignUp` | "Read-only": a pure provenance field, coexisting with SOA (authority), proving the two axes are distinct in the wild |
+| AKS | node resource group lockdown | `ReadOnly`, `Unrestricted` | "a deny assignment blocks direct updates" under `ReadOnly` |
+| Event Grid | `systemTopics` resource type | structural | "Only Azure services can publish events to system topics" |
+
+Actor vocabulary: "A **security principal** is an object that represents
+a user, group, service principal, or managed identity that is requesting
+access" (RBAC overview); **tenant** is Entra's word for the directory
+boundary. Honesty note: `systemData.createdByType` enumerates `User`,
+`Application`, `ManagedIdentity`, `Key` and has no `System` value despite
+the field's name; Azure carries the system-owned concept in booleans
+(`isSystemProtected`, `isBuiltIn`) and value prefixes (`SystemAssigned`),
+never as a bare `system` enum token.
+
+#### What the deep survey establishes
+
+1. **An authority-named enum on the resource is a first-class industry
+   pattern**: AWS `KeyManager`/`Source.Owner`/`AwsManaged`, Azure
+   `policyType`/`roleType`/`managedBy`, GCP `sslCertificates.type`. GCP's
+   own field-presence approach for encryption tiers is the
+   counter-example that shows why the explicit enum is the cleaner shape.
+2. **Enforcement is verb-level, not decorative**, in every mature
+   implementation: AWS rejects specific mutation calls outright (some
+   with explicit `Force` escape hatches, identity resources with a
+   dedicated deletion API), Azure enforces via system-protected deny
+   assignments. This matches pairing the field with API-layer rejections
+   and database triggers rather than treating it as informational.
+3. **The literal token `system` is this taxonomy's own choice**: AWS's
+   token is `AWS`, GCP's is `MANAGED`, Azure's are `BuiltIn`/`Static`/
+   `SystemAssigned`/`isSystemProtected`. Each provider names itself; a
+   self-hosted product has no vendor name to use, and `system` is the
+   generic form of what `SystemAssigned`, `isSystemProtected`, and
+   "system topics" already gesture at.
+4. **`principal` is the one actor word all three clouds share** as their
+   official umbrella for authenticated identities (AWS glossary, Azure
+   "security principal", GCP's explicit members-to-principals rename).
+   This is the strongest evidence in the whole survey for the ladder's
+   union term, and it strengthens `principal` as a viable api-side value
+   relative to where the earlier survey left it.
+5. **Azure's Source of Authority is the flagship precedent for the
+   `external` rung and for rule 4**: externally-mastered objects are
+   read-only locally, the concept is named for *authority* (not
+   provenance), and Microsoft ships authority *transfer* (SOA conversion)
+   as a supported operation, while keeping a separate read-only
+   `creationType` field for actual provenance.
+
 ## Links
 
+- [AWS EventBridge `ManagedBy` (DescribeRule)](https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_DescribeRule.html)
+- [AWS Config `Source.Owner`](https://docs.aws.amazon.com/config/latest/APIReference/API_Source.html)
+- [AWS Organizations `PolicySummary.AwsManaged`](https://docs.aws.amazon.com/organizations/latest/APIReference/API_PolicySummary.html)
+- [AWS Secrets Manager managed secrets (`OwningService`)](https://docs.aws.amazon.com/secretsmanager/latest/userguide/service-linked-secrets.html)
+- [AWS IAM terms (Principal umbrella)](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_identity-management.html)
+- [Azure ARM `managedBy`](https://learn.microsoft.com/en-us/rest/api/resources/resource-groups/get?view=rest-resources-2021-04-01)
+- [Azure deny assignments (`isSystemProtected`)](https://learn.microsoft.com/en-us/azure/role-based-access-control/deny-assignments)
+- [Azure Policy `policyType`](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/definition-structure-basics)
+- [Entra Source of Authority overview](https://learn.microsoft.com/en-us/entra/identity/hybrid/concept-source-of-authority-overview)
+- [Azure RBAC overview (security principal)](https://learn.microsoft.com/en-us/azure/role-based-access-control/overview)
+- [GCP `sslCertificates.type` (MANAGED | SELF_MANAGED)](https://cloud.google.com/compute/docs/reference/rest/v1/sslCertificates)
+- [GCP IAM overview (members renamed to principals)](https://docs.cloud.google.com/iam/docs/overview)
+- [GCP service agents](https://docs.cloud.google.com/iam/docs/service-agents)
+- [GKE Autopilot managed-namespace enforcement](https://docs.cloud.google.com/kubernetes-engine/security/autopilot-cluster-policies-standard)
 - [Okta policy API (`system` attribute)](https://developer.okta.com/docs/api/openapi/okta-management/management/tags/policy/)
 - [Grafana alerting provisioning (`provenance`)](https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/)
 - [AWS KMS `KeyManager`](https://docs.aws.amazon.com/kms/latest/APIReference/API_KeyMetadata.html)
