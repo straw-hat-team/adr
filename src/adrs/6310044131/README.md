@@ -111,6 +111,10 @@ arise under the qualification rule below.
   correctly on sight.
 - Grep for `parent[^A-Z_]` finds every placement reference across
   services; qualified kinship never pollutes the result.
+- `parent` says where a resource lives, never who answers for it. Reading
+  ownership off the parent is the misuse
+  [ADR#4761776210](../4761776210/README.md) rules out; the resource
+  carries its own `owner`.
 - Moving a resource is a change of `parent`, which keeps move APIs
   uniform (`sourceParent`, `destinationParent`) across services.
 - The rule is enforced in schema tooling, not review vigilance: the

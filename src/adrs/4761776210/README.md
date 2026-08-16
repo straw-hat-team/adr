@@ -21,10 +21,13 @@ Three concerns get conflated and must stay separate:
 | --- | --- |
 | Tenant | Which isolation wall is this inside? |
 | Placement | Where does it live within the tenant? |
-| Ownership | Which human answers for it? |
+| Ownership | Which principal answers for it? |
 
 Ownership is never derived from placement: a tenant-wide resource still
-needs exactly one accountable human.
+needs exactly one accountable principal. The conflation is tempting
+enough that reviewers keep proposing it ("whoever owns the place owns
+what is in it"), so the Resolution below states the separation as a rule
+rather than leaving it as prose.
 
 ### Considered options
 
@@ -105,9 +108,13 @@ The decision, five rules:
    each validated against the whole tree (parent exists, no cycles, depth
    cap of 10). There is no container record; the current tree is derived
    from the history of those operations.
-2. Every resource carries exactly one `container` id (where it lives) and
-   one `owner` principal (which human answers for it). Neither derives
-   from the other.
+2. Every resource carries exactly one container id (where it lives,
+   spelled `parent` on the resource per
+   [ADR#6310044131](../6310044131/README.md)) and one `owner` principal
+   (which principal answers for it), stored independently. Neither
+   derives from the other, in either direction: placement never confers
+   ownership, and ownership never implies placement. See "Placement does
+   not confer ownership" below.
 3. The platform never interprets what a place *means*. Words like
    "project" or "team" are labels on the id; display names are
    API-surface slugs. No code path is conditioned on them.
@@ -118,12 +125,56 @@ The decision, five rules:
    at or below it. Permissions accumulate downward (a child can gain,
    never lose); limits bound downward (a parent caps everything below).
 
+### Placement does not confer ownership
+
+The recurring misreading is that a resource is owned by whoever owns the
+place it sits in, making the `owner` field redundant. It is not, for
+three reasons, each independently sufficient:
+
+1. **A place has no owner to inherit from.** By rule 1 a place is an
+   opaque id with no container record; the tree is derived from the
+   history of add, move, and remove operations. There is no field on a
+   place naming a principal, and there is deliberately none to add: who
+   belongs to a place is membership, which lives in the authorization
+   system, not in the tree.
+2. **What flows down is permission, not accountability.** Rule 5 grants a
+   set of principals access to everything at or below a node. Ownership
+   is the opposite shape: exactly one principal answerable for one
+   resource. A set that grows as it descends cannot yield a single
+   accountable principal. "The team lead can administer everything in
+   this place" and "this person answers for this agent" are different
+   claims, and only the second survives the team lead's departure.
+3. **Placement is designed to change.** Moving a resource is a routine
+   audited operation. Under derivation, a move would silently reassign
+   accountability with no owner-change event anywhere, which is precisely
+   the record an accountability field exists to keep. Ownership transfer
+   is its own audited operation on its own field.
+
+The permitted correlation is a **write-time default, never a read-time
+derivation**: a create call may default `owner` to the caller, and
+tooling may suggest owners from place membership. Whatever is chosen is
+then stored on the resource and changes only by explicit reassignment.
+
+Both fields are also mandatory and total, which is what rules out the
+derivation as a space saving: a resource placed at the root of the tree,
+governed by no narrower policy, still carries exactly one accountable
+`owner`.
+
+Neither field says anything about mutation authority, which is a third
+axis entirely: whether a row is converged by the system or written by
+principals is `managed_by`, per
+[ADR#8779742261](../8779742261/README.md), which also reserves
+`owner`/`owned_by` for exactly the belonging sense used here.
+
 ## Consequences
 
 - "What is in this place?" is a query over resource pointers; the tree
   itself stores nothing.
 - Who belongs to a place (membership) is authorization data, kept in the
   authorization system, not in the tree.
+- "Who answers for this resource?" is a read of one field, never a walk
+  up the tree, and it keeps answering after a move. A schema that omits
+  `owner` because the place implies it is a review defect.
 - Moving a place is one audited operation; ids never change, so nothing
   that references a place breaks. Policies apply from the new position
   going forward.
@@ -136,6 +187,10 @@ The decision, five rules:
 
 ## Links
 
+- [ADR#6310044131](../6310044131/README.md): Placement is referenced by a
+  bare parent field
+- [ADR#8779742261](../8779742261/README.md): Actor and Authority Taxonomy
+  for Managed Systems
 - [Google Cloud resource hierarchy (Folders)](https://cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy)
 - [AWS Organizations: Organizational Units](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html)
 - [Azure management groups](https://learn.microsoft.com/en-us/azure/governance/management-groups/overview)
