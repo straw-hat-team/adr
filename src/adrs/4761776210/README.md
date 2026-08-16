@@ -113,7 +113,7 @@ The decision, five rules:
    spelled `parent` on the resource per
    [ADR#6310044131](../6310044131/README.md). It is the only placement
    field, and it is mandatory. A resource-level `owner` field is not
-   required and is not the default; see "Ownership follows the parent"
+   required and is not the default; see "Ownership follows placement"
    below.
 3. The platform never interprets what a place *means*. Words like
    "project" or "team" are labels on the id; display names are
@@ -125,14 +125,15 @@ The decision, five rules:
    at or below it. Permissions accumulate downward (a child can gain,
    never lose); limits bound downward (a parent caps everything below).
 
-### Ownership follows the parent
+### Ownership follows placement
 
 A resource whose `parent` is `places/pl_123`, the node a tenant labels
 its billing project, is answered for by whoever answers for that node.
 Nothing has to be copied onto the resource for that to be true, because
-the attachment was authorized against the parent in the first place: the write path establishes that the calling principal
-may place a resource at that node, and the governance bound to that node
-then governs the resource. Adding an `owner` field to restate it is
+the attachment was authorized against the parent in the first place: the
+write path establishes that the calling principal may place a resource at
+that node, and the principal accountable for the node is accountable for
+what hangs off it. Adding an `owner` field to restate that is
 counterproductive:
 
 1. **It duplicates a fact the parent already carries.** Two records of
@@ -146,27 +147,29 @@ counterproductive:
    design; the audited tree operation is the record of that change. A
    stored owner survives the move unchanged and quietly becomes wrong.
 
-The rules that follow:
+The rules that follow, stated as bullets so that the numbered references
+in this ADR always mean the five rules of the decision above:
 
-1. Resources carry `parent`. They do not carry an `owner` by default, and
-   a schema **SHOULD NOT** add one merely to make ownership look
-   explicit.
-2. Who answers for a place is authorization data, resolved in the
-   authorization system exactly like membership, not stored in the tree.
-   Rule 1 leaves places as bare ids for this reason.
-3. Resolution walks up, in the mood of rule 4: the nearest ancestor with
-   an accountable principal wins, and the tenant root always has one.
-   Every resource therefore resolves to exactly one answer, including a
-   resource sitting at the root, which is the guarantee a mandatory
-   `owner` column was previously buying at the cost of a stale copy.
-4. A resource-level `owner` **MAY** exist only where the accountable
-   principal genuinely differs from what rule 3 would resolve. It carries
-   no other meaning, so writing one that agrees with the resolved answer
-   is a review defect, and the exception is worth a comment saying why
-   the place is not the right anchor.
-5. If a resource needs a different accountable party often enough to feel
-   like a pattern, that is a signal it belongs at a different place, not
-   that the schema needs a field.
+- **No owner field by default.** Resources carry `parent`. A schema
+  **SHOULD NOT** add an `owner` merely to make ownership look explicit.
+- **The answer lives with the place.** Who answers for a place is
+  authorization data, resolved in the authorization system exactly like
+  membership, never stored in the tree; rule 1 leaves places as bare ids
+  for exactly this reason.
+- **Resolution walks up**, in the mood of rule 4: the nearest ancestor
+  with an accountable principal wins, and the tenant root always has one.
+  Every resource therefore resolves to exactly one answer, including a
+  resource sitting at the root. That is the guarantee a mandatory `owner`
+  column used to buy, now bought without the stale copy.
+- **An owner field is an exception record.** A resource-level `owner`
+  **MAY** exist only where the accountable principal genuinely differs
+  from what walking up resolves. It carries no other meaning, so writing
+  one that agrees with the resolved answer is a review defect, and the
+  exception is worth a comment saying why the place is not the right
+  anchor.
+- **A recurring exception is a placement problem.** If a resource needs a
+  different accountable party often enough to feel like a pattern, it
+  belongs at a different place; the schema does not need a field.
 
 What placement still does **not** decide, because these are other axes:
 
