@@ -127,10 +127,10 @@ The decision, five rules:
 
 ### Ownership follows the parent
 
-A resource attached to `/project/proj_123` is answered for by whoever
-answers for that project. Nothing has to be copied onto the resource for
-that to be true, because the attachment was authorized against the parent
-in the first place: the write path establishes that the calling principal
+A resource whose `parent` is `places/pl_123`, the node a tenant labels
+its billing project, is answered for by whoever answers for that node.
+Nothing has to be copied onto the resource for that to be true, because
+the attachment was authorized against the parent in the first place: the write path establishes that the calling principal
 may place a resource at that node, and the governance bound to that node
 then governs the resource. Adding an `owner` field to restate it is
 counterproductive:
@@ -154,12 +154,17 @@ The rules that follow:
 2. Who answers for a place is authorization data, resolved in the
    authorization system exactly like membership, not stored in the tree.
    Rule 1 leaves places as bare ids for this reason.
-3. A resource-level `owner` **MAY** exist only where the accountable
-   principal genuinely differs from the parent's. Its meaning is "not the
-   parent's answer", so writing one that agrees with the parent is a
-   review defect, and the exception is worth a comment saying why the
-   parent is not the right anchor.
-4. If a resource needs a different accountable party often enough to feel
+3. Resolution walks up, in the mood of rule 4: the nearest ancestor with
+   an accountable principal wins, and the tenant root always has one.
+   Every resource therefore resolves to exactly one answer, including a
+   resource sitting at the root, which is the guarantee a mandatory
+   `owner` column was previously buying at the cost of a stale copy.
+4. A resource-level `owner` **MAY** exist only where the accountable
+   principal genuinely differs from what rule 3 would resolve. It carries
+   no other meaning, so writing one that agrees with the resolved answer
+   is a review defect, and the exception is worth a comment saying why
+   the place is not the right anchor.
+5. If a resource needs a different accountable party often enough to feel
    like a pattern, that is a signal it belongs at a different place, not
    that the schema needs a field.
 
