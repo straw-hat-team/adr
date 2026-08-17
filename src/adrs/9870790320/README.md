@@ -104,14 +104,14 @@ so it serves as pattern evidence rather than a rule source.
 
 ### Summary decision table
 
-| Fact | Where it lives | Precedent |
-| --- | --- | --- |
-| "This field never changes after create" | API contract annotation (`IMMUTABLE` / `x-ms-mutability`), enforced at the write path, DB triggers as backstop | AIP-203, Azure autorest |
-| "This row is owned by X" | The stored authority enum (`managed_by`) | ADR#8779742261 |
-| "Can the caller delete/edit this row right now" | Computed `OUTPUT_ONLY` response field | `viewerCan*` pattern, AIP-203 |
-| "The owner asked for a deletion guard" | Stored boolean input flag | GCP `deletionProtectionEnabled`, AWS termination protection |
-| "Skip reconciling this built-in object" | Stored per-object opt-out marker | Kubernetes `autoupdate` annotation |
-| "This row is read-only" as a stored column | Nowhere, ever | The anti-pattern this ADR exists to reject |
+| Fact                                            | Where it lives                                                                                                 | Precedent                                                   |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| "This field never changes after create"         | API contract annotation (`IMMUTABLE` / `x-ms-mutability`), enforced at the write path, DB triggers as backstop | AIP-203, Azure autorest                                     |
+| "This row is owned by X"                        | The stored authority enum (`managed_by`)                                                                       | ADR#8779742261                                              |
+| "Can the caller delete/edit this row right now" | Computed `OUTPUT_ONLY` response field                                                                          | `viewerCan*` pattern, AIP-203                               |
+| "The owner asked for a deletion guard"          | Stored boolean input flag                                                                                      | GCP `deletionProtectionEnabled`, AWS termination protection |
+| "Skip reconciling this built-in object"         | Stored per-object opt-out marker                                                                               | Kubernetes `autoupdate` annotation                          |
+| "This row is read-only" as a stored column      | Nowhere, ever                                                                                                  | The anti-pattern this ADR exists to reject                  |
 
 ## Links
 

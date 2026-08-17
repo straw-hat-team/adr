@@ -28,10 +28,18 @@ Make sure you have read the following ADRs:
 Use the following command to get started:
 
 ```shell
-make start_adr
+mise run start_adr
 ```
 
 Follow the template to proposal a new ADR.
+
+### Adding or moving a Tech Radar blip?
+
+Read [how the radar works](/radar/how-it-works.md) first, then use the following command to get started:
+
+```shell
+mise run start_radar_item "Some Technology"
+```
 
 ## Code reviews
 

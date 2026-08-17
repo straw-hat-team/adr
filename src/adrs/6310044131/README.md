@@ -38,7 +38,7 @@ Industry evidence, verified against primary sources (linked below):
 - **AWS**: Organizations speaks Parent throughout: `ListParents` ("Lists
   the root or organizational units (OUs) that serve as the immediate
   parent of the specified child"), `MoveAccount(AccountId,
-  SourceParentId, DestinationParentId)`. Its docs also state the single
+SourceParentId, DestinationParentId)`. Its docs also state the single
   canonical parent outright: "In the current release, a child can have
   only a single parent."
 - **Azure**: the ManagementGroup resource carries
@@ -117,7 +117,7 @@ arise under the qualification rule below.
 5. When ids are wrapper messages rather than bare strings, the `Id`
    suffix belongs to the type and leaves the field name. Rule 4's two
    shapes then read as `NodeId parent` for position and `SessionId
-   parent_session` for kinship, rather than `parent_session_id`. The
+parent_session` for kinship, rather than `parent_session_id`. The
    principle is unchanged, a field states its role and the type states
    what the role points at; only the spelling moves, because repeating
    the suffix in a typed field is stutter.

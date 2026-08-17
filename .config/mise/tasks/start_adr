@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#MISE description="Create a new ADR from the template"
+set -euo pipefail
+
+cd "${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+
+id="$(npx nanoid-cli --size 10 --alphabet "0123456789")"
+output="./src/adrs/$id/README.md"
+
+if [ -e "$output" ]; then
+  echo "$output already exists, edit it instead" >&2
+  exit 1
+fi
+
+mkdir -p "./src/adrs/$id"
+cp ./templates/adr.md "$output"
+
+sed -i '' "s/<!-- ADR unique identifier -->/$id/g" "$output"
+sed -i '' "s/<!-- YYYY-MM-DD -->/$(date +'%Y-%m-%d')/g" "$output"
+
+echo "ADR created at $output"

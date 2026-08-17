@@ -17,11 +17,11 @@ can answer who sees it, who may use it, and which rules apply to it.
 
 Three concerns are distinct questions, though they are not independent:
 
-| Concern | Question |
-| --- | --- |
-| Tenant | Which isolation wall is this inside? |
-| Position | Which node of the tenant's hierarchy is it attached to? |
-| Ownership | Which principal answers for it? |
+| Concern   | Question                                                |
+| --------- | ------------------------------------------------------- |
+| Tenant    | Which isolation wall is this inside?                    |
+| Position  | Which node of the tenant's hierarchy is it attached to? |
+| Ownership | Which principal answers for it?                         |
 
 Position is the governed one. Attaching a resource to a node is an
 authorized write: the authorization system decides whether the calling
@@ -93,11 +93,11 @@ consistency unit, not the node).
 All three major clouds faced unknown tenant structure and independently
 built the same shape:
 
-| Platform | Wall | Untyped recursive middle | Promoted leaf | Rules flow down as |
-| --- | --- | --- | --- | --- |
-| Google Cloud | Organization | Folders | Project (billing, quotas) | IAM policy (additive) |
-| AWS | Organization root | Organizational Units | Account (billing, isolation) | SCPs (ceilings) |
-| Azure | Tenant root | Management Groups | Subscription (billing) | Azure Policy + RBAC |
+| Platform     | Wall              | Untyped recursive middle | Promoted leaf                | Rules flow down as    |
+| ------------ | ----------------- | ------------------------ | ---------------------------- | --------------------- |
+| Google Cloud | Organization      | Folders                  | Project (billing, quotas)    | IAM policy (additive) |
+| AWS          | Organization root | Organizational Units     | Account (billing, isolation) | SCPs (ceilings)       |
+| Azure        | Tenant root       | Management Groups        | Subscription (billing)       | Azure Policy + RBAC   |
 
 Recurring properties: the middle is untyped and recursive (customers
 model themselves), exactly one node kind is promoted (where billing
@@ -129,7 +129,7 @@ The decision, five rules:
    `trogon.hierarchy.v1alpha1.NodeId`. It is the only position field, and
    it is mandatory. A resource-level `owner` field is not required and is
    not the default; see "Ownership follows the hierarchy" below.
-3. The platform never interprets what a node *means*. Words like
+3. The platform never interprets what a node _means_. Words like
    "project" or "team" are labels on the id; display names are
    API-surface slugs. No code path is conditioned on them.
 4. **Finding walks up.** Looking up a resource by name searches the

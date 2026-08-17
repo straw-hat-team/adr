@@ -35,13 +35,13 @@ actor with a channel, or reusing a word that already had a meaning.
 
 ### The actor ladder (who can cause a write)
 
-| Rung | Meaning | Trust source | Examples |
-| --- | --- | --- | --- |
-| `system` | The software itself, acting autonomously with **no principal attached** | The deployment's trust root (declared configuration, master keys) | Boot-time convergence of declared resources, migrations, internal schedulers |
-| `platform` | Principals whose scope is the **whole deployment**, across every tenant | Grants in the management plane | Platform administrators, a config-declared operator service account |
-| `tenant` | Principals scoped to **one customer organization** | Grants inside that organization | Org admins, org members managing org resources |
-| `user` | An individual principal acting on **their own resources** | Self-service capability | Own profile, own API keys, own MFA enrollment |
-| `external` | An **outside system of record**; its writes arrive by synchronization and are read-only from inside | The sync trust relationship | SCIM/directory-synced users, upstream-IdP-asserted attributes |
+| Rung       | Meaning                                                                                             | Trust source                                                      | Examples                                                                     |
+| ---------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `system`   | The software itself, acting autonomously with **no principal attached**                             | The deployment's trust root (declared configuration, master keys) | Boot-time convergence of declared resources, migrations, internal schedulers |
+| `platform` | Principals whose scope is the **whole deployment**, across every tenant                             | Grants in the management plane                                    | Platform administrators, a config-declared operator service account          |
+| `tenant`   | Principals scoped to **one customer organization**                                                  | Grants inside that organization                                   | Org admins, org members managing org resources                               |
+| `user`     | An individual principal acting on **their own resources**                                           | Self-service capability                                           | Own profile, own API keys, own MFA enrollment                                |
+| `external` | An **outside system of record**; its writes arrive by synchronization and are read-only from inside | The sync trust relationship                                       | SCIM/directory-synced users, upstream-IdP-asserted attributes                |
 
 Two structural notes:
 
@@ -64,11 +64,11 @@ a `managed_by`-style enum.
 
 Channels are orthogonal to actors and must never be confused with them:
 
-| Channel | Meaning |
-| --- | --- |
+| Channel       | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `declaration` | The deployment declares desired state and `system` converges it. Transport-agnostic on purpose: env vars, values files, a declared public key, or federation trust are all declarations. Rejected names for this channel: `file` (Grafana's word; misleading, a declaration need not be a file), `config` (names an overloaded artifact, not the way a write arrives), `provisioning`/`provisioned` (collides with SCIM user provisioning, which is the `sync` channel) |
-| `api` | The single governed management surface; every management client (console, CLI appliers, Terraform/Crossplane providers) is a client of it, never a backdoor |
-| `sync` | Inbound replication from an `external` system of record |
+| `api`         | The single governed management surface; every management client (console, CLI appliers, Terraform/Crossplane providers) is a client of it, never a backdoor                                                                                                                                                                                                                                                                                                             |
+| `sync`        | Inbound replication from an `external` system of record                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 Note the axis discipline this table enforces: `declaration` was rejected
 as an authority value (it names how, not who), yet it is exactly right as
@@ -170,7 +170,7 @@ those problems disappear:
 2. **URI schemes address instances and classes in federated pools:**
    `principal://iam.googleapis.com/.../workloadIdentityPools/POOL/subject/S`
    names one external identity, `principalSet://.../group/G` names a
-   matching class. Structure exists to *address* things.
+   matching class. Structure exists to _address_ things.
 3. **Resource names address instances across services** (AIP-122): the
    full resource name is "a schemeless URI with the owning API's service
    name, followed by the relative resource name":
@@ -191,7 +191,7 @@ authority enum in the survey is bare (`AWS`, `CUSTOMER`, `Local`,
 path-shaped enum value.
 
 The corollary for **instance attribution**: when an authority class later
-needs to say *which* manager (which sync connection, which managing
+needs to say _which_ manager (which sync connection, which managing
 resource), the precedented shape is a companion reference field, never a
 composite enum value. Azure keeps `type: BuiltInRole` (closed enum)
 separate from `managedBy` (a resource ID); AWS keeps Config's
@@ -200,30 +200,30 @@ separate from `managedBy` (a resource ID); AWS keeps Config's
 `managed_by: external` plus a `managing_connection_id` reference, not
 `managed_by: external:scim:conn_123`. If such a reference must address
 resources across services, AIP-122 full resource names are the
-precedented value format for the *reference field*, which is exactly
+precedented value format for the _reference field_, which is exactly
 where structured identifiers belong. (Reserved lexical prefixes like
 `goog-` labels and `aws:` tags are a third mechanism again: namespacing
 inside user-writable open fields, irrelevant to closed enums.)
 
 ### Precedent survey (2026-08-03)
 
-| Product | Field | Values | Behavior |
-| --- | --- | --- | --- |
-| Okta (policies, network zones) | `system` | boolean | system rows undeletable; "created by a system or by a user" |
-| Grafana Alerting | `provenance` | `none`, `api`, `file` | file-provisioned rows locked from the API surface |
-| Grafana dashboards | `meta.provisioned` | boolean | provisioned dashboards read-only in UI |
-| AWS KMS | `KeyManager` | `AWS`, `CUSTOMER` | AWS-managed keys not editable |
-| AWS IAM | `Scope` | `AWS`, `Local` | AWS-managed policies copy-to-edit only |
-| Azure RBAC | `type` | `BuiltInRole`, `CustomRole` | built-ins read-only |
-| Azure managed identity | `identity.type` | `SystemAssigned`, `UserAssigned` | agent-pair naming of the same boundary |
-| GCP | none | none | Google-managed vs customer-managed expressed structurally, no enum |
-| Kubernetes | `app.kubernetes.io/managed-by` | free-form label | convention only, unenforced |
-| Salesforce | `custom` | boolean | standard vs custom objects |
-| WorkOS (roles) | `type` | `EnvironmentRole`, `OrganizationRole` | row-level system-vs-custom enum |
-| WorkOS (directory sync) | none | none | structurally read-only: no mutation endpoints exist |
-| Clerk | none (enterprise-connection presence) | connection `provider`/`protocol` | directory-synced attributes documented read-only |
-| Zitadel | none | none | config-declared API principals exist but nothing is marked in the data model |
-| Keycloak | none | none | built-ins protected by convention only |
+| Product                        | Field                                 | Values                                | Behavior                                                                     |
+| ------------------------------ | ------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
+| Okta (policies, network zones) | `system`                              | boolean                               | system rows undeletable; "created by a system or by a user"                  |
+| Grafana Alerting               | `provenance`                          | `none`, `api`, `file`                 | file-provisioned rows locked from the API surface                            |
+| Grafana dashboards             | `meta.provisioned`                    | boolean                               | provisioned dashboards read-only in UI                                       |
+| AWS KMS                        | `KeyManager`                          | `AWS`, `CUSTOMER`                     | AWS-managed keys not editable                                                |
+| AWS IAM                        | `Scope`                               | `AWS`, `Local`                        | AWS-managed policies copy-to-edit only                                       |
+| Azure RBAC                     | `type`                                | `BuiltInRole`, `CustomRole`           | built-ins read-only                                                          |
+| Azure managed identity         | `identity.type`                       | `SystemAssigned`, `UserAssigned`      | agent-pair naming of the same boundary                                       |
+| GCP                            | none                                  | none                                  | Google-managed vs customer-managed expressed structurally, no enum           |
+| Kubernetes                     | `app.kubernetes.io/managed-by`        | free-form label                       | convention only, unenforced                                                  |
+| Salesforce                     | `custom`                              | boolean                               | standard vs custom objects                                                   |
+| WorkOS (roles)                 | `type`                                | `EnvironmentRole`, `OrganizationRole` | row-level system-vs-custom enum                                              |
+| WorkOS (directory sync)        | none                                  | none                                  | structurally read-only: no mutation endpoints exist                          |
+| Clerk                          | none (enterprise-connection presence) | connection `provider`/`protocol`      | directory-synced attributes documented read-only                             |
+| Zitadel                        | none                                  | none                                  | config-declared API principals exist but nothing is marked in the data model |
+| Keycloak                       | none                                  | none                                  | built-ins protected by convention only                                       |
 
 The cloud providers name agent pairs (`AWS | CUSTOMER`, system-assigned vs
 user-assigned), which works because provider and customer really are two
@@ -243,17 +243,17 @@ not be confirmed verbatim were dropped or are marked as such.
 
 #### AWS
 
-| Where | Field | Exact values | Enforcement |
-| --- | --- | --- | --- |
-| KMS `KeyMetadata` | `KeyManager` | `AWS`, `CUSTOMER` | AWS-managed keys: no property changes, no policy changes, no deletion scheduling, rotation fixed |
-| IAM `ListPolicies` | `Scope` | `All`, `AWS`, `Local` | "You cannot change the permissions defined in AWS managed policies" |
-| IAM service-linked roles | path `/aws-service-role/` | structural | admins "can view, but not edit the permissions"; deletion only via the dedicated `DeleteServiceLinkedRole` API |
-| EventBridge `DescribeRule` | `ManagedBy` | service principal name | "created by an AWS service on your behalf... displays the principal name of the AWS service that created the rule"; `DisableRule`, `EnableRule`, `PutRule`, `PutTargets`, `TagResource`, `UntagResource` are rejected with no override; only `DeleteRule`/`RemoveTargets` accept an explicit `Force` |
-| Config `Source` | `Owner` | `AWS`, `CUSTOM_LAMBDA`, `CUSTOM_POLICY` | "Indicates whether AWS or the customer owns and manages the AWS Config rule" |
-| Organizations `PolicySummary` | `AwsManaged` | boolean | "you can attach the policy... but you cannot edit it" |
-| Secrets Manager | `OwningService` | service id string | "Managed secrets can only be created by the AWS service that manages them"; `DeleteSecret` raises `InvalidRequestException` |
-| EC2 managed prefix lists | owner | `AWS` | "You cannot create, modify, share, or delete an AWS-managed prefix list" |
-| Cross-service tags | reserved `aws:` key prefix | prefix | "you can't edit or delete the tag's key or value" |
+| Where                         | Field                      | Exact values                            | Enforcement                                                                                                                                                                                                                                                                                          |
+| ----------------------------- | -------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| KMS `KeyMetadata`             | `KeyManager`               | `AWS`, `CUSTOMER`                       | AWS-managed keys: no property changes, no policy changes, no deletion scheduling, rotation fixed                                                                                                                                                                                                     |
+| IAM `ListPolicies`            | `Scope`                    | `All`, `AWS`, `Local`                   | "You cannot change the permissions defined in AWS managed policies"                                                                                                                                                                                                                                  |
+| IAM service-linked roles      | path `/aws-service-role/`  | structural                              | admins "can view, but not edit the permissions"; deletion only via the dedicated `DeleteServiceLinkedRole` API                                                                                                                                                                                       |
+| EventBridge `DescribeRule`    | `ManagedBy`                | service principal name                  | "created by an AWS service on your behalf... displays the principal name of the AWS service that created the rule"; `DisableRule`, `EnableRule`, `PutRule`, `PutTargets`, `TagResource`, `UntagResource` are rejected with no override; only `DeleteRule`/`RemoveTargets` accept an explicit `Force` |
+| Config `Source`               | `Owner`                    | `AWS`, `CUSTOM_LAMBDA`, `CUSTOM_POLICY` | "Indicates whether AWS or the customer owns and manages the AWS Config rule"                                                                                                                                                                                                                         |
+| Organizations `PolicySummary` | `AwsManaged`               | boolean                                 | "you can attach the policy... but you cannot edit it"                                                                                                                                                                                                                                                |
+| Secrets Manager               | `OwningService`            | service id string                       | "Managed secrets can only be created by the AWS service that manages them"; `DeleteSecret` raises `InvalidRequestException`                                                                                                                                                                          |
+| EC2 managed prefix lists      | owner                      | `AWS`                                   | "You cannot create, modify, share, or delete an AWS-managed prefix list"                                                                                                                                                                                                                             |
+| Cross-service tags            | reserved `aws:` key prefix | prefix                                  | "you can't edit or delete the tag's key or value"                                                                                                                                                                                                                                                    |
 
 Actor vocabulary: IAM's glossary makes **Principal** the umbrella term
 ("An AWS account root user, IAM user or an IAM role... Principals include
@@ -263,18 +263,18 @@ software actors.
 
 #### GCP
 
-| Where | Field / mechanism | Exact values | Enforcement |
-| --- | --- | --- | --- |
-| Compute `sslCertificates` | `type` | `MANAGED`, `SELF_MANAGED` ("Google-managed SSLCertificate." / "Certificate uploaded by user.") | `managed.status` output-only |
-| Certificate Manager | union `managed` / `selfManaged` / `managedIdentity` | structural | managed cert `domains`, `dnsAuthorizations`, `issuanceConfig` marked "Immutable" |
-| Storage/BigQuery encryption tiers | field presence (`kmsKeyName`, `customerEncryption`) | none | Google-managed is the absence of both; no enum anywhere |
-| IAM predefined roles | `roles/*` namespace | structural | predefined/basic roles "always have the ETag `AA==`" |
-| Cloud Logging | bucket ids `_Required`, `_Default` | structural | "You can't change the retention period of the `_Required` log bucket" |
-| Org Policy | "managed constraints" vs custom | prose | custom constraints "are managed by your organization instead of by Google" |
-| Dataproc | reserved `goog-dataproc-*` label keys | structural | auto-applied; overriding "not recommended" |
-| App Engine | default service | none | "You can't delete the default app" |
-| GKE Autopilot | "GKE Warden" admission | denial message | `GKE Warden authz [denied by managed-namespaces-limitation]` on GKE-managed namespaces |
-| Literal `managedBy` field | searched Filestore, Cloud SQL, GKE NodePool schemas | absent | GCP has no literal `managedBy` API field; the `app.kubernetes.io/managed-by` label is an upstream Kubernetes convention, not a GCP schema field |
+| Where                             | Field / mechanism                                   | Exact values                                                                                   | Enforcement                                                                                                                                     |
+| --------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Compute `sslCertificates`         | `type`                                              | `MANAGED`, `SELF_MANAGED` ("Google-managed SSLCertificate." / "Certificate uploaded by user.") | `managed.status` output-only                                                                                                                    |
+| Certificate Manager               | union `managed` / `selfManaged` / `managedIdentity` | structural                                                                                     | managed cert `domains`, `dnsAuthorizations`, `issuanceConfig` marked "Immutable"                                                                |
+| Storage/BigQuery encryption tiers | field presence (`kmsKeyName`, `customerEncryption`) | none                                                                                           | Google-managed is the absence of both; no enum anywhere                                                                                         |
+| IAM predefined roles              | `roles/*` namespace                                 | structural                                                                                     | predefined/basic roles "always have the ETag `AA==`"                                                                                            |
+| Cloud Logging                     | bucket ids `_Required`, `_Default`                  | structural                                                                                     | "You can't change the retention period of the `_Required` log bucket"                                                                           |
+| Org Policy                        | "managed constraints" vs custom                     | prose                                                                                          | custom constraints "are managed by your organization instead of by Google"                                                                      |
+| Dataproc                          | reserved `goog-dataproc-*` label keys               | structural                                                                                     | auto-applied; overriding "not recommended"                                                                                                      |
+| App Engine                        | default service                                     | none                                                                                           | "You can't delete the default app"                                                                                                              |
+| GKE Autopilot                     | "GKE Warden" admission                              | denial message                                                                                 | `GKE Warden authz [denied by managed-namespaces-limitation]` on GKE-managed namespaces                                                          |
+| Literal `managedBy` field         | searched Filestore, Cloud SQL, GKE NodePool schemas | absent                                                                                         | GCP has no literal `managedBy` API field; the `app.kubernetes.io/managed-by` label is an upstream Kubernetes convention, not a GCP schema field |
 
 Actor vocabulary: GCP's IAM docs use **principals** as the umbrella and
 say so explicitly ("In the past, principals were referred to as
@@ -287,20 +287,20 @@ warn their role permissions "can change without notice".
 
 #### Azure / Entra
 
-| Where | Property | Exact values | Enforcement |
-| --- | --- | --- | --- |
-| ARM resources and resource groups | `managedBy` | resource id | "ID of the resource that manages this resource"; enforcement is delivered separately via deny assignments, not by the field itself |
-| Deny assignments | `isSystemProtected` | boolean | "You can't directly create your own deny assignments. Deny assignments are created and managed by Azure"; "created by Azure and cannot be edited or deleted"; currently all deny assignments are system protected |
-| Azure Policy definitions | `policyType` | `NotSpecified`, `BuiltIn`, `Custom`, `Static` | "The policyType property can't be set" (server-assigned); `Static` denotes Microsoft ownership |
-| RBAC role definitions | `type`/`roleType` | `BuiltInRole`, `CustomRole` | built-ins copied, not edited |
-| Graph `servicePrincipal` | `servicePrincipalType` | `Application`, `ManagedIdentity`, `Legacy`, `ServiceIdentity`, `SocialIdp` | `ManagedIdentity`: "can be granted access and permissions, but can't be updated or modified directly" |
-| ARM `identity` | `type` | `SystemAssigned`, `UserAssigned`, `SystemAssigned, UserAssigned`, `None` | system-assigned lifecycle tied to the resource; "Azure automatically deletes the service principal for you" |
-| Graph `user` | `onPremisesSyncEnabled` + synced attributes | boolean | "the source of authority for this set of properties is the on-premises and is read-only" |
-| Entra hybrid identity | **Source of Authority (SOA)** | concept + per-object conversion | converting Group/User SOA to cloud makes the object cloud-editable: a first-party precedent for authority *transfer* |
-| Graph `unifiedRoleDefinition` | `isBuiltIn` | boolean | "Read-only"; cascades read-only onto description, permissions, scopes when true |
-| Graph `user` | `creationType` | `null`, `Invitation`, `LocalAccount`, `EmailVerified`, `SelfServiceSignUp` | "Read-only": a pure provenance field, coexisting with SOA (authority), proving the two axes are distinct in the wild |
-| AKS | node resource group lockdown | `ReadOnly`, `Unrestricted` | "a deny assignment blocks direct updates" under `ReadOnly` |
-| Event Grid | `systemTopics` resource type | structural | "Only Azure services can publish events to system topics" |
+| Where                             | Property                                    | Exact values                                                               | Enforcement                                                                                                                                                                                                       |
+| --------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ARM resources and resource groups | `managedBy`                                 | resource id                                                                | "ID of the resource that manages this resource"; enforcement is delivered separately via deny assignments, not by the field itself                                                                                |
+| Deny assignments                  | `isSystemProtected`                         | boolean                                                                    | "You can't directly create your own deny assignments. Deny assignments are created and managed by Azure"; "created by Azure and cannot be edited or deleted"; currently all deny assignments are system protected |
+| Azure Policy definitions          | `policyType`                                | `NotSpecified`, `BuiltIn`, `Custom`, `Static`                              | "The policyType property can't be set" (server-assigned); `Static` denotes Microsoft ownership                                                                                                                    |
+| RBAC role definitions             | `type`/`roleType`                           | `BuiltInRole`, `CustomRole`                                                | built-ins copied, not edited                                                                                                                                                                                      |
+| Graph `servicePrincipal`          | `servicePrincipalType`                      | `Application`, `ManagedIdentity`, `Legacy`, `ServiceIdentity`, `SocialIdp` | `ManagedIdentity`: "can be granted access and permissions, but can't be updated or modified directly"                                                                                                             |
+| ARM `identity`                    | `type`                                      | `SystemAssigned`, `UserAssigned`, `SystemAssigned, UserAssigned`, `None`   | system-assigned lifecycle tied to the resource; "Azure automatically deletes the service principal for you"                                                                                                       |
+| Graph `user`                      | `onPremisesSyncEnabled` + synced attributes | boolean                                                                    | "the source of authority for this set of properties is the on-premises and is read-only"                                                                                                                          |
+| Entra hybrid identity             | **Source of Authority (SOA)**               | concept + per-object conversion                                            | converting Group/User SOA to cloud makes the object cloud-editable: a first-party precedent for authority _transfer_                                                                                              |
+| Graph `unifiedRoleDefinition`     | `isBuiltIn`                                 | boolean                                                                    | "Read-only"; cascades read-only onto description, permissions, scopes when true                                                                                                                                   |
+| Graph `user`                      | `creationType`                              | `null`, `Invitation`, `LocalAccount`, `EmailVerified`, `SelfServiceSignUp` | "Read-only": a pure provenance field, coexisting with SOA (authority), proving the two axes are distinct in the wild                                                                                              |
+| AKS                               | node resource group lockdown                | `ReadOnly`, `Unrestricted`                                                 | "a deny assignment blocks direct updates" under `ReadOnly`                                                                                                                                                        |
+| Event Grid                        | `systemTopics` resource type                | structural                                                                 | "Only Azure services can publish events to system topics"                                                                                                                                                         |
 
 Actor vocabulary: "A **security principal** is an object that represents
 a user, group, service principal, or managed identity that is requesting
@@ -338,8 +338,8 @@ never as a bare `system` enum token.
    relative to where the earlier survey left it.
 5. **Azure's Source of Authority is the flagship precedent for the
    `external` rung and for rule 4**: externally-mastered objects are
-   read-only locally, the concept is named for *authority* (not
-   provenance), and Microsoft ships authority *transfer* (SOA conversion)
+   read-only locally, the concept is named for _authority_ (not
+   provenance), and Microsoft ships authority _transfer_ (SOA conversion)
    as a supported operation, while keeping a separate read-only
    `creationType` field for actual provenance.
 
