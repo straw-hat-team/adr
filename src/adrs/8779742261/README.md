@@ -96,6 +96,10 @@ a channel name, where "how" is the axis being named.
 - `customer`: avoid in schemas; see `tenant`.
 - `owner`/`owned_by`: resource-to-principal belonging (whose credential
   this is), never mutation authority.
+- `resource`, `entity`, `record`, `object`, `document`: settled
+  separately in [ADR#1394819661](../1394819661/README.md). `resource` is
+  the generic noun for a governed thing, and `object` is reserved for
+  the in-memory and serialization senses, so it is not a synonym for it.
 
 ### Naming rules derived from the taxonomy
 
@@ -341,6 +345,8 @@ never as a bare `system` enum token.
 
 ## Links
 
+- [ADR#1394819661](../1394819661/README.md): Resource Is the Generic
+  Noun, Object Is a Runtime Term
 - [AWS EventBridge `ManagedBy` (DescribeRule)](https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_DescribeRule.html)
 - [AWS Config `Source.Owner`](https://docs.aws.amazon.com/config/latest/APIReference/API_Source.html)
 - [AWS Organizations `PolicySummary.AwsManaged`](https://docs.aws.amazon.com/organizations/latest/APIReference/API_PolicySummary.html)
