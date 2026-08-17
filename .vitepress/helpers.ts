@@ -5,7 +5,7 @@ import matter from 'gray-matter';
 import glob from 'fast-glob';
 import { z } from 'zod';
 
-type ReadFrontmatterResult<T> = Array<{ filePath: string; frontmatter: T }>;
+type FrontmatterEntry<T> = { filePath: string; frontmatter: T };
 
 /**
  * Read frontmatter from files.
@@ -16,13 +16,13 @@ type ReadFrontmatterResult<T> = Array<{ filePath: string; frontmatter: T }>;
  * @param opts.schema the Zod Schema to validate the frontmatter.
  * @returns a list of frontmatter objects.
  */
-export async function readFrontmatter<T>(
+export async function readFrontmatter<S extends z.ZodType>(
   patterns: string[],
   opts?: {
     rootDir?: string;
-    schema?: z.ZodObject<T>;
+    schema?: S;
   },
-): Promise<ReadFrontmatterResult<T>> {
+): Promise<Array<FrontmatterEntry<z.output<S>>>> {
   const pattern = patterns.map((pattern) => {
     const finalPath = opts?.rootDir ? path.join(opts.rootDir, pattern) : pattern;
     return normalizePath(finalPath);
@@ -40,37 +40,30 @@ export async function readFrontmatter<T>(
         frontmatter,
       };
     } catch (e) {
-      throw new InvalidFrontmatterError(filePath, e);
+      if (e instanceof z.ZodError) {
+        throw new InvalidFrontmatterError(filePath, e);
+      }
+      throw e;
     }
   });
 }
 
 class InvalidFrontmatterError extends Error {
-  #zodError: z.ZodError;
-  #filePath: string;
-
   constructor(filePath: string, zodErr: z.ZodError) {
-    super();
-    this.name = 'InvalidFrontmatterError';
-    this.#zodError = zodErr;
-    this.#filePath = filePath;
-  }
-
-  get message() {
-    const issues = this.#zodError.errors
+    const issues = zodErr.issues
       .map((zodIssue, index) => {
         return [
           `    ${index + 1}. Error Code: ${zodIssue.code}`,
           `       - Path: ${zodIssue.path.join(' > ')}`,
-          `       - Expected: ${zodIssue.expected}`,
-          `       - Received: ${zodIssue.received}`,
+          ...('expected' in zodIssue ? [`       - Expected: ${zodIssue.expected}`] : []),
           `       - Message: ${zodIssue.message}`,
         ];
       })
       .flat()
       .join('\n');
 
-    return `${this.#filePath}\n\n${issues}\n`;
+    super(`${filePath}\n\n${issues}\n`);
+    this.name = 'InvalidFrontmatterError';
   }
 }
 
@@ -89,26 +82,26 @@ export const AdrFrontmatter = z.object({
 
 type IAdrFrontmatter = z.infer<typeof AdrFrontmatter>;
 
-export function orderByCreated(r1: ReadFrontmatterResult<IAdrFrontmatter>, r2: ReadFrontmatterResult<IAdrFrontmatter>) {
-  return r1.frontmatter.created - r2.frontmatter.created;
+export function orderByCreated(r1: FrontmatterEntry<IAdrFrontmatter>, r2: FrontmatterEntry<IAdrFrontmatter>) {
+  return r1.frontmatter.created.getTime() - r2.frontmatter.created.getTime();
 }
 
 export function groupByCategory(
-  acc: Record<Category, Array<ReadFrontmatterResult<IAdrFrontmatter>>>,
-  r: ReadFrontmatterResult<IAdrFrontmatter>,
+  acc: Record<Category, Array<FrontmatterEntry<IAdrFrontmatter>>>,
+  r: FrontmatterEntry<IAdrFrontmatter>,
 ) {
   acc[r.frontmatter.category] ??= [];
   acc[r.frontmatter.category].push(r);
   return acc;
 }
 
-export function toSidebarItem(r: ReadFrontmatterResult<IAdrFrontmatter>) {
+export function toSidebarItem(r: FrontmatterEntry<IAdrFrontmatter>) {
   return {
     text: r.frontmatter.title,
     link: `/adrs/${r.frontmatter.id}/README.md`,
   };
 }
 
-export function hasAnyCategory(categories: Record<Category, Array<ReadFrontmatterResult<IAdrFrontmatter>>>) {
+export function hasAnyCategory(categories: Record<Category, Array<FrontmatterEntry<IAdrFrontmatter>>>) {
   return (category: Category) => categories[category]?.length > 0;
 }

@@ -16,6 +16,14 @@ export default async () => {
     schema: AdrFrontmatter,
   });
   const categories = frontmatters.sort(orderByCreated).reduce(groupByCategory, {});
+  const adrSidebar = ['General', 'Platform', 'Elixir', 'JavaScript']
+    .filter(hasAnyCategory(categories))
+    .map((category) => ({
+      text: category,
+      collapsible: true,
+      collapsed: false,
+      items: categories[category].map(toSidebarItem) ?? [],
+    }));
 
   return withMermaid(
     defineConfig({
@@ -35,15 +43,22 @@ export default async () => {
           pattern: 'https://github.com/straw-hat-team/adr/tree/main/src/:path',
         },
         nav: [
+          { text: 'Tech Radar', link: '/radar/' },
           { text: 'Contributing', link: '/contributing' },
           { text: 'GitHub', link: 'https://github.com/straw-hat-team/adr' },
         ],
-        sidebar: ['General', 'Platform', 'Elixir', 'JavaScript'].filter(hasAnyCategory(categories)).map((category) => ({
-          text: category,
-          collapsible: true,
-          collapsed: false,
-          items: categories[category].map(toSidebarItem) ?? [],
-        })),
+        sidebar: {
+          '/radar/': [
+            {
+              text: 'Tech Radar',
+              items: [
+                { text: 'The radar', link: '/radar/' },
+                { text: 'How it works', link: '/radar/how-it-works' },
+              ],
+            },
+          ],
+          '/': adrSidebar,
+        },
       },
     }),
   );

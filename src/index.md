@@ -13,6 +13,9 @@ hero:
       text: Genesis ADR
       link: /adrs/0000000000/README
     - theme: alt
+      text: Tech Radar
+      link: /radar/
+    - theme: alt
       text: View on GitHub
       link: https://github.com/straw-hat-team/adr
 ---

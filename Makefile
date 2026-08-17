@@ -3,3 +3,6 @@ generate_adr_id:
 
 start_adr:
 	./scripts/start_adr.sh
+
+start_radar_item:
+	./scripts/start_radar_item.sh "$(name)" "$(slug)"

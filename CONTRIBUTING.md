@@ -33,6 +33,14 @@ make start_adr
 
 Follow the template to proposal a new ADR.
 
+### Adding or moving a Tech Radar blip?
+
+Read [how the radar works](/radar/how-it-works.md) first, then use the following command to get started:
+
+```shell
+make start_radar_item name="Some Technology"
+```
+
 ## Code reviews
 
 All submissions, including submissions by project members, require review. We
