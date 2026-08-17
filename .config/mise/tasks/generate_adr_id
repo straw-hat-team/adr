@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Print a fresh ADR id"
+set -euo pipefail
+
+npx nanoid-cli --size 10 --alphabet "0123456789"

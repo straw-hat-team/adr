@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#MISE description="Create a new Tech Radar blip from the template"
+#USAGE arg "<name>" help="Display name of the technology, technique, or platform"
+#USAGE arg "[slug]" help="File name to write, defaults to the slugified name"
+set -euo pipefail
+
+cd "${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+
+slugify() {
+  echo "$1" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^a-z0-9]\{1,\}/-/g' -e 's/^-//' -e 's/-$//'
+}
+
+current_edition() {
+  awk '/const editions/,/\] as const;/' ./.vitepress/radar.ts |
+    grep -o "id: '[^']*'" |
+    tail -1 |
+    sed -e "s/id: '//" -e "s/'$//"
+}
+
+name="$1"
+slug="${2:-$(slugify "$name")}"
+
+if [ -z "$slug" ]; then
+  echo "could not derive a slug from \"$name\", pass one explicitly" >&2
+  exit 1
+fi
+
+output="./src/radar/items/$slug.md"
+
+if [ -e "$output" ]; then
+  echo "$output already exists, edit it instead" >&2
+  exit 1
+fi
+
+edition="$(current_edition)"
+
+if [ -z "$edition" ]; then
+  echo "could not read the current edition from ./.vitepress/radar.ts" >&2
+  exit 1
+fi
+
+cp ./templates/radar-item.md "$output"
+
+sed -i '' "s|<!-- display name of the technology, technique, or platform -->|$name|g" "$output"
+sed -i '' "s|# <!-- display name -->|# $name|g" "$output"
+sed -i '' "s|<!-- the current edition, see .vitepress/radar.ts -->|'$edition'|g" "$output"
+
+echo "radar item created at $output"

@@ -28,7 +28,7 @@ Make sure you have read the following ADRs:
 Use the following command to get started:
 
 ```shell
-make start_adr
+mise run start_adr
 ```
 
 Follow the template to proposal a new ADR.
@@ -38,7 +38,7 @@ Follow the template to proposal a new ADR.
 Read [how the radar works](/radar/how-it-works.md) first, then use the following command to get started:
 
 ```shell
-make start_radar_item name="Some Technology"
+mise run start_radar_item "Some Technology"
 ```
 
 ## Code reviews
