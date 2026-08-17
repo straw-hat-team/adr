@@ -3,7 +3,7 @@ name: Zod
 quadrant: languages-and-frameworks
 history:
   - edition: '2026.2'
-    ring: adopt
+    ring: trial
 tags: [javascript, typescript, validation]
 ---
 

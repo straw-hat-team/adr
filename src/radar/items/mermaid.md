@@ -3,7 +3,7 @@ name: Mermaid
 quadrant: tools
 history:
   - edition: '2026.2'
-    ring: adopt
+    ring: trial
 tags: [documentation, diagrams]
 ---
 

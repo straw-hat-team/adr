@@ -3,7 +3,7 @@ name: GitHub Pages
 quadrant: platforms
 history:
   - edition: '2026.2'
-    ring: adopt
+    ring: trial
 tags: [hosting, static-site]
 ---
 
