@@ -48,8 +48,8 @@ Industry evidence, verified against primary sources (linked below):
   of each namespace's `HierarchyConfiguration` object.
 
 **An honest caveat about this evidence.** The four attestations above sit
-on org-structure objects (OUs, folders, management groups, projects), not
-on arbitrary resources placed inside the structure, which is our case.
+on org-structure nodes (OUs, folders, management groups, projects), not
+on arbitrary resources attached inside the structure, which is our case.
 For placed leaf resources the picture differs: GCP leaves carry no stored
 parent field (the position is encoded in the resource name), AWS
 leaves have no hierarchy (tags), and Kubernetes, the one platform with a
@@ -93,12 +93,13 @@ arise under the qualification rule below.
    holding kinship is a review defect.
 3. Parent values are self-describing, so a value read in isolation says
    what it points at. Two mechanisms deliver that and both apply: the
-   field's type, `trogon.hierarchy.v1alpha1.NodeId`, and the object id
+   field's type, `trogon.hierarchy.v1alpha1.NodeId`, and the resource id
    prefix carried inside the value, `node_01h9x`. Our prefix convention
-   is what GCP achieves with a collection segment (`folders/876`); it is
-   the same goal reached by the spelling this ecosystem already uses, so
-   parent values take the prefix form and not the path form. The value
-   names one node and never encodes ancestry.
+   ([ADR#4860595695](../4860595695/README.md)) is what GCP achieves with
+   a collection segment (`folders/876`); it is the same goal reached by
+   the spelling this ecosystem already uses, so parent values take the
+   prefix form and not the path form. The value names one node and never
+   encodes ancestry.
 4. The spellings `parentId` and `parent_id` are disallowed, for a reason
    internal to our own naming pattern rather than imported taste. Every
    id-suffixed reference field we write is `<Type>Id`: the word before
@@ -153,6 +154,9 @@ arise under the qualification rule below.
 
 - [ADR#4761776210](../4761776210/README.md): Resource hierarchy via
   untyped recursive nodes
+- [ADR#4860595695](../4860595695/README.md): Human-Readable IDs
+- [ADR#1394819661](../1394819661/README.md): Resource Is the Generic
+  Noun, Object Is a Runtime Term
 - [GCP Project resource: `parent` field and `projects.move`](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects)
 - [AWS Organizations ListParents ("a child can have only a single parent")](https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListParents.html)
 - [AWS Organizations MoveAccount (`SourceParentId`, `DestinationParentId`)](https://docs.aws.amazon.com/organizations/latest/APIReference/API_MoveAccount.html)
