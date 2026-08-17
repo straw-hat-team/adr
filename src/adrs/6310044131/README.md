@@ -1,19 +1,20 @@
 ---
 id: '6310044131'
-title: Placement is referenced by a bare parent field
+title: Hierarchy position is referenced by a bare parent field
 state: Approved
 created: 2026-07-09
 tags: [naming, multi-tenancy, hierarchy, api-design]
 category: Platform
 ---
 
-# Placement is referenced by a bare parent field
+# Hierarchy position is referenced by a bare parent field
 
 ## Context
 
-[ADR#4761776210](../4761776210/README.md) places every resource at
-exactly one node of its tenant's container tree. Each service now needs a field on its resources that
-references that node, and without a shared convention each service will
+[ADR#4761776210](../4761776210/README.md) attaches every resource to
+exactly one node of its tenant's hierarchy. Each service now needs a
+field on its resources that references that node, and without a shared
+convention each service will
 invent its own (`folder`, `scope`, `container`, `parentId`), which makes
 cross-service reading and tooling needlessly hard.
 
@@ -50,9 +51,9 @@ Industry evidence, verified against primary sources (linked below):
 on org-structure objects (OUs, folders, management groups, projects), not
 on arbitrary resources placed inside the structure, which is our case.
 For placed leaf resources the picture differs: GCP leaves carry no stored
-parent field (placement is encoded in the resource name), AWS leaves have
-no hierarchy (tags), and Kubernetes, the one platform with a stored
-placement field on every object, calls it `namespace`. The convention
+parent field (the position is encoded in the resource name), AWS
+leaves have no hierarchy (tags), and Kubernetes, the one platform with a
+stored position field on every object, calls it `namespace`. The convention
 still transfers to our case on three narrower grounds:
 
 1. Movability is the real dividing line, not org-versus-resource: GCP's
@@ -71,10 +72,12 @@ what kind of node the parent is.
 
 Compound alternatives were considered and each carries a wart:
 `parent_id` does not say which parent; `parent_container` reintroduces the
-OCI collision; `parent_node` and `parent_folder` introduce vocabulary the
-placement ADR does not use. The ambiguity a compound would prevent does
-not occur in practice: ambiguity lives inside a single schema, and no
-schema carries both placement and unqualified kinship.
+OCI collision; `parent_folder` introduces vocabulary the hierarchy ADR
+does not use; and `parent_node`, though it now uses the right word, says
+in the field name what the field's type already says. The ambiguity a
+compound would prevent does not occur in practice: ambiguity lives inside
+a single schema, and no schema carries both a hierarchy position and
+unqualified kinship.
 
 ## Resolution
 
@@ -82,21 +85,27 @@ Chosen option: a bare `parent` field, because it matches the verified
 industry convention for movable resources and the feared ambiguity cannot
 arise under the qualification rule below.
 
-1. On any resource, the field `parent` refers to placement: the node of
-   the tenant's container tree the resource lives in. It has no other
+1. On any resource, the field `parent` refers to position: the node of
+   the tenant's hierarchy the resource is attached to. It has no other
    meaning, on any resource, in any service.
 2. Kinship between resources is always qualified, never bare:
    `parentSessionId`, `parentAgentId`, `sourceParentId`. A bare `parent`
    holding kinship is a review defect.
-3. Parent values are typed references (the id carries its kind, in the
-   manner of `folders/876`), so the value documents what the parent is.
+3. Parent values are self-describing, so a value read in isolation says
+   what it points at. Two mechanisms deliver that and both apply: the
+   field's type, `trogon.hierarchy.v1alpha1.NodeId`, and the object id
+   prefix carried inside the value, `node_01h9x`. Our prefix convention
+   is what GCP achieves with a collection segment (`folders/876`); it is
+   the same goal reached by the spelling this ecosystem already uses, so
+   parent values take the prefix form and not the path form. The value
+   names one node and never encodes ancestry.
 4. The spellings `parentId` and `parent_id` are disallowed, for a reason
    internal to our own naming pattern rather than imported taste. Every
    id-suffixed reference field we write is `<Type>Id`: the word before
    the suffix names a resource type (`agentId`, `sessionId`,
-   `rubricId`). "Parent" is not a type; it is a role, and placement may
+   `rubricId`). "Parent" is not a type; it is a role, and a position may
    point at a node of any kind, which is its entire point. So the two
-   valid shapes are: role-named bare `parent` for placement, and
+   valid shapes are: role-named bare `parent` for position, and
    role-plus-type `parent<Type>Id` for kinship (`parentSessionId`, where
    Session is the type). `parentId` is a role plus suffix with no type,
    fitting neither pattern, so it cannot be written. This mirrors actual
@@ -104,12 +113,19 @@ arise under the qualification rule below.
    in one request without contradiction. Weight note: the load-bearing
    rule of this ADR is kinship qualification (rule 2); this spelling rule
    is a consistency rule on top of it.
+5. When ids are wrapper messages rather than bare strings, the `Id`
+   suffix belongs to the type and leaves the field name. Rule 4's two
+   shapes then read as `NodeId parent` for position and `SessionId
+   parent_session` for kinship, rather than `parent_session_id`. The
+   principle is unchanged, a field states its role and the type states
+   what the role points at; only the spelling moves, because repeating
+   the suffix in a typed field is stutter.
 
 ## Consequences
 
 - Engineers arriving from GCP, AWS, Azure, or Kubernetes read the field
   correctly on sight.
-- Grep for `parent[^A-Z_]` finds every placement reference across
+- Grep for `parent[^A-Z_]` finds every position reference across
   services; qualified kinship never pollutes the result.
 - `parent` is where accountability is anchored: attaching to a node is an
   authorized write, so who answers for the node answers for what hangs
@@ -128,14 +144,15 @@ arise under the qualification rule below.
 - Domains that own a tree of same-kind resources qualify with their own
   type (`parentTaskId`, `parentCommentId`). The hierarchy service's own
   events are the one near-bare use (`parentId` on a node), which is
-  consistent: there the parent is placement.
+  consistent: there the parent is the position.
 - Foreign protocols keep their names at the boundary. If an external
   standard uses bare `parent` for kinship, adapters translate at the
   edge; this ADR governs our stored schemas and events only.
 
 ## Links
 
-- [ADR#4761776210](../4761776210/README.md): Resource placement via untyped recursive containers
+- [ADR#4761776210](../4761776210/README.md): Resource hierarchy via
+  untyped recursive nodes
 - [GCP Project resource: `parent` field and `projects.move`](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects)
 - [AWS Organizations ListParents ("a child can have only a single parent")](https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListParents.html)
 - [AWS Organizations MoveAccount (`SourceParentId`, `DestinationParentId`)](https://docs.aws.amazon.com/organizations/latest/APIReference/API_MoveAccount.html)

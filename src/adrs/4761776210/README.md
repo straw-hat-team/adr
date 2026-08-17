@@ -1,13 +1,13 @@
 ---
 id: '4761776210'
-title: Resource placement via untyped recursive containers
+title: Resource hierarchy via untyped recursive nodes
 state: Approved
 created: 2026-07-09
 tags: [multi-tenancy, hierarchy, authorization, platform-design]
 category: Platform
 ---
 
-# Resource placement via untyped recursive containers
+# Resource hierarchy via untyped recursive nodes
 
 ## Context
 
@@ -20,15 +20,28 @@ Three concerns are distinct questions, though they are not independent:
 | Concern | Question |
 | --- | --- |
 | Tenant | Which isolation wall is this inside? |
-| Placement | Where does it live within the tenant? |
+| Position | Which node of the tenant's hierarchy is it attached to? |
 | Ownership | Which principal answers for it? |
 
-Placement is the governed one. Attaching a resource to a place is an
+Position is the governed one. Attaching a resource to a node is an
 authorized write: the authorization system decides whether the calling
-principal may attach at that node, and the governance already attached to
-that node is what answers for everything under it. Ownership therefore
-has an answer the moment placement does, which is why this ADR does not
-require every resource to carry an owner of its own.
+principal may attach there, and the principal accountable for that node
+is accountable for everything under it. Ownership therefore has an answer
+the moment position does, which is why this ADR does not require every
+resource to carry an owner of its own.
+
+A note on vocabulary, because three words for one concept caused repeated
+confusion. The element of the tree is a **node**, the tree is the
+tenant's **hierarchy**, and putting a resource at a node is **attaching**
+it. This ADR previously said "place" and "container" for the node and
+"placement" for the attachment; those words are retired. "Place" invited
+a containment reading that the design denies, since nothing is stored
+inside a node, and "placement" already means workload scheduling and
+topology in cloud vocabulary (EC2 placement groups, proximity placement
+groups, compute placement policies, pod placement). "Container" was
+rejected for colliding with OCI containers by
+[ADR#6310044131](../6310044131/README.md), which applied that same
+collision test to the field name.
 
 ### Considered options
 
@@ -44,12 +57,13 @@ badly on top. Kubernetes itself needed the Hierarchical Namespace
 Controller bolted on later.
 
 **Pure relations, no canonical parent** (the raw Zanzibar shape).
-Rejected for placement: resources lose a single unambiguous home, and
+Rejected as the hierarchy: resources lose a single unambiguous home, and
 "which `pr-reviewer` do I get here?" has no defined answer. Relations
 remain the right substrate for membership.
 
-**Structure encoded in the string (paths or prefixes).** Placement as a
-path such as `acme/backend/ml`: walk-up is segment-stripping, flow-down is
+**Structure encoded in the string (paths or prefixes).** A position
+expressed as a path such as `acme/backend/ml`: walk-up is
+segment-stripping, flow-down is
 prefix matching, and no tree needs to exist. Rejected: a rename or move
 invalidates every pointer (unrepairable wherever history is immutable;
 with opaque ids a single recorded move rearranges everything and no
@@ -59,15 +73,15 @@ trail; and policy bound to a prefix detaches silently on rename. The
 chosen design keeps the pointer an opaque string and moves the structure
 into audited tree operations.
 
-**Multiple placements per resource.** Rejected: placement exists to answer
+**Multiple parents per resource.** Rejected: a position exists to answer
 which policy chain governs a resource and where name resolution starts;
 two parents give two ceilings and two shadowing orders with no defined
 winner. All three clouds are single-parent for the same reason (AIP-124:
 at most one canonical parent). The need to appear in several groupings is
-served by labels (unlimited), and cross-place access by shares; one
-placement for governance, many labels for queries.
+served by labels (unlimited), and cross-node access by shares; one parent
+for governance, many labels for queries.
 
-**A container entity with fields.** Two drafts died under review:
+**A node entity with fields.** Two drafts died under review:
 `{ id, tenant, parentId?, kind, name }` (tenant is derivable, kind is an
 uninterpreted label, name is an API-surface slug) and then
 `{ id, parentId? }` (the parent is not a node property: commands that
@@ -86,7 +100,7 @@ built the same shape:
 | Azure | Tenant root | Management Groups | Subscription (billing) | Azure Policy + RBAC |
 
 Recurring properties: the middle is untyped and recursive (customers
-model themselves), exactly one container kind is promoted (where billing
+model themselves), exactly one node kind is promoted (where billing
 and isolation anchor), policy attaches to nodes and inherits downward,
 and every vendor caps nesting depth. The clouds disagree on inheritance
 mood: GCP IAM is additive-only (children gain, never lose), AWS SCPs are
@@ -95,55 +109,55 @@ opposite moods, and a design needs both.
 
 ## Resolution
 
-Chosen option: one hierarchy of untyped places per tenant, because it is
+Chosen option: one hierarchy of untyped nodes per tenant, because it is
 the only pattern that survived at scale across three independent cloud
 vendors, and it removes every platform guess about tenant org charts.
 
-**A container is a named place in the tenant's tree, not a thing.**
-Nothing is stored inside one; resources point at it.
+**A node is a named position in the tenant's tree, not a thing.** Nothing
+is stored inside one; resources attach to it.
 
 The decision, five rules:
 
-1. Each tenant has one tree of places. A place is an opaque id. The tree
+1. Each tenant has one tree of nodes. A node is an opaque id. The tree
    changes only through three audited operations (add, move, remove),
    each validated against the whole tree (parent exists, no cycles, depth
-   cap of 10). There is no container record; the current tree is derived
-   from the history of those operations.
-2. Every resource carries exactly one container id: where it lives,
-   spelled `parent` on the resource per
-   [ADR#6310044131](../6310044131/README.md). It is the only placement
-   field, and it is mandatory. A resource-level `owner` field is not
-   required and is not the default; see "Ownership follows placement"
-   below.
-3. The platform never interprets what a place *means*. Words like
+   cap of 10). There is no node record; the current tree is derived from
+   the history of those operations.
+2. Every resource carries exactly one node id: the node it is attached
+   to, spelled `parent` on the resource per
+   [ADR#6310044131](../6310044131/README.md) and typed as
+   `trogon.hierarchy.v1alpha1.NodeId`. It is the only position field, and
+   it is mandatory. A resource-level `owner` field is not required and is
+   not the default; see "Ownership follows the hierarchy" below.
+3. The platform never interprets what a node *means*. Words like
    "project" or "team" are labels on the id; display names are
    API-surface slugs. No code path is conditioned on them.
 4. **Finding walks up.** Looking up a resource by name searches the
-   starting place, then its ancestors toward the root; the nearest match
+   starting node, then its ancestors toward the root; the nearest match
    wins.
-5. **Rules flow down.** A policy attached to a place governs everything
+5. **Rules flow down.** A policy attached to a node governs everything
    at or below it. Permissions accumulate downward (a child can gain,
    never lose); limits bound downward (a parent caps everything below).
 
-### Ownership follows placement
+### Ownership follows the hierarchy
 
-A resource whose `parent` is `places/pl_123`, the node a tenant labels
-its billing project, is answered for by whoever answers for that node.
+A resource whose `parent` is `node_01h9x`, the node a tenant labels its
+billing project, is answered for by whoever answers for that node.
 Nothing has to be copied onto the resource for that to be true, because
-the attachment was authorized against the parent in the first place: the
-write path establishes that the calling principal may place a resource at
-that node, and the principal accountable for the node is accountable for
-what hangs off it. Adding an `owner` field to restate that is
+the attachment was authorized against that node in the first place: the
+write path establishes that the calling principal may attach a resource
+there, and the principal accountable for the node is accountable for what
+hangs off it. Adding an `owner` field to restate that is
 counterproductive:
 
-1. **It duplicates a fact the parent already carries.** Two records of
-   one truth diverge, and the copy is the one that goes stale, so reads
-   have to pick a winner that no rule names.
+1. **It duplicates a fact the node already carries.** Two records of one
+   truth diverge, and the copy is the one that goes stale, so reads have
+   to pick a winner that no rule names.
 2. **It re-asks a question authorization already answered.** The attach
-   check is where a principal is bound to a place. A field written after
+   check is where a principal is bound to a node. A field written after
    that check reflects it at one instant and stops tracking.
-3. **It makes routine governance changes lossy.** Reorganizing a place,
-   or moving a resource to a new one, re-anchors accountability by
+3. **It makes routine governance changes lossy.** Reorganizing the tree,
+   or moving a resource to a different node, re-anchors accountability by
    design; the audited tree operation is the record of that change. A
    stored owner survives the move unchanged and quietly becomes wrong.
 
@@ -152,9 +166,9 @@ in this ADR always mean the five rules of the decision above:
 
 - **No owner field by default.** Resources carry `parent`. A schema
   **SHOULD NOT** add an `owner` merely to make ownership look explicit.
-- **The answer lives with the place.** Who answers for a place is
+- **The answer lives with the node.** Who answers for a node is
   authorization data, resolved in the authorization system exactly like
-  membership, never stored in the tree; rule 1 leaves places as bare ids
+  membership, never stored in the tree; rule 1 leaves nodes as bare ids
   for exactly this reason.
 - **Resolution walks up**, in the mood of rule 4: the nearest ancestor
   with an accountable principal wins, and the tenant root always has one.
@@ -165,37 +179,37 @@ in this ADR always mean the five rules of the decision above:
   **MAY** exist only where the accountable principal genuinely differs
   from what walking up resolves. It carries no other meaning, so writing
   one that agrees with the resolved answer is a review defect, and the
-  exception is worth a comment saying why the place is not the right
+  exception is worth a comment saying why the node is not the right
   anchor.
-- **A recurring exception is a placement problem.** If a resource needs a
+- **A recurring exception is a position problem.** If a resource needs a
   different accountable party often enough to feel like a pattern, it
-  belongs at a different place; the schema does not need a field.
+  belongs at a different node; the schema does not need a field.
 
-What placement still does **not** decide, because these are other axes:
+What a position still does **not** decide, because these are other axes:
 
 - **Permission.** A `parent` value is not itself a grant. Policy attached
-  to the place is evaluated per rule 5; the field records where the
-  resource sits, and authorization reads it as input rather than
-  treating it as an answer.
+  to the node is evaluated per rule 5; the field records which node the
+  resource is attached to, and authorization reads it as input rather
+  than treating it as an answer.
 - **Mutation authority.** Whether a row is converged by the system or
   written by principals is `managed_by`, per
   [ADR#8779742261](../8779742261/README.md), which is orthogonal to both
-  placement and ownership and reserves `owner`/`owned_by` for the
+  position and ownership and reserves `owner`/`owned_by` for the
   belonging sense used here.
 
 ## Consequences
 
-- "What is in this place?" is a query over resource pointers; the tree
-  itself stores nothing.
-- Who belongs to a place (membership) is authorization data, kept in the
+- "What is attached to this node?" is a query over resource pointers; the
+  tree itself stores nothing.
+- Who belongs to a node (membership) is authorization data, kept in the
   authorization system, not in the tree.
-- "Who answers for this resource?" is answered from its place, so the
+- "Who answers for this resource?" is answered from its node, so the
   answer stays correct through reorganizations without a migration or a
   backfill of owner columns.
-- Moving a place is one audited operation; ids never change, so nothing
-  that references a place breaks. Policies apply from the new position
+- Moving a node is one audited operation; ids never change, so nothing
+  that references a node breaks. Policies apply from the new position
   going forward.
-- If the platform ever needs to treat one kind of place specially (for
+- If the platform ever needs to treat one kind of node specially (for
   example, billing per "project"), that kind is promoted to a real
   concept at that moment, by a new decision. Until then, everything stays
   a label.
@@ -204,10 +218,11 @@ What placement still does **not** decide, because these are other axes:
 
 ## Links
 
-- [ADR#6310044131](../6310044131/README.md): Placement is referenced by a
-  bare parent field
+- [ADR#6310044131](../6310044131/README.md): Hierarchy position is
+  referenced by a bare parent field
 - [ADR#8779742261](../8779742261/README.md): Actor and Authority Taxonomy
   for Managed Systems
+- [`trogon.hierarchy.v1alpha1.NodeId`](https://github.com/TrogonStack/trogon-proto/blob/main/proto/trogon/hierarchy/v1alpha1/node.proto)
 - [Google Cloud resource hierarchy (Folders)](https://cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy)
 - [AWS Organizations: Organizational Units](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html)
 - [Azure management groups](https://learn.microsoft.com/en-us/azure/governance/management-groups/overview)
