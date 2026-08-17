@@ -13,4 +13,4 @@ tags: [documentation]
 Documentation is split into tutorials, how-to guides, reference, and explanation, because mixing those concerns is
 what makes most documentation unreadable.
 
-See [ADR#3223845695](/adrs/3223845695/README.md).
+See [ADR#3223845695](../../adrs/3223845695/README.md).

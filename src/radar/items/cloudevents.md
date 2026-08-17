@@ -13,4 +13,4 @@ tags: [messaging, eda]
 CloudEvents is the envelope we reach for when errors and domain events cross a system boundary. There is an
 approved adapter decision behind it, but not enough deployed surface yet to call it the default.
 
-See [ADR#6860374633](/adrs/6860374633/README.md).
+See [ADR#6860374633](../../adrs/6860374633/README.md).

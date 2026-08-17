@@ -13,4 +13,4 @@ tags: [api, id]
 Public identifiers are readable and self-describing rather than bare sequential integers, which trades a little
 verbosity for usability and safer defaults.
 
-See [ADR#4860595695](/adrs/4860595695/README.md).
+See [ADR#4860595695](../../adrs/4860595695/README.md).

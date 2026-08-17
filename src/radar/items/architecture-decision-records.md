@@ -13,4 +13,4 @@ tags: [documentation, process]
 Every decision that constrains future work is written down as an ADR before it is treated as settled. The record
 carries the context and the reasoning, so a later reader can tell whether the decision still holds.
 
-See [ADR#0000000000](/adrs/0000000000/README.md).
+See [ADR#0000000000](../../adrs/0000000000/README.md).
