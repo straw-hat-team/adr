@@ -76,6 +76,8 @@ export const RadarItemFrontmatter = z.object({
 
 type IRadarItemFrontmatter = z.infer<typeof RadarItemFrontmatter>;
 
+type HistoryEntry = IRadarItemFrontmatter['history'][number];
+
 export type Movement = 'new' | 'in' | 'out' | 'none';
 
 export type RadarBlip = {
@@ -93,10 +95,14 @@ export type RadarBlip = {
 export type RadarData = {
   edition: (typeof editions)[number];
   isFirstEdition: boolean;
-  quadrants: Array<{ id: string; name: string; description: string }>;
+  quadrants: Array<{ id: string; name: string; description: string; link: string }>;
   rings: Array<{ id: string; name: string; description: string }>;
   blips: RadarBlip[];
 };
+
+export function quadrantLink(quadrant: string) {
+  return `/radar/quadrants/${quadrant}`;
+}
 
 class InvalidRadarItemError extends Error {
   constructor(filePath: string, reason: string) {
@@ -113,14 +119,17 @@ function ringIndex(ring: RingId) {
   return rings.findIndex((candidate) => candidate.id === ring);
 }
 
-function toMovement(current: RingId, previous: RingId | null): Movement {
+function toMovement(current: HistoryEntry, previous: HistoryEntry | null, upToEdition: EditionId): Movement {
+  if (current.edition !== upToEdition) {
+    return 'none';
+  }
   if (previous === null) {
     return 'new';
   }
-  if (previous === current) {
+  if (previous.ring === current.ring) {
     return 'none';
   }
-  return ringIndex(current) < ringIndex(previous) ? 'in' : 'out';
+  return ringIndex(current.ring) < ringIndex(previous.ring) ? 'in' : 'out';
 }
 
 function toBlip(
@@ -155,7 +164,7 @@ function toBlip(
     name: frontmatter.name,
     quadrant: frontmatter.quadrant,
     ring: current.ring,
-    movement: toMovement(current.ring, previous?.ring ?? null),
+    movement: toMovement(current, previous, upToEdition),
     previousRing: previous?.ring ?? null,
     tags: frontmatter.tags,
     adr: frontmatter.adr ?? null,
@@ -185,7 +194,7 @@ export async function loadRadar(rootDir = path.resolve(process.cwd(), 'src')): P
   return {
     edition,
     isFirstEdition: editions.length === 1,
-    quadrants: quadrants.map((quadrant) => ({ ...quadrant })),
+    quadrants: quadrants.map((quadrant) => ({ ...quadrant, link: quadrantLink(quadrant.id) })),
     rings: rings.map((ring) => ({ ...ring })),
     blips,
   };

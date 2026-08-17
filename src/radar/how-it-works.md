@@ -24,8 +24,11 @@ A ring is a statement about commitment, not about quality.
 | Platforms              | Things we build on top of, such as runtimes, infrastructure, hosted services. |
 | Languages & Frameworks | Programming languages and the libraries we write code against.                |
 
+Every quadrant also has its own page, holding one quadrant of the board and the full list for it. That is the
+place to read a crowded quadrant, and it is reachable from the quadrant name on the board.
+
 Rings, quadrants, and editions are data, not code. They live in `.vitepress/radar.ts`, and every blip is
-validated against them at build time.
+validated against them at build time. Adding a quadrant there adds its page and its sidebar entry.
 
 ## Editions
 
@@ -40,9 +43,10 @@ history:
     ring: trial
 ```
 
-The ring shown on the board is derived from the newest published edition, and the movement marker is derived
-from the entry before it. This is why the board can show that something moved without anyone maintaining a
-"moved" flag by hand:
+The ring shown on the board is the one from the newest published edition that the blip has an entry for.
+Movement is a statement about the current edition only: a blip with no entry for it did not move, whatever it
+did in the past. This is why the board can show that something moved without anyone maintaining a "moved" flag
+by hand:
 
 - A circle means the ring did not change.
 - A triangle pointing inward means it moved toward Adopt.
@@ -57,7 +61,7 @@ open without publishing it early.
 Create the file:
 
 ```shell
-make start_radar_item name="Some Technology"
+mise run start_radar_item "Some Technology"
 ```
 
 Then fill in the frontmatter and say why in the body. Rules the build enforces:

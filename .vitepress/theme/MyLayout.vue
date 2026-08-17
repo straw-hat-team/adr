@@ -1,24 +1,29 @@
 <script setup lang="ts">
 import DefaultTheme from 'vitepress/theme';
-import { useData, withBase } from 'vitepress';
+import { useData } from 'vitepress';
 import { computed } from 'vue';
 import { data as radar } from './radar.data';
+import { useHref } from './use-href';
 
 const { Layout } = DefaultTheme;
 const data = useData();
+const href = useHref();
 
 const radarPlacement = computed(() => {
-  const { quadrant, history } = data.frontmatter.value;
+  const slug = /^radar\/items\/(.+)\.md$/.exec(data.page.value.relativePath)?.[1];
+  const blip = radar.blips.find((candidate) => candidate.slug === slug);
 
-  if (!quadrant || !Array.isArray(history) || history.length === 0) {
+  if (blip === undefined) {
     return null;
   }
 
-  const ring = history[history.length - 1].ring;
+  const quadrant = radar.quadrants.find((candidate) => candidate.id === blip.quadrant);
 
   return {
-    quadrant: radar.quadrants.find((candidate) => candidate.id === quadrant)?.name ?? quadrant,
-    ring: radar.rings.find((candidate) => candidate.id === ring)?.name ?? ring,
+    quadrant: quadrant?.name ?? blip.quadrant,
+    quadrantLink: quadrant?.link ?? null,
+    ring: radar.rings.find((candidate) => candidate.id === blip.ring)?.name ?? blip.ring,
+    tags: blip.tags,
   };
 });
 </script>
@@ -77,13 +82,17 @@ const radarPlacement = computed(() => {
           <span
             class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-white"
           >
-            Quadrant: <span class="font-bold">{{ radarPlacement.quadrant }}</span>
+            Quadrant:
+            <a v-if="radarPlacement.quadrantLink" class="font-bold" :href="href(radarPlacement.quadrantLink)">
+              {{ radarPlacement.quadrant }}
+            </a>
+            <span v-else class="font-bold">{{ radarPlacement.quadrant }}</span>
           </span>
-          <a class="inline-flex items-center text-xs" :href="withBase('/radar/')">Back to the radar</a>
+          <a class="inline-flex items-center text-xs" :href="href('/radar/')">Back to the radar</a>
         </div>
         <div class="flex gap-2">
           <span
-            v-for="tag in data.frontmatter.value.tags"
+            v-for="tag in radarPlacement.tags"
             class="rounded-full px-1.5 py-0.5 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 dark:ring-gray-200 dark:text-gray-200"
           >
             {{ tag }}

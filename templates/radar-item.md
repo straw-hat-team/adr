@@ -4,8 +4,8 @@ quadrant: <!-- techniques|tools|platforms|languages-and-frameworks -->
 history:
   - edition: <!-- the current edition, see .vitepress/radar.ts -->
     ring: <!-- adopt|trial|assess|hold -->
-adr: <!-- optional, the id of the ADR that backs this placement -->
-tags: [<!-- separated by comma, and lowercase -->]
+# adr: the id of the ADR that backs this placement, when there is one
+# tags: [lowercase, comma-separated]
 ---
 
 # <!-- display name -->
