@@ -23,3 +23,8 @@ part of entering the project rather than a step every task has to remember to pe
 
 This is what replaced both [Task](./task.md) and [EJSON](./ejson.md), and both of those blips are on Hold because
 of it.
+
+Adopting a tool is also a bet that it will still be maintained in three years. That bet reads better than it did:
+Omarchy ships mise as its developer runtime manager, and the Omacom Foundation behind it is a premier sponsor of
+the project. A tool with a distribution depending on it is a different risk profile from a tool with one
+maintainer and a good README.
