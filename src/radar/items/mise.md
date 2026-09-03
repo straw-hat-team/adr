@@ -21,8 +21,8 @@ who cloned the repository five minutes ago is not the person who discovers the v
 Secrets follow the same reasoning. mise reads [SOPS](./sops.md)-encrypted files as environment, so decryption is
 part of entering the project rather than a step every task has to remember to perform.
 
-This is what replaced both [Task](./task.md) and [EJSON](./ejson.md), and both of those blips are on Hold because
-of it.
+This is what replaced [Task](./task.md), [EJSON](./ejson.md), and [direnv](./direnv.md), and all three of those
+blips are on Hold because of it.
 
 Adopting a tool is also a bet that it will still be maintained in three years. That bet reads better than it did:
 Omarchy ships mise as its developer runtime manager, and the Omacom Foundation behind it is a premier sponsor of
