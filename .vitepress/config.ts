@@ -12,7 +12,7 @@ import {
 import { quadrants, quadrantLink } from './radar';
 
 export default async () => {
-  const frontmatters = await readFrontmatter(['adrs/**/*.md'], {
+  const frontmatters = await readFrontmatter(['adrs/*/README.md'], {
     rootDir: path.join(__dirname, '../src'),
     schema: AdrFrontmatter,
   });
