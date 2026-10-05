@@ -83,6 +83,27 @@ shape: `trogon.trogondb.v1`, or `trogon.cloud.trogondb.v1`).
   only thing that distinguishes `trogon.hierarchy` from `trogon.trogondb`
   is knowing which second segments are products.
 
+**One root, a reserved list of shared names** (`trogon.<name>` for
+products and tools, the googleapis shape across separate repositories).
+
+- Good, because there is a single root and product names stay plain.
+- Bad, because shared packages and products compete for the same second
+  segment forever. The collision already exists: the shared
+  `trogon.stream.v1alpha1` occupies the name the trogonstream product
+  would need, and `actor`, `content`, `relay`, and `env` are equally
+  plausible product names. Google can live with this because one
+  organization allocates every name from one monorepo; without a central
+  registry nothing prevents the next collision.
+
+**One root, a container segment for products** (`trogon.apis.<name>`,
+the shape of `google.cloud.<product>`).
+
+- Good, because it cannot collide with a shared package and keeps one
+  root.
+- Bad, because every type name, generated module, and `Any` type URL
+  carries a segment that names nothing, and ownership is enforced per
+  module anyway, so the single root buys no practical guarantee.
+
 **Unversioned shared leaf packages** (`google.type` and `google.rpc`
 carry no version suffix).
 
@@ -91,8 +112,10 @@ carry no version suffix).
   do, and the repository already runs the version ladder on every
   package today.
 
-**Shared root for shared packages only; each product under its own
-name, in its own repository, versioned.** Chosen, below.
+**Shared root for shared packages only; each owner under its own
+root, in its own repository, versioned.** Chosen, below. Tools and
+products are not distinguished: an owner is anything that publishes
+schemas of its own.
 
 ## Resolution
 
@@ -101,18 +124,26 @@ name, in its own repository, versioned.** Chosen, below.
    and ship in the `buf.build/trogonstack/trogon-proto` module. Products
    **MUST NOT** define packages under `trogon.`, and `trogon.<product>.`
    is forbidden for any product name.
-2. A product's package root is the product's own name: `trogondb.`,
-   `trogonkv.`, `trogonstream.`, `trogonlang.`, `trogonos.`,
-   `trogonbrowser.`, `trogonai.`. The hosted control plane is not a
-   product with a domain of its own, but it is a product in the package
-   sense and uses the root `trogoncloud.`; its DNS renderings are under
-   `cloud.trogonstack.com` per [ADR#0184938998](../0184938998/README.md),
-   and `trogoncloud.com` never appears in any of them. Product packages
-   **MUST** live in the product's own repository and **MUST NOT** be
-   added to trogon-proto. Consumers that need both depend on both
-   modules; the registry, not a monorepo, provides the single-dependency
-   convenience.
-3. A package qualifies for `trogon.` only when all of the following
+2. Every product or tool that publishes its own schemas, called an
+   owner here, has the package root `trogon<name>.`, whether or not it
+   owns a domain. Tools and products follow the same rule. The current
+   roots are `trogondb.`, `trogonkv.`, `trogonstream.`, `trogonlang.`,
+   `trogonos.`, `trogonbrowser.`, `trogonai.`, `trogoncloud.` for the
+   hosted control plane, and `trogonatlas.` for Atlas. An owner without
+   a domain of its own renders its DNS identifiers under
+   `<name>.trogonstack.com` per [ADR#0184938998](../0184938998/README.md);
+   `trogoncloud.com` never appears in any of the hosted control plane's.
+   An owner's packages **MUST** live in its own repository, **MUST** be
+   published as its own module under `buf.build/trogonstack`, and
+   **MUST NOT** be added to trogon-proto. A module **MUST NOT** publish
+   a package outside its own root. Consumers that need several depend on
+   several modules; the registry organization, not a monorepo, provides
+   the single place to find them.
+3. This ADR is the record of which root belongs to which owner. A new
+   owner adds its root to rule 2 before publishing any package under it.
+   A dedicated registry that enforces the allocation is deferred until
+   the number of owners makes a document insufficient.
+4. A package qualifies for `trogon.` only when all of the following
    hold: it is used or clearly reusable by two or more products, or it
    implements a platform-wide decision (annotations per
    [ADR#5177934677](../5177934677/README.md), identifiers per
@@ -123,13 +154,13 @@ name, in its own repository, versioned.** Chosen, below.
    the protobuf well-known types or in googleapis `google.type`,
    `google.rpc`, or `google.api`. This is the AIP-213 and AIP-215 line
    drawn for our roots.
-4. Promotion is a new package in trogon-proto plus deprecation of the
+5. Promotion is a new package in trogon-proto plus deprecation of the
    product package. A package **MUST NOT** be renamed or moved across
    roots, because the path is part of the wire format for `Any` and part
    of every generated client. The product package keeps serving until
    its consumers have migrated, then is marked deprecated and left in
    place.
-5. Every package, shared or product, **MUST** carry a version suffix
+6. Every package, shared or product, **MUST** carry a version suffix
    following [AIP-185](https://google.aip.dev/185):
    `v1alpha1`, `v1beta1`, `v1`. Stability follows
    [AIP-180](https://google.aip.dev/180) and
@@ -140,7 +171,7 @@ name, in its own repository, versioned.** Chosen, below.
    [ADR#1394819661](../1394819661/README.md) concerns the spelling of
    `object_id` and `object_type`, not versioning; the package is
    `trogon.object_id.v1alpha1` and climbs the ladder like any other.
-6. Reuse before definition. Packages **MUST** import the protobuf
+7. Reuse before definition. Packages **MUST** import the protobuf
    well-known types and googleapis (`buf.build/googleapis/googleapis`)
    for money, dates, intervals, status, error details, field behavior,
    and resource annotations, and **MUST NOT** vendor, copy, or redefine
@@ -150,7 +181,7 @@ name, in its own repository, versioned.** Chosen, below.
    omits `OK` by design and whose options describe how a runtime emits
    `google.rpc.Status` and `google.rpc.ErrorInfo` rather than replacing
    them.
-7. Directory path **MUST** equal package path
+8. Directory path **MUST** equal package path
    ([AIP-191](https://google.aip.dev/191)), as in
    `proto/trogon/hierarchy/v1alpha1/node.proto`. `buf lint` with the
    `STANDARD` category, which enforces both the version suffix and the
@@ -159,7 +190,7 @@ name, in its own repository, versioned.** Chosen, below.
    protobuf. Google's
    [api-linter](https://linter.aip.dev/) **SHOULD** run as well, so the
    schemas stay conformant with the googleapis conventions they import.
-8. A protobuf package `<root>.<area>.<version>` and a Kubernetes API
+9. A protobuf package `<root>.<area>.<version>` and a Kubernetes API
    group `<area>.<root-domain>/<version>` are two renderings of one
    namespace identity. The `<area>` segment **MUST** be the same word in
    both and both use the same version ladder, so `trogondb.clusters.v1`
@@ -167,22 +198,33 @@ name, in its own repository, versioned.** Chosen, below.
    two versions are not coupled: each reports the maturity of its own
    surface, and a `v1alpha1` manifest group **MAY** wrap a `v1` package,
    as Google's Config Connector groups do over stable `google.*`
-   packages. For shared packages the pair is `trogon.<area>.<version>`
-   and `<area>.trogonstack.com/<version>`. A message that is the spec or
+   packages. `<root-domain>` is the owner's identifier namespace from
+   [ADR#0184938998](../0184938998/README.md): `trogondb.com` for an owner
+   with a domain, `<name>.trogonstack.com` for one without, so
+   `trogonatlas.<area>.<version>` pairs with
+   `<area>.atlas.trogonstack.com/<version>`. An owner whose schemas form
+   a single area **MAY** omit `<area>` on both sides, pairing
+   `trogonatlas.<version>` with `atlas.trogonstack.com/<version>`. For
+   shared packages the pair is `trogon.<area>.<version>` and
+   `<area>.trogonstack.com/<version>`. A message that is the spec or
    status of a Kind **SHOULD** carry the Kind's name. Which DNS domain
    renders which root is owned by
    [ADR#0184938998](../0184938998/README.md); this ADR owns the package
    side and the alignment constraint only.
-9. `Any` type URLs **MUST** be `type.googleapis.com/<package>.<Message>`,
-   the prefix every protobuf library writes by default, and an
-   organization host such as `type.trogonapis.com` **MUST NOT** be used.
-   Service names are `<product>.trogonapis.com`, per the allocation in
-   [ADR#0184938998](../0184938998/README.md). Package roots stay DNS-free.
-10. Language options derive from the package and from the owner's
+10. `Any` type URLs **MUST** be
+    `type.googleapis.com/<package>.<Message>`, the prefix every protobuf
+    library writes by default, and an organization host such as
+    `type.trogonapis.com` **MUST NOT** be used. An owner's service host
+    is its package root under the API umbrella,
+    `trogon<name>.trogonapis.com`, per the allocation in
+    [ADR#0184938998](../0184938998/README.md). Package roots stay
+    DNS-free.
+11. Language options derive from the package and from the owner's
     canonical domain, never the reverse. `java_package` **MUST** begin
-    with the owner's reversed canonical domain, `com.trogonstack.` for a
-    shared package, `com.trogonstack.cloud.` for the hosted control
-    plane, and `com.<product>.` for a product package, per the
+    with the owner's reversed identifier namespace, `com.trogonstack.`
+    for a shared package, `com.<product>.` for an owner with a domain,
+    and `com.trogonstack.<name>.` for one without, such as
+    `com.trogonstack.cloud.` and `com.trogonstack.atlas.`, per the
     reverse-DNS rule of [ADR#0184938998](../0184938998/README.md).
     `csharp_namespace` is the package in PascalCase, and `go_package` is
     the import path of the generated module. These options **SHOULD** be
@@ -195,17 +237,19 @@ name, in its own repository, versioned.** Chosen, below.
 ## Consequences
 
 - A reader can tell from the first segment whether a type is shared or
-  belongs to a product, and a reviewer has a rule to cite when a product
+  belongs to an owner, and a reviewer has a rule to cite when a product
   noun appears under `trogon.`.
-- Every package already in trogon-proto satisfies rules 1, 5, and 7
+- A shared name and an owner name can never collide, because they live
+  under different roots. No existing shared package has to move.
+- Every package already in trogon-proto satisfies rules 1, 6, and 8
   today, so the decision records current practice rather than requiring
   a migration. `trogon.uuid.v1` is the one package already at `v1`, and
   is therefore already under the additive-only rule.
 - trogon-proto does not yet depend on `buf.build/googleapis/googleapis`;
   the first shared package that needs a `google.type` or `google.api`
-  symbol adds the dependency rather than a local copy, per rule 6.
+  symbol adds the dependency rather than a local copy, per rule 7.
 - Promotion costs a deprecation cycle. That is the price of never
-  breaking a published path, and it is paid rarely because rule 3 keeps
+  breaking a published path, and it is paid rarely because rule 4 keeps
   product-specific types out of the shared root in the first place.
 - Products choosing an `<area>` name choose it once for proto and
   Kubernetes together, and each surface's version ladder is read on
