@@ -58,8 +58,9 @@ word for an area in proto and another in Kubernetes.
 A package root is not a DNS name. Nothing in protobuf or in the Buf
 Schema Registry checks domain ownership, and Google's root is `google.`,
 not `google.com.`. Owning trogon.com is irrelevant to this decision.
-Where DNS does enter, in `Any` type URLs and service names, the domains
-are allocated by [ADR#0184938998](../0184938998/README.md).
+Where DNS does enter, in service names, the domains are allocated by
+[ADR#0184938998](../0184938998/README.md). `Any` type URLs are not a DNS
+position and keep the standard `type.googleapis.com/` prefix.
 
 ### Considered options
 
@@ -172,8 +173,10 @@ name, in its own repository, versioned.** Chosen, below.
    renders which root is owned by
    [ADR#0184938998](../0184938998/README.md); this ADR owns the package
    side and the alignment constraint only.
-9. `Any` type URLs are `type.trogonapis.com/<package>.<Message>` and
-   service names are `<product>.trogonapis.com`, per the allocation in
+9. `Any` type URLs **MUST** be `type.googleapis.com/<package>.<Message>`,
+   the prefix every protobuf library writes by default, and an
+   organization host such as `type.trogonapis.com` **MUST NOT** be used.
+   Service names are `<product>.trogonapis.com`, per the allocation in
    [ADR#0184938998](../0184938998/README.md). Package roots stay DNS-free.
 10. Language options derive from the package and from the owner's
     canonical domain, never the reverse. `java_package` **MUST** begin

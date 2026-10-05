@@ -13,9 +13,8 @@ category: Platform
 
 A domain name shows up in far more places than a browser address bar. It
 is the prefix of an annotation key
-([ADR#5177934677](../5177934677/README.md)), the host in a protobuf
-`Any` type URL, the service segment of a full resource name, the group of
-a Kubernetes custom resource, the root of a reverse-DNS identifier, and
+([ADR#5177934677](../5177934677/README.md)), the service segment of a
+full resource name, the group of a Kubernetes custom resource, the root of a reverse-DNS identifier, and
 the issuer of a token. Each of those positions is an ownership claim, and
 each is permanent once a record carrying it has been written. The
 organization holds a dozen `trogon*` domains and, until now, no rule for
@@ -24,12 +23,11 @@ which one goes where. The result is predictable: one product reserves
 `api.<product>.com` for its endpoint, and a third would mint a CRD group
 on whatever host its documentation happens to live on.
 
-Kubernetes, protobuf `Any`, and reverse-DNS naming all converge on the
-same principle: ownership is the canonical domain you control, rendered
-in the syntax of the technology at hand. Kubernetes writes it as
-`cert-manager.io` or `monitoring.coreos.com` in an API group and as
-`prefix/name` in a label key, protobuf writes it as a type URL host, and
-Java writes it backwards. One allocation of domains to owners therefore
+Kubernetes and reverse-DNS naming converge on the same principle:
+ownership is the canonical domain you control, rendered in the syntax of
+the technology at hand. Kubernetes writes it as `cert-manager.io` or
+`monitoring.coreos.com` in an API group and as `prefix/name` in a label
+key, and Java writes it backwards. One allocation of domains to owners therefore
 serves every present and future technology that keys identifiers off
 DNS, and this ADR makes that allocation once.
 
@@ -40,6 +38,17 @@ payload names. Products do not get their own API hostnames; they get a
 subdomain of the umbrella. The resource name convention in AIP-122
 depends on that uniformity, since `//pubsub.googleapis.com/projects/p`
 only parses because every service shares one suffix.
+
+The protobuf `Any` type URL looks like one of those positions and is
+not. The runtime resolves a type by the fully qualified message name
+after the last `/` and never fetches the URL, and the protobuf libraries
+and the tools built on them, such as gRPC reflection clients, JSON
+transcoders, and debuggers, write and expect `type.googleapis.com/` by
+default. Envoy publishes its own types under that prefix for this
+reason. Ownership of a type is already carried by its package name, so
+an organization type host adds no information and costs configuration in
+every code generator, hand-built type URLs wherever a library hardcodes
+the default, and weaker support in every generic tool.
 
 A registrable domain is also the boundary browsers use for cookies and
 for site isolation. Every host under one registrable domain can set a
@@ -70,11 +79,23 @@ allocates. Package roots are governed by
 **Product APIs on product domains** (`api.trogondb.com`). Each product
 already owns its domain, so this is the path of least coordination.
 
-- Bad, because type URLs, full resource names, certificates, and
-  discovery stop being uniform. A client that handles two products
+- Bad, because full resource names, certificates, and discovery stop
+  being uniform. A client that handles two products
   needs two trust roots and two parsing rules for resource names.
 - Bad, because `googleapis.com` demonstrates the alternative scaling to
   hundreds of services without a single product needing its own host.
+
+**An organization type URL host** (`type.trogonapis.com/<type>`), so
+that `Any` payloads name a host the organization owns.
+
+- Good, because it mirrors `type.googleapis.com` and reads as an
+  ownership claim.
+- Bad, because the claim is already made by the package name, and the
+  host is never resolved. Every protobuf library defaults to
+  `type.googleapis.com/`, so a custom prefix needs per-language
+  generator configuration, hand-built type URLs where a library hardcodes
+  the default, and prefix-aware parsing in every consumer, and generic
+  tooling handles it worse. Rejected.
 
 **`trogonstack.com` as the API umbrella.** One domain for the
 organization and its machines.
@@ -181,14 +202,19 @@ console live as subdomains of the platform.
 
 3. `trogonapis.com` serves machines only. `<service>.trogonapis.com` is
    the service hostname and the service segment of a full resource name,
-   as in `//trogondb.trogonapis.com/...`. `type.trogonapis.com/<type>` is
-   the type URL prefix for every protobuf `Any`, where `<type>` is the
-   fully qualified message name. `schemas.trogonapis.com` is reserved for
+   as in `//trogondb.trogonapis.com/...`. `schemas.trogonapis.com` is
+   reserved for
    schema identifiers that are not protobuf, such as a JSON Schema `$id`
    or an OpenAPI document URL. The apex redirects to
    `docs.trogonstack.com` and serves nothing else. Service hostnames
    **MUST NOT** live on a product domain; `api.<product>.com` is not a
    valid host.
+   Protobuf `Any` type URLs are not a DNS position and are not allocated
+   here. Every `Any` **MUST** use the standard prefix,
+   `type.googleapis.com/<type>`, where `<type>` is the fully qualified
+   message name. `type.trogonapis.com`, or any other host the
+   organization owns, **MUST NOT** be used as a type URL prefix, and code
+   that writes an `Any` **MUST NOT** override the library default.
 4. A product's canonical domain is its human-facing site and its
    identifier namespace. The current product domains are `trogondb.com`,
    `trogonkv.com`, `trogonstream.com`, `trogonlang.com`, `trogonos.com`,
@@ -312,9 +338,9 @@ console live as subdomains of the platform.
     canonical domain: `com.trogonstack.*` for the platform,
     `com.trogonstack.cloud.*` for the hosted control plane, and
     `com.<product>.*` for a product. The reverse of `trogonapis.com`
-    **MUST NOT** be used, because that domain names endpoints and type
-    URLs, not code, and the reverse of `trogoncloud.com` **MUST NOT** be
-    used, because that domain carries no organization identifier.
+    **MUST NOT** be used, because that domain names endpoints, not
+    code, and the reverse of `trogoncloud.com` **MUST NOT** be used,
+    because that domain carries no organization identifier.
 19. Identifiers use canonical domains only. This covers the kinds in the
     table under Where each identifier lives, token issuer URLs, and any
     position added later where a domain acts as an ownership claim.
@@ -348,32 +374,35 @@ console live as subdomains of the platform.
 
 ### Where each identifier lives
 
-| Identifier kind  | Platform                           | Product                       | Shared API surface           |
-| ---------------- | ---------------------------------- | ----------------------------- | ---------------------------- |
-| Label/annotation | `trogonstack.com/`                 | `<product>.com/`              | none                         |
-| Finalizer        | `<area>.trogonstack.com/<name>`    | `<area>.<product>.com/<name>` | none                         |
-| API group        | `<area>.trogonstack.com`           | `<area>.<product>.com`        | none                         |
-| Type URL         | none                               | none                          | `type.trogonapis.com/<type>` |
-| Service hostname | none                               | none                          | `<service>.trogonapis.com`   |
-| Reverse-DNS      | `com.trogonstack.*`                | `com.<product>.*`             | none                         |
-| Documentation    | `docs.trogonstack.com`             | `<product>.com`               | none                         |
-| Public app host  | `<app>.trogonstack.com`            | `<product>.com`               | none                         |
-| Private host     | `<name>.<cluster>.trogonstack.com` | none                          | none                         |
-| Customer content | never                              | never                         | never                        |
-| Cluster plumbing | never                              | never                         | never                        |
+| Identifier kind  | Platform                           | Product                       | Shared API surface         |
+| ---------------- | ---------------------------------- | ----------------------------- | -------------------------- |
+| Label/annotation | `trogonstack.com/`                 | `<product>.com/`              | none                       |
+| Finalizer        | `<area>.trogonstack.com/<name>`    | `<area>.<product>.com/<name>` | none                       |
+| API group        | `<area>.trogonstack.com`           | `<area>.<product>.com`        | none                       |
+| Service hostname | none                               | none                          | `<service>.trogonapis.com` |
+| Reverse-DNS      | `com.trogonstack.*`                | `com.<product>.*`             | none                       |
+| Documentation    | `docs.trogonstack.com`             | `<product>.com`               | none                       |
+| Public app host  | `<app>.trogonstack.com`            | `<product>.com`               | none                       |
+| Private host     | `<name>.<cluster>.trogonstack.com` | none                          | none                       |
+| Customer content | never                              | never                         | never                      |
+| Cluster plumbing | never                              | never                         | never                      |
 
 `trogoncompany.com` and `trogoncloud.com` have no column by design: the
 company domain carries no technical identifier, and the customer-content
-domain belongs to customers, not to the organization.
+domain belongs to customers, not to the organization. Type URLs have no
+row because they are not allocated here: every `Any` uses
+`type.googleapis.com/<type>` per rule 3.
 
 ## Consequences
 
 - A reader who sees a host, a group, or a key prefix can name its owner,
   and a writer who has an owner can name the identifier, without
   consulting anyone.
-- Every `Any` payload across every product resolves against one type
-  host, and every full resource name shares one suffix, so a generic
-  client needs one trust root and one parser.
+- Every full resource name shares one suffix, so a generic client needs
+  one trust root and one parser.
+- Every `Any` payload carries the standard `type.googleapis.com/`
+  prefix, so protobuf libraries, gRPC reflection, JSON transcoding, and
+  debuggers handle it with no configuration.
 - A Kubernetes operator and a gRPC service for the same product area
   share a name: `clusters.trogondb.com/v1alpha1` and
   `trogondb.clusters.v1` are recognizably the same area, and each

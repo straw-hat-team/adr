@@ -258,9 +258,9 @@ records, split DNS** (chosen).
 11. Private names are addressing, never identity, whether under
     `<cluster>.trogonstack.com` or under `.internal`. They **MUST NOT**
     appear in any identifier governed by
-    [ADR#0184938998](../0184938998/README.md): type URLs, API groups,
-    annotation or label prefixes, reverse-DNS identifiers, token issuer
-    URLs. They **MUST NOT** appear in OpenAPI server lists, in
+    [ADR#0184938998](../0184938998/README.md): API groups, annotation or
+    label prefixes, reverse-DNS identifiers, token issuer URLs, or `Any`
+    type URLs. They **MUST NOT** appear in OpenAPI server lists, in
     CloudEvents source URIs that leave the network, in public
     documentation, or in public repositories. A full resource name keeps
     `<service>.trogonapis.com` as its service segment even when the call
