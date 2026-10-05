@@ -226,8 +226,17 @@ schemas of its own.
     for an owner, such as `com.trogonstack.db.` and
     `com.trogonstack.atlas.`, per the
     reverse-DNS rule of [ADR#0184938998](../0184938998/README.md).
-    `csharp_namespace` is the package in PascalCase, and `go_package` is
-    the import path of the generated module. These options **SHOULD** be
+    Languages whose namespaces are PascalCase, such as C# through
+    `csharp_namespace` and Elixir through the generator's module prefix,
+    render the package root with its word boundary kept: `Trogon` for a
+    shared package and `Trogon<Name>` for an owner, such as `TrogonDb`
+    and `TrogonAtlas`, so `trogonatlas.eventmodel.v1` becomes
+    `TrogonAtlas.Eventmodel.V1`. An owner root **MUST NOT** be rendered
+    as `Trogon.<Name>`, because that places an owner's code inside the
+    shared namespace, the collision rule 2 exists to prevent, and
+    **MUST NOT** be left as the default `Trogonatlas`, which loses the
+    owner's name. `go_package` is the import path of the generated
+    module. These options **SHOULD** be
     produced by the generator configuration rather than written into
     each file. A domain **MUST NOT** appear in the protobuf package
     itself: `com.trogonstack.hierarchy.v1alpha1` is a Java package, not
