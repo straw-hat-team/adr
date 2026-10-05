@@ -103,7 +103,8 @@ Keys follow the Kubernetes label key syntax, by reference:
   written by the platform.
 - Keys under a platform-owned prefix are reserved for that platform.
   Consumers `MUST NOT` write to a prefix they do not own.
-- `trogondb.com/` is reserved for TrogonDB platform-written annotations.
+- `db.trogonstack.com/` is reserved for TrogonDB platform-written
+  annotations.
   Callers `MUST NOT` write keys under this prefix unless they are acting as
   the platform component that owns the key.
 - Additional reserved prefixes `MUST` be documented by the system that owns

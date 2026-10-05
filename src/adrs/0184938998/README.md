@@ -14,27 +14,35 @@ category: Platform
 A domain name shows up in far more places than a browser address bar. It
 is the prefix of an annotation key
 ([ADR#5177934677](../5177934677/README.md)), the service segment of a
-full resource name, the group of a Kubernetes custom resource, the root of a reverse-DNS identifier, and
-the issuer of a token. Each of those positions is an ownership claim, and
-each is permanent once a record carrying it has been written. The
-organization holds a dozen `trogon*` domains and, until now, no rule for
-which one goes where. The result is predictable: one product reserves
+full resource name, the group of a Kubernetes custom resource, the root
+of a reverse-DNS identifier, and the issuer of a token. Each of those
+positions is an ownership claim, and each is permanent once a record
+carrying it has been written. Until now there has been no rule for which
+domain goes where. The result is predictable: one product reserves
 `trogondb.com/` for its annotations, another would reach for
 `api.<product>.com` for its endpoint, and a third would mint a CRD group
 on whatever host its documentation happens to live on.
 
+Not every `trogon*` domain is held by the organization, and holding one
+today does not guarantee holding it for as long as the records that name
+it are read. An identifier minted on a domain the organization does not
+hold is an ownership claim anyone can take by registering that domain.
+The organization holds `trogonstack.com` and `trogonapis.com`, and those
+are the only domains an identifier can safely depend on.
+
 Kubernetes and reverse-DNS naming converge on the same principle:
-ownership is the canonical domain you control, rendered in the syntax of
-the technology at hand. Kubernetes writes it as `cert-manager.io` or
+ownership is a domain you control, rendered in the syntax of the
+technology at hand. Kubernetes writes it as `cert-manager.io` or
 `monitoring.coreos.com` in an API group and as `prefix/name` in a label
-key, and Java writes it backwards. One allocation of domains to owners therefore
-serves every present and future technology that keys identifiers off
-DNS, and this ADR makes that allocation once.
+key, and Java writes it backwards. Ownership delegates the way DNS does,
+so `*.cnrm.cloud.google.com` names a team under a domain its company
+holds. One allocation of names to owners therefore serves every present
+and future technology that keys identifiers off DNS, and this ADR makes
+that allocation once.
 
 Google answered the hostname half of the question with a split that has
-held for over a decade: `google.com` is for people, `googleapis.com` is
-for machines, and `type.googleapis.com` is the one host every `Any`
-payload names. Products do not get their own API hostnames; they get a
+held for over a decade: `google.com` is for people and `googleapis.com`
+is for machines. Products do not get their own API hostnames; they get a
 subdomain of the umbrella. The resource name convention in AIP-122
 depends on that uniformity, since `//pubsub.googleapis.com/projects/p`
 only parses because every service shares one suffix.
@@ -63,32 +71,41 @@ application read the session of another, and lets customer content reach
 the organization's own console. The allocation below treats the cookie
 boundary as a first-class input, not an afterthought.
 
-Each domain costs a renewal forever once an identifier depends on it, so
-the set is kept to the domains that carry a role no subdomain can carry.
-`trogon.com` is not owned, and this does not matter. A protobuf package
-root such as `trogon.` is a convention, not a DNS name; Google's packages
-are `google.*` and not `google.com.*`, and nothing in protobuf or the Buf
-Schema Registry checks a registrar. Registry modules are scoped by the
-organization that publishes them. DNS enters the picture only at the
-positions listed above, and those are exactly the positions this ADR
-allocates. Package roots are governed by
-[ADR#6874603764](../6874603764/README.md).
+A protobuf package root such as `trogon.` or `trogondb.` is a
+convention, not a DNS name; Google's packages are `google.*` and not
+`google.com.*`, and nothing in protobuf or the Buf Schema Registry
+checks a registrar. Registry modules are scoped by the organization that
+publishes them. DNS enters the picture only at the positions listed
+above, and those are exactly the positions this ADR allocates. Package
+roots are governed by [ADR#6874603764](../6874603764/README.md).
 
 ### Considered options
 
-**Product APIs on product domains** (`api.trogondb.com`). Each product
-already owns its domain, so this is the path of least coordination.
+**Identifiers on product domains** (`trogondb.com/` as an annotation
+prefix, `clusters.trogondb.com` as an API group), the shape upstream
+projects such as `cert-manager.io` use.
+
+- Good, because the names are short and carry the product's identity.
+- Bad, because it is only as safe as the registration behind it. The
+  organization does not hold every `trogon*` domain, and an identifier
+  on a domain it does not hold, or stops holding, is claimable by
+  whoever registers it.
+- Bad, because a product or tool without a domain needs a second rule,
+  so every reader has to know which owners hold a domain before they can
+  name an identifier. Rejected.
+
+**Product APIs on product domains** (`api.trogondb.com`).
 
 - Bad, because full resource names, certificates, and discovery stop
-  being uniform. A client that handles two products
-  needs two trust roots and two parsing rules for resource names.
+  being uniform. A client that handles two products needs two trust
+  roots and two parsing rules for resource names.
 - Bad, because `googleapis.com` demonstrates the alternative scaling to
   hundreds of services without a single product needing its own host.
 
 **An organization type URL host** (`type.trogonapis.com/<type>`), so
 that `Any` payloads name a host the organization owns.
 
-- Good, because it mirrors `type.googleapis.com` and reads as an
+- Good, because it mirrors the `googleapis.com` split and reads as an
   ownership claim.
 - Bad, because the claim is already made by the package name, and the
   host is never resolved. Every protobuf library defaults to
@@ -106,17 +123,6 @@ organization and its machines.
   applications share a cookie jar and a site boundary with authenticated
   API traffic, so a session cookie set by any application becomes an
   ambient credential against the API.
-
-**Products as subdomains of `trogonstack.com`.** No product domains at
-all; `trogondb.trogonstack.com` for everything, and
-`clusters.trogondb.trogonstack.com` as a CRD group.
-
-- Bad, because the products already own their domains, and the
-  writer-owns-prefix rule in [ADR#5177934677](../5177934677/README.md)
-  wants each writer minting keys on a domain it controls rather than
-  under a parent it does not. It also surrenders the product identity
-  that the domains were registered to carry, and produces API groups
-  longer than any upstream project uses.
 
 **Separate domains for documentation and for incubation** (`trogon.dev`
 for developer documentation, `trogonlab.com` for experiments).
@@ -151,8 +157,8 @@ anything public.
   practice. Rejected for anything a person reaches; retained for
   in-cluster plumbing per [ADR#9147226377](../9147226377/README.md).
 
-**Private names as a subdomain of the public domain.** Two variants
-exist and they differ in what becomes public.
+**Private names as a subdomain of the public domain.** The variants
+differ in what becomes public.
 
 - Bad with per-host certificates and public records, because every
   hostname is published in Certificate Transparency and every address is
@@ -164,152 +170,147 @@ exist and they differ in what becomes public.
   [ADR#9147226377](../9147226377/README.md) owns the resolution and
   certificate rules.
 
-**A role per domain, and only the roles a subdomain cannot carry**
-(chosen). The company, the platform, the machines, and customer content
-each get one registrable domain, products keep theirs for identity while
-sharing the machine umbrella, and documentation, incubation, and the
-console live as subdomains of the platform.
+**Every owner under the platform domain, machines under the API
+umbrella** (chosen). Each product or tool takes one label, `<name>`,
+and renders it as `<name>.trogonstack.com` for identifiers and
+`trogon<name>.trogonapis.com`, its package root, for its API. Product domains, where held, are
+human-facing sites and nothing else.
 
-- Good, because every identifier position has one answer and every
-  domain has one job, so a reader can infer the role from the name and
-  the name from the role.
+- Good, because every identifier depends only on domains the
+  organization holds, so no identifier can be claimed by registering a
+  lapsed or never-held domain.
+- Good, because there is one rule for every owner, whether it is a
+  product or a tool and whether or not a domain exists for it, so a
+  reader can infer the identifier from the name and the name from the
+  identifier.
 - Good, because each registrable domain is also a cookie and site
-  boundary, so the split that keeps roles apart is the same split that
-  keeps sessions apart.
+  boundary, so the split that keeps people and machines apart is the
+  same split that keeps sessions apart.
 - Good, because it follows the shape that `googleapis.com` has already
   proven for endpoints, the shape that `github.io` has proven for
-  customer content, and the shape that upstream Kubernetes projects use
-  for groups, while respecting the product-level ownership that the
-  annotation rule already relies on.
-- Bad, because it adds a hop: a product's site and its API live on
-  different apexes, and the distinction has to be taught once.
+  customer content, and the delegated shape of
+  `*.cnrm.cloud.google.com` for groups.
+- Bad, because API groups are a label longer than upstream projects
+  that hold a domain per product, as in `clusters.db.trogonstack.com`
+  against `clusters.trogondb.com`.
 
 ## Resolution
 
-1. Every owner, whether the company, the platform, a product, or the
-   managed offering's customers, has exactly one **canonical domain**,
-   and its canonical form is the `.com`. An owner without a domain of
-   its own uses the subdomain of rule 5 in its place. Every other domain
-   held for that owner is an **alias**.
-2. The roles are fixed as follows.
+1. The organization holds `trogonstack.com` and `trogonapis.com`. They
+   are the only domains any identifier in this ADR may depend on.
 
-   | Domain              | Role                                                      |
-   | ------------------- | --------------------------------------------------------- |
-   | `trogoncompany.com` | the company: marketing, careers, legal, corporate content |
-   | `trogonstack.com`   | the platform: identifiers, applications, private networks |
-   | `trogonapis.com`    | the machine-facing API umbrella                           |
-   | `trogoncloud.com`   | content that customers of the managed offering deploy     |
-   | `trogon<name>.com`  | the product named `<name>`                                |
+   | Domain            | Role                                                      |
+   | ----------------- | --------------------------------------------------------- |
+   | `trogonstack.com` | the platform: identifiers, applications, private networks |
+   | `trogonapis.com`  | the machine-facing API umbrella                           |
 
-3. `trogonapis.com` serves machines only. `<service>.trogonapis.com` is
-   the service hostname and the service segment of a full resource name,
-   as in `//trogondb.trogonapis.com/...`, and its label is the owner's
-   protobuf package root, `trogon<name>`. `schemas.trogonapis.com` is
-   reserved for schema identifiers that are not protobuf, such as a JSON
-   Schema `$id` or an OpenAPI document URL. The apex redirects to
-   `docs.trogonstack.com` and serves nothing else. Service hostnames
-   **MUST NOT** live on a product domain; `api.<product>.com` is not a
-   valid host. Protobuf `Any` type URLs are not a DNS position and are not allocated
+2. An **owner** is anything that mints identifiers of its own: the
+   platform, or a product or tool. Products and tools are not
+   distinguished. Each product or tool has one **owner label**,
+   `<name>`, and its protobuf package root is `trogon<name>.` per
+   [ADR#6874603764](../6874603764/README.md). The current owner labels
+   are `db`, `kv`, `stream`, `lang`, `os`, `browser`, `ai`, `cloud` for
+   the hosted control plane, and `atlas`.
+3. An owner's **identifier namespace** is `<name>.trogonstack.com`. The
+   platform's own namespace, for components that belong to no owner, is
+   `trogonstack.com` itself. Every DNS-rooted identifier an owner mints
+   lives in its namespace:
+   - annotation, label, and other key prefixes:
+     `<name>.trogonstack.com/`;
+   - API groups: `<area>.<name>.trogonstack.com`, or
+     `<name>.trogonstack.com` for an owner whose resources form a single
+     area;
+   - finalizers: `<area>.<name>.trogonstack.com/<finalizer>`;
+   - reverse-DNS identifiers: `com.trogonstack.<name>.*`.
+4. `trogonapis.com` serves machines only. `trogon<name>.trogonapis.com`
+   is an owner's service hostname and the service segment of a full
+   resource name, as in `//trogondb.trogonapis.com/...`; the label is
+   the owner's package root of rule 2, so a service host and its
+   protobuf package read the same. `schemas.trogonapis.com` is reserved for schema
+   identifiers that are not protobuf, such as a JSON Schema `$id` or an
+   OpenAPI document URL. The apex redirects to `docs.trogonstack.com` and
+   serves nothing else. Service hostnames **MUST NOT** live on any other
+   domain; `api.<product>.com` is not a valid host.
+5. Protobuf `Any` type URLs are not a DNS position and are not allocated
    here. Every `Any` **MUST** use the standard prefix,
    `type.googleapis.com/<type>`, where `<type>` is the fully qualified
    message name. `type.trogonapis.com`, or any other host the
    organization owns, **MUST NOT** be used as a type URL prefix, and code
    that writes an `Any` **MUST NOT** override the library default.
-4. A product's canonical domain is its human-facing site and its
-   identifier namespace. The current product domains are `trogondb.com`,
-   `trogonkv.com`, `trogonstream.com`, `trogonlang.com`, `trogonos.com`,
-   `trogonbrowser.com`, and `trogonai.com`. A product's API hostname is
-   `trogon<name>.trogonapis.com`, never a host under its own domain.
-5. `trogonstack.com` is the identifier namespace for platform components
-   that are not a product. The annotation key prefix `trogonstack.com/`
-   is reserved for them, extending the reservation rule of
-   [ADR#5177934677](../5177934677/README.md). A product or tool without
-   a domain of its own is treated the same way a product is, with
-   `<name>.trogonstack.com` as its identifier namespace: the prefix
-   `<name>.trogonstack.com/`, the group `<name>.trogonstack.com` or
-   `<area>.<name>.trogonstack.com`, the reverse-DNS root
-   `com.trogonstack.<name>`, and the API hostname
-   `trogon<name>.trogonapis.com`. The hosted control plane of rule 9 is
-   one such owner and Atlas, under `atlas.trogonstack.com`, is another.
-   The owner **MAY** serve its own human-facing site at that name, as a
-   product does at its domain; no other application may use the label.
-   Registering `trogon<name>.com` later does not move an identifier
-   already minted; moving one is a migration of every record that
-   carries it.
-6. An application the organization operates and exposes to the public
+6. Labels directly under `trogonstack.com` are a single namespace, and
+   each label has exactly one holder:
+   - an owner label of rule 2;
+   - a platform area used in a platform group `<area>.trogonstack.com`;
+   - a reserved function: `docs`, `lab`, `auth`, and `global`;
+   - a cluster label, `<env>-<site>` or a bare site such as `homelab`;
+   - a public application of rule 8.
+
+   A new label **MUST NOT** reuse one that is already held. Owner labels
+   are recorded in rule 2, platform areas with the platform, and cluster
+   labels with the clusters.
+7. An owner **MAY** serve its human-facing site at
+   `<name>.trogonstack.com`, as the hosted control plane does with its
+   console, account, and billing surfaces at `cloud.trogonstack.com`. No
+   other application may use an owner's label.
+8. An application the organization operates and exposes to the public
    internet, such as a source forge, a dashboard, a homepage, or an
    internal tool opened to the web, is `<app>.trogonstack.com`. That
-   name resolves only to the public edge proxy and **MUST NOT** resolve
-   to a machine, a pod, or a private address; the edge forwards to the
-   application's private name of rule 23. The contrast is the label
-   count: `<app>.trogonstack.com` with no cluster label is the public
-   edge, and `<service>.<cluster>.trogonstack.com` with one is private.
-   `trogoncompany.com` is the company's site and `trogoncloud.com` is
-   customer content, so neither is a valid host for organization
-   tooling, and `trogonapis.com` is not for browser applications.
-   Products keep their own sites on `<product>.com`; this rule covers
-   the organization's own tooling.
-7. The labels `docs`, `lab`, `cloud`, `auth`, `global`, and `atlas`,
-   every owner label of rule 5, and every cluster label, `<env>-<site>` or a bare site such as `homelab`,
-   are reserved directly under `trogonstack.com` and **MUST NOT** be
-   used as a public application name. A new cluster label **MUST NOT**
-   reuse an existing public application name, so the public form of
-   rule 6 and the private form of rule 23 cannot collide. The list of
-   cluster labels is recorded with the clusters.
-8. `docs.trogonstack.com` is developer documentation for every product
-   and for the platform. It is for people and **MUST NOT** appear in any
+   name, and an owner site of rule 7, resolves only to the public edge
+   proxy and **MUST NOT** resolve to a machine, a pod, or a private
+   address; the edge forwards to the application's private name of
+   rule 21. The contrast is the label count: a name with no cluster label
+   is the public edge, and `<service>.<cluster>.trogonstack.com` is
+   private. `trogonapis.com` is not for browser applications.
+9. `docs.trogonstack.com` is developer documentation for every owner and
+   for the platform. It is for people and **MUST NOT** appear in any
    machine identifier.
-9. `cloud.trogonstack.com` hosts the console, account, and billing
-   surfaces of the managed offering. Its APIs live under
-   `trogonapis.com` like every other service. The hosted control plane,
-   when it writes as itself, mints identifiers under
-   `cloud.trogonstack.com`: the prefix `cloud.trogonstack.com/` and
-   groups `<area>.cloud.trogonstack.com`.
 10. `lab.trogonstack.com` is incubation and carries no stability
     guarantee. An experiment mints identifiers under it, the prefix
     `lab.trogonstack.com/` and groups `<area>.lab.trogonstack.com`, and
-    products **MUST NOT** depend on an identifier minted there.
-    Graduating an experiment into a product means registering
-    `trogon<name>.com` and minting fresh identifiers under it; an alias
-    from the lab name is not a graduation path.
-11. `trogoncompany.com` is the company: marketing, careers, legal, and
-    corporate content. It **MUST NOT** appear in any technical
-    identifier and **MUST NOT** host any application, API, or
-    documentation surface.
-12. `trogoncloud.com` carries only content that customers of the managed
-    offering deploy, as `<app>.trogoncloud.com` or whatever shape the
-    offering chooses, following `github.io`, `vercel.app`, and `fly.dev`.
-    It **MUST** be submitted to the private section of the Public Suffix
-    List before the first customer host is served. It **MUST NOT** host
-    any organization-operated surface, whether console, login,
-    documentation, or API, and it **MUST NOT** appear in any
+    owners **MUST NOT** depend on an identifier minted there.
+    Graduating an experiment means taking an owner label and minting
+    fresh identifiers under it; an alias from the lab name is not a
+    graduation path.
+11. A `trogon*` domain other than those of rule 1, such as a product
+    domain like `trogondb.com`, is optional. Where it is held, it
+    **MAY** serve that product's human-facing site or redirect to it,
+    and it **MUST NOT** appear in any identifier, host any API, or set a
+    cookie that any surface under rule 1 reads. Because nothing depends
+    on it, it **MAY** be allowed to lapse.
+12. The company's corporate content, such as marketing, careers, and
+    legal, **MUST NOT** appear in any technical identifier and **MUST
+    NOT** share a registrable domain with any application, API, or
+    documentation surface. It lives on a domain the organization holds
+    for that purpose, intended to be `trogoncompany.com`.
+13. Content that customers of the managed offering deploy lives on a
+    registrable domain of its own, intended to be `trogoncloud.com`, as
+    `<app>.<domain>` or whatever shape the offering chooses, following
+    `github.io`, `vercel.app`, and `fly.dev`. The domain **MUST** be
+    held by the organization and submitted to the private section of the
+    Public Suffix List before the first customer host is served. It
+    **MUST NOT** host any organization-operated surface, whether console,
+    login, documentation, or API, and it **MUST NOT** appear in any
     organization identifier.
-13. Aliases **MUST** answer with a permanent redirect to their canonical
-    domain, **MUST NOT** serve content, and **MUST NOT** appear in any
-    identifier. `trogondb.io` redirects to `trogondb.com`, and
-    `trogonstreams.com` redirects to `trogonstream.com`, while they are
-    held. Because no identifier may reference an alias, an alias **MAY**
-    be allowed to lapse.
 14. Cookies and sessions respect the registrable-domain boundary that
     the roles above create.
     - `trogonapis.com` **MUST NOT** set or accept cookies. Authentication
       is bearer tokens only. This is the reason the machine umbrella is
       a registrable domain of its own rather than a host under the
       platform domain.
-    - `trogoncloud.com` carries untrusted content and relies on its
-      Public Suffix List entry, so `<app>.trogoncloud.com` cannot set a
+    - The customer-content domain carries untrusted content and relies
+      on its Public Suffix List entry, so a customer host cannot set a
       cookie on the parent and two customer applications are different
       sites. No organization cookie, login flow, or script is ever
       served from it.
     - An application under `trogonstack.com`, whether public
-      (`<app>.trogonstack.com`) or private
+      (`<app>.trogonstack.com` or an owner site) or private
       (`<service>.<cluster>.trogonstack.com`), **MUST** set host-only
       cookies: no `Domain` attribute, the `Secure` attribute, and the
       `__Host-` prefix **SHOULD** be used. A cookie with
       `Domain=trogonstack.com` or any parent label is forbidden, because
-      public applications, private cluster names, documentation, and
-      the console share the registrable domain and a domain cookie would
-      reach all of them.
+      public applications, owner sites, private cluster names,
+      documentation, and the console share the registrable domain and a
+      domain cookie would reach all of them.
     - Single sign-on **MUST** be done by redirect to a dedicated login
       host and an authorization code or token exchange, never by a
       shared parent-domain session cookie. The interactive login surface
@@ -319,21 +320,15 @@ console live as subdomains of the platform.
       The concrete host names are chosen when the identity service
       exists; this rule fixes only their placement.
 15. Kubernetes API groups, whether for custom resource definitions or
-    aggregated API servers, are DNS names owned by the author, following
-    the upstream convention of `cert-manager.io`, `monitoring.coreos.com`,
-    and `*.cnrm.cloud.google.com`. A product group is
-    `<area>.<product>.com`, for example `clusters.trogondb.com`. A
-    platform-wide group that belongs to no product is
-    `<area>.trogonstack.com`. An owner without a domain uses
-    `<name>.trogonstack.com` or `<area>.<name>.trogonstack.com` per rule
-    5, as in `atlas.trogonstack.com` and `<area>.cloud.trogonstack.com`,
-    and an experiment uses `<area>.lab.trogonstack.com`. Groups **MUST NOT** be minted under
-    `trogonapis.com`, `trogoncompany.com`, `trogoncloud.com`, or any
-    alias.
+    aggregated API servers, are DNS names owned by the author and follow
+    rule 3: `<area>.<name>.trogonstack.com` for an owner, for example
+    `clusters.db.trogonstack.com`, and `<area>.trogonstack.com` for a
+    platform-wide group that belongs to no owner. Groups **MUST NOT** be
+    minted under `trogonapis.com` or any domain outside rule 1.
 16. An API group version uses the same version ladder as a protobuf
     package: `v1alpha1`, `v1beta1`, `v1`. The `<area>` segment **MUST**
-    be the same word in both renderings, so `clusters.trogondb.com` and
-    the package root `trogondb.clusters` are recognizably one area. The
+    be the same word in both renderings, so `clusters.db.trogonstack.com`
+    and the package `trogondb.clusters` are recognizably one area. The
     version reports the maturity of its own surface and nothing else: a
     manifest group at `v1alpha1` **MAY** wrap a wire schema already at
     `v1`, as Google's Config Connector groups do over stable `google.*`
@@ -343,38 +338,25 @@ console live as subdomains of the platform.
 17. Every Kubernetes-style key follows the `prefix/name` syntax and the
     ownership rule that [ADR#5177934677](../5177934677/README.md)
     specifies for annotations. This ADR extends that rule to label keys,
-    taint keys, finalizers (`<area>.<product>.com/<name>`), and field
-    manager names. One owner, one canonical domain, every key under it.
+    taint keys, finalizers, and field manager names. One owner, one
+    namespace, every key under it.
 18. Reverse-DNS identifiers (Java packages, including the protobuf
-    `java_package` option, Apple bundle identifiers,
-    D-Bus names, Android application identifiers) are the reversed
-    canonical domain: `com.trogonstack.*` for the platform,
-    `com.trogonstack.<name>.*` for an owner without a domain, such as
-    `com.trogonstack.cloud.*` and `com.trogonstack.atlas.*`, and
-    `com.<product>.*` for a product. The reverse of `trogonapis.com`
-    **MUST NOT** be used, because that domain names endpoints, not
-    code, and the reverse of `trogoncloud.com` **MUST NOT** be used,
-    because that domain carries no organization identifier.
-19. Identifiers use canonical domains only. This covers the kinds in the
-    table under Where each identifier lives, token issuer URLs, and any
-    position added later where a domain acts as an ownership claim.
-20. A new product or tool either registers `trogon<name>.com` or takes
-    `<name>.trogonstack.com` per rule 5 before any identifier is minted
-    for it, and takes `trogon<name>.trogonapis.com` as its API hostname
-    at the same time. The label under `trogonapis.com` **MUST** equal
-    the owner's protobuf package root.
-21. A domain that appears in an identifier is permanent. It **MUST**
-    remain registered with automatic renewal enabled for as long as any
-    record carrying the identifier can be read, because an expired
-    identifier domain is a takeover of every identifier under it.
+    `java_package` option, Apple bundle identifiers, D-Bus names,
+    Android application identifiers) are `com.trogonstack.*` for the
+    platform and `com.trogonstack.<name>.*` for an owner. The reverse of
+    `trogonapis.com` **MUST NOT** be used, because that domain names
+    endpoints, not code.
+19. Every identifier kind in the table under Where each identifier lives,
+    token issuer URLs, and any position added later where a domain acts
+    as an ownership claim **MUST** use a domain of rule 1.
+20. A domain of rule 1 is permanent. It **MUST** remain registered with
+    automatic renewal enabled for as long as any record carrying an
+    identifier under it can be read, because an expired identifier
+    domain is a takeover of every identifier under it.
     [ADR#5177934677](../5177934677/README.md) already states that a
     lapsed registration grants no claim over documented prefixes; this
     rule prevents the lapse rather than arguing about it afterwards.
-22. Protobuf package roots are not domains and are not allocated here.
-    `trogon.` is the root for shared packages and `trogon<name>.` is the
-    root for every product or tool, per
-    [ADR#6874603764](../6874603764/README.md).
-23. A private name that a person or a client configuration references
+21. A private name that a person or a client configuration references
     is `<service>.<cluster>.trogonstack.com` for a service and
     `<host>.<cluster>.trogonstack.com` for a machine. A cluster label in
     a `trogonstack.com` name means private: the name has no public
@@ -389,55 +371,55 @@ console live as subdomains of the platform.
 
 ### Where each identifier lives
 
-| Identifier kind  | Platform                           | Product                       | Shared API surface         |
-| ---------------- | ---------------------------------- | ----------------------------- | -------------------------- |
-| Label/annotation | `trogonstack.com/`                 | `<product>.com/`              | none                       |
-| Finalizer        | `<area>.trogonstack.com/<name>`    | `<area>.<product>.com/<name>` | none                       |
-| API group        | `<area>.trogonstack.com`           | `<area>.<product>.com`        | none                       |
-| Service hostname | none                               | none                          | `<service>.trogonapis.com` |
-| Reverse-DNS      | `com.trogonstack.*`                | `com.<product>.*`             | none                       |
-| Documentation    | `docs.trogonstack.com`             | `<product>.com`               | none                       |
-| Public app host  | `<app>.trogonstack.com`            | `<product>.com`               | none                       |
-| Private host     | `<name>.<cluster>.trogonstack.com` | none                          | none                       |
-| Customer content | never                              | never                         | never                      |
-| Cluster plumbing | never                              | never                         | never                      |
+| Identifier kind  | Platform                           | Owner `<name>`                              |
+| ---------------- | ---------------------------------- | ------------------------------------------- |
+| Label/annotation | `trogonstack.com/`                 | `<name>.trogonstack.com/`                   |
+| Finalizer        | `<area>.trogonstack.com/<x>`       | `<area>.<name>.trogonstack.com/<x>`         |
+| API group        | `<area>.trogonstack.com`           | `<area>.<name>.trogonstack.com`             |
+| Service hostname | none                               | `trogon<name>.trogonapis.com`               |
+| Reverse-DNS      | `com.trogonstack.*`                | `com.trogonstack.<name>.*`                  |
+| Package root     | `trogon.`                          | `trogon<name>.`                             |
+| Documentation    | `docs.trogonstack.com`             | `docs.trogonstack.com`                      |
+| Public site      | `<app>.trogonstack.com`            | `<name>.trogonstack.com`, or a held domain  |
+| Private host     | `<name>.<cluster>.trogonstack.com` | `<service>.<cluster>.trogonstack.com`       |
+| Type URL         | `type.googleapis.com/<type>`       | `type.googleapis.com/<type>`                |
 
-`trogoncompany.com` and `trogoncloud.com` have no column by design: the
-company domain carries no technical identifier, and the customer-content
-domain belongs to customers, not to the organization. Type URLs have no
-row because they are not allocated here: every `Any` uses
-`type.googleapis.com/<type>` per rule 3. An owner without a domain uses
-the Product column with `<name>.trogonstack.com` in place of
-`<product>.com`, per rule 5.
+The package root row is governed by
+[ADR#6874603764](../6874603764/README.md) and is listed so that every
+rendering of an owner sits in one place. Customer content and cluster
+plumbing appear in no column, because neither ever carries an
+organization identifier.
 
 ## Consequences
 
 - A reader who sees a host, a group, or a key prefix can name its owner,
   and a writer who has an owner can name the identifier, without
-  consulting anyone.
+  consulting anyone and without knowing which `trogon*` domains are
+  held.
+- No identifier depends on a domain the organization does not hold, so
+  losing, never acquiring, or letting a product domain lapse breaks
+  nothing.
 - Every full resource name shares one suffix, so a generic client needs
   one trust root and one parser.
 - Every `Any` payload carries the standard `type.googleapis.com/`
   prefix, so protobuf libraries, gRPC reflection, JSON transcoding, and
   debuggers handle it with no configuration.
-- A Kubernetes operator and a gRPC service for the same product area
-  share a name: `clusters.trogondb.com/v1alpha1` and
+- A Kubernetes operator and a gRPC service for the same owner area share
+  a name: `clusters.db.trogonstack.com/v1alpha1` and
   `trogondb.clusters.v1` are recognizably the same area, and each
   version ladder reports the maturity of its own surface.
 - Product identity and machine endpoints are decoupled. A product can
-  rebrand its site without touching a single stored identifier, and the
-  API umbrella can change infrastructure without touching a product
-  site.
-- The permanent set is `trogoncompany.com`, `trogonstack.com`,
-  `trogonapis.com`, `trogoncloud.com`, and the product domains. Nothing
-  new has to be registered. `trogon.dev` and `trogonlab.com` leave the
-  scheme, and `trogondb.io` and `trogonstreams.com` redirect while held
-  and may lapse. Automatic renewal becomes a correctness requirement
-  rather than a billing preference for every domain in rule 2.
-- `trogoncloud.com` has to be listed in the Public Suffix List before
-  customer content is served from it, and the listing is a one-time
-  operational task with a review delay, so it is done before the
-  managed offering launches rather than after.
+  rebrand or move its site without touching a single stored identifier,
+  and the API umbrella can change infrastructure without touching a
+  product site.
+- The permanent set is `trogonstack.com` and `trogonapis.com`. Automatic
+  renewal is a correctness requirement for both, not a billing
+  preference. `trogon.dev` and `trogonlab.com` leave the scheme, and
+  product domains and their aliases are optional.
+- The customer-content domain has to be held and listed in the Public
+  Suffix List before customer content is served from it, and the listing
+  is a one-time operational task with a review delay, so it is done
+  before the managed offering launches rather than after.
 - A compromised or buggy application on any host cannot read another
   host's session, because every session cookie under `trogonstack.com`
   is host-only. Customer content cannot touch the console, because it
@@ -452,9 +434,10 @@ the Product column with `<name>.trogonstack.com` in place of
   configuration reaches under `trogonstack.com` carries a publicly
   trusted certificate, and the private certificate authority is confined
   to workload identity inside clusters.
-- Existing reservations stay valid. `trogondb.com/` as reserved by
-  [ADR#5177934677](../5177934677/README.md) is a rule 4 prefix and
-  needs no change.
+- The `trogondb.com/` reservation in
+  [ADR#5177934677](../5177934677/README.md) moves to
+  `db.trogonstack.com/`. No record carries a key under the old prefix,
+  so the move needs no migration.
 - The companion decision on package roots can refer to hosts without
   redefining them, and the identifier convention of
   [ADR#4860595695](../4860595695/README.md) gains a stable service

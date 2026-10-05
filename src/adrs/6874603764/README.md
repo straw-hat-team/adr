@@ -129,10 +129,11 @@ schemas of its own.
    owns a domain. Tools and products follow the same rule. The current
    roots are `trogondb.`, `trogonkv.`, `trogonstream.`, `trogonlang.`,
    `trogonos.`, `trogonbrowser.`, `trogonai.`, `trogoncloud.` for the
-   hosted control plane, and `trogonatlas.` for Atlas. An owner without
-   a domain of its own renders its DNS identifiers under
-   `<name>.trogonstack.com` per [ADR#0184938998](../0184938998/README.md);
-   `trogoncloud.com` never appears in any of the hosted control plane's.
+   hosted control plane, and `trogonatlas.` for Atlas. Every owner
+   renders its DNS identifiers under `<name>.trogonstack.com` per
+   [ADR#0184938998](../0184938998/README.md), whether or not a
+   `trogon<name>` domain exists, so `trogondb.` pairs with
+   `db.trogonstack.com` and never with `trogondb.com`.
    An owner's packages **MUST** live in its own repository, **MUST** be
    published as its own module under `buf.build/trogonstack`, and
    **MUST NOT** be added to trogon-proto. A module **MUST NOT** publish
@@ -194,14 +195,13 @@ schemas of its own.
    group `<area>.<root-domain>/<version>` are two renderings of one
    namespace identity. The `<area>` segment **MUST** be the same word in
    both and both use the same version ladder, so `trogondb.clusters.v1`
-   and `clusters.trogondb.com/v1alpha1` are recognizably one area. The
+   and `clusters.db.trogonstack.com/v1alpha1` are recognizably one area. The
    two versions are not coupled: each reports the maturity of its own
    surface, and a `v1alpha1` manifest group **MAY** wrap a `v1` package,
    as Google's Config Connector groups do over stable `google.*`
    packages. `<root-domain>` is the owner's identifier namespace from
-   [ADR#0184938998](../0184938998/README.md): `trogondb.com` for an owner
-   with a domain, `<name>.trogonstack.com` for one without, so
-   `trogonatlas.<area>.<version>` pairs with
+   [ADR#0184938998](../0184938998/README.md), `<name>.trogonstack.com`
+   for every owner, so `trogonatlas.<area>.<version>` pairs with
    `<area>.atlas.trogonstack.com/<version>`. An owner whose schemas form
    a single area **MAY** omit `<area>` on both sides, pairing
    `trogonatlas.<version>` with `atlas.trogonstack.com/<version>`. For
@@ -220,11 +220,11 @@ schemas of its own.
     [ADR#0184938998](../0184938998/README.md). Package roots stay
     DNS-free.
 11. Language options derive from the package and from the owner's
-    canonical domain, never the reverse. `java_package` **MUST** begin
-    with the owner's reversed identifier namespace, `com.trogonstack.`
-    for a shared package, `com.<product>.` for an owner with a domain,
-    and `com.trogonstack.<name>.` for one without, such as
-    `com.trogonstack.cloud.` and `com.trogonstack.atlas.`, per the
+    identifier namespace, never the reverse. `java_package` **MUST**
+    begin with the owner's reversed identifier namespace,
+    `com.trogonstack.` for a shared package and `com.trogonstack.<name>.`
+    for an owner, such as `com.trogonstack.db.` and
+    `com.trogonstack.atlas.`, per the
     reverse-DNS rule of [ADR#0184938998](../0184938998/README.md).
     `csharp_namespace` is the package in PascalCase, and `go_package` is
     the import path of the generated module. These options **SHOULD** be

@@ -263,7 +263,7 @@ records, split DNS** (chosen).
     type URLs. They **MUST NOT** appear in OpenAPI server lists, in
     CloudEvents source URIs that leave the network, in public
     documentation, or in public repositories. A full resource name keeps
-    `<service>.trogonapis.com` as its service segment even when the call
+    `trogon<name>.trogonapis.com` as its service segment even when the call
     is routed over the private network.
 12. Local developer tooling names, such as OrbStack's `*.orb.local` or
     any multicast DNS name, are laptop-only. They **MUST NOT** be mixed
