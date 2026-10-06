@@ -252,6 +252,7 @@ human-facing sites and nothing else.
    A new label **MUST NOT** reuse one that is already held. Owner labels
    are recorded in rule 2, platform areas with the platform, and cluster
    labels with the clusters.
+
 7. An owner **MAY** serve its human-facing site at
    `<name>.trogonstack.com`. No other application may use an owner's
    label. `cloud.trogonstack.com` is the hosted control plane's console,
@@ -389,19 +390,19 @@ human-facing sites and nothing else.
 
 ### Where each identifier lives
 
-| Identifier kind  | Platform                           | Owner `<name>`                              |
-| ---------------- | ---------------------------------- | ------------------------------------------- |
-| Label/annotation | `trogonstack.com/`                 | `<name>.trogonstack.com/`                   |
-| Finalizer        | `<area>.trogonstack.com/<x>`       | `<area>.<name>.trogonstack.com/<x>`         |
-| API group        | `<area>.trogonstack.com`           | `<area>.<name>.trogonstack.com`             |
-| Service hostname | none                               | `trogon<name>.trogonapis.com`               |
-| Reverse-DNS      | `com.trogonstack.*`                | `com.trogonstack.<name>.*`                  |
-| Package root     | `trogon.`                          | `trogon<name>.`                             |
-| Documentation    | `docs.trogonstack.com`             | `docs.trogonstack.com`                      |
-| Public site      | `<app>.trogonstack.com`            | `<name>.trogonstack.com`, or a held domain  |
-| Private host     | `<name>.<cluster>.trogonstack.com` | `<service>.<cluster>.trogonstack.com`       |
-| Token issuer     | `https://idp.trogonstack.com`      | `https://idp.trogonstack.com`               |
-| Type URL         | `type.googleapis.com/<type>`       | `type.googleapis.com/<type>`                |
+| Identifier kind  | Platform                           | Owner `<name>`                             |
+| ---------------- | ---------------------------------- | ------------------------------------------ |
+| Label/annotation | `trogonstack.com/`                 | `<name>.trogonstack.com/`                  |
+| Finalizer        | `<area>.trogonstack.com/<x>`       | `<area>.<name>.trogonstack.com/<x>`        |
+| API group        | `<area>.trogonstack.com`           | `<area>.<name>.trogonstack.com`            |
+| Service hostname | none                               | `trogon<name>.trogonapis.com`              |
+| Reverse-DNS      | `com.trogonstack.*`                | `com.trogonstack.<name>.*`                 |
+| Package root     | `trogon.`                          | `trogon<name>.`                            |
+| Documentation    | `docs.trogonstack.com`             | `docs.trogonstack.com`                     |
+| Public site      | `<app>.trogonstack.com`            | `<name>.trogonstack.com`, or a held domain |
+| Private host     | `<name>.<cluster>.trogonstack.com` | `<service>.<cluster>.trogonstack.com`      |
+| Token issuer     | `https://idp.trogonstack.com`      | `https://idp.trogonstack.com`              |
+| Type URL         | `type.googleapis.com/<type>`       | `type.googleapis.com/<type>`               |
 
 The package root row is governed by
 [ADR#6874603764](../6874603764/README.md) and is listed so that every
