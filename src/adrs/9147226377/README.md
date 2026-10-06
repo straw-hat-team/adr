@@ -259,12 +259,14 @@ records, split DNS** (chosen).
     `<cluster>.trogonstack.com` or under `.internal`. They **MUST NOT**
     appear in any identifier governed by
     [ADR#0184938998](../0184938998/README.md): API groups, annotation or
-    label prefixes, reverse-DNS identifiers, token issuer URLs, or `Any`
-    type URLs. They **MUST NOT** appear in OpenAPI server lists, in
-    CloudEvents source URIs that leave the network, in public
-    documentation, or in public repositories. A full resource name keeps
-    `trogon<name>.trogonapis.com` as its service segment even when the call
-    is routed over the private network.
+    label prefixes (per [ADR#5177934677](../5177934677/README.md)),
+    reverse-DNS identifiers, token issuer URLs, or `Any` type URLs. They
+    **MUST NOT** appear in OpenAPI server lists, in CloudEvents source
+    URIs that leave the network, in public documentation, or in public
+    repositories. A full resource name keeps `trogon<name>.trogonapis.com`,
+    the package root an owner takes per
+    [ADR#6874603764](../6874603764/README.md), as its service segment even
+    when the call is routed over the private network.
 12. Local developer tooling names, such as OrbStack's `*.orb.local` or
     any multicast DNS name, are laptop-only. They **MUST NOT** be mixed
     into any zone above and **MUST NOT** be referenced by any deployed

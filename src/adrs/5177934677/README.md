@@ -237,6 +237,8 @@ consumers.
 
 ## Links
 
+- [ADR#0184938998](../0184938998/README.md): Domain Names and DNS-Rooted
+  Identifiers Across Products
 - [Kubernetes: Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
 - [Kubernetes: Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
 - [CloudEvents specification](https://github.com/cloudevents/spec)
