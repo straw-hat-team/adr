@@ -49,7 +49,10 @@ export const rings = [
   },
 ] as const;
 
-export const editions = [{ id: '2026.2', publishedOn: '2026-08-17' }] as const;
+export const editions = [
+  { id: '2026.2', publishedOn: '2026-08-17' },
+  { id: '2026.3', publishedOn: '2026-10-08' },
+] as const;
 
 type QuadrantId = (typeof quadrants)[number]['id'];
 type RingId = (typeof rings)[number]['id'];
