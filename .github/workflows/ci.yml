@@ -18,4 +18,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:prettier --check
       - run: pnpm lint:markdownlint
+      - run: pnpm lint:adr-layout
       - run: pnpm docs:build
