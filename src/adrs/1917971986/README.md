@@ -255,3 +255,19 @@ ladder of ADR#8779742261, from widest to narrowest:
 - [GCP: IAM deny policies](https://docs.cloud.google.com/iam/docs/deny-overview)
 - [AWS: Service control policies](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html)
 - [GitHub: Enterprise policies](https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/security-and-compliance/enterprise-policies)
+
+### Provider research
+
+How each provider structures its hierarchy, audiences, and access,
+verified against its own documentation:
+
+- [AWS](./aws.md)
+- [Azure](./azure.md)
+- [Google Cloud](./gcp.md)
+- [GitHub](./github.md)
+- [Google Drive and Google Workspace](./google-drive.md)
+- [Notion](./notion.md)
+- [Confluence](./confluence.md)
+- [Slack](./slack.md)
+- [Asana](./asana.md)
+- [Linear](./linear.md)
