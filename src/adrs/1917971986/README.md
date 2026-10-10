@@ -261,13 +261,13 @@ ladder of ADR#8779742261, from widest to narrowest:
 How each provider structures its hierarchy, audiences, and access,
 verified against its own documentation:
 
-- [AWS](./aws.md)
-- [Azure](./azure.md)
-- [Google Cloud](./gcp.md)
-- [GitHub](./github.md)
-- [Google Drive and Google Workspace](./google-drive.md)
-- [Notion](./notion.md)
-- [Confluence](./confluence.md)
-- [Slack](./slack.md)
-- [Asana](./asana.md)
-- [Linear](./linear.md)
+- [AWS](./references/aws.md)
+- [Azure](./references/azure.md)
+- [Google Cloud](./references/gcp.md)
+- [GitHub](./references/github.md)
+- [Google Drive and Google Workspace](./references/google-drive.md)
+- [Notion](./references/notion.md)
+- [Confluence](./references/confluence.md)
+- [Slack](./references/slack.md)
+- [Asana](./references/asana.md)
+- [Linear](./references/linear.md)
