@@ -1,7 +1,7 @@
 ---
 id: '1917971986'
 title: Organization, workspace, folder, and project
-state: Draft
+state: Approved
 created: 2026-10-10
 tags: [naming, multi-tenancy, hierarchy, product-vocabulary]
 category: Platform
