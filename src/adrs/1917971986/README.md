@@ -121,10 +121,65 @@ Organization                 tenant root, governs
 - **Work resources attach at a workspace or below, never at the
   root.** This is what prevents the organization from impersonating a
   workspace. The root carries only governance resources.
-- **"Everyone in" names a workspace.** The default audience a product
-  offers for work is the workspace, inherited downward per
-  ADR#4761776210 rule 5. A product does not offer "everyone in the
-  organization" as an audience for work.
+- **A workspace with resources attached cannot be removed.** Removing
+  it is refused until its resources and folders have been moved
+  elsewhere, each move an audited hierarchy operation. Removing a node
+  never deletes or silently re-homes the work attached to it.
+
+### Visibility is per audience, at any level
+
+Visibility is not a single switch. It is a set of audiences, each of
+which a level may let in or keep out. The audiences follow the actor
+ladder of ADR#8779742261, from widest to narrowest:
+
+| Audience        | Who                                                  |
+| --------------- | ---------------------------------------------------- |
+| Public          | Anyone, including unauthenticated visitors           |
+| Organization    | Every principal of the tenant, across all workspaces |
+| Inherited       | Whoever the parent level lets in (the default)       |
+| Invited members | Only principals granted on this level                |
+
+- **Any level may widen or narrow.** A workspace, a folder, or a
+  project can open itself to a wider audience or close itself to
+  invited members. Widening is a grant, which ADR#4761776210 rule 5 lets
+  accumulate downward; narrowing is a limit, which the same rule lets
+  bound downward. Neither needs a new mechanism.
+- **Ancestors' limits cap descendants.** A project inside an
+  invited-members folder cannot be public or organization-wide, because
+  a parent caps everything below it. Policy at the root caps what any
+  level may choose, so an organization that disables public visibility
+  disables it everywhere.
+- **Audiences differ per capability.** An audience may be let in to
+  discover a resource without reading it, or to read without changing
+  it. Products present presets such as "Everyone in Engineering" or
+  "Only invited members"; a preset is a shortcut over per-audience,
+  per-capability bindings held by the authorization system, not the
+  model itself, and new audiences or capabilities arrive without
+  reshaping it.
+- **Labels name the effective audience.** A level that inherits reads
+  "Everyone in Engineering" when the nearest limit is the workspace, and
+  "Everyone with access to Finance" when an invited-members folder sits
+  in between. A level widened to the organization reads "Everyone in
+  Acme".
+- **Grants combine by union and limits by intersection, per
+  capability.** A principal's access is the widest grant reaching it,
+  evaluated only after every limit on the path has been applied, the
+  same order GCP evaluates deny policies before allow policies. A grant
+  never lifts a principal over a limit above it.
+- **A limit decides whether it can be discovered.** Narrowing reading
+  does not have to hide existence. A limit may leave discovery open, so
+  excluded principals see that the level exists and can request access
+  (Google Drive's limited-access folders), or close it, so the level is
+  invisible to them (Slack private channels). Products choose the
+  default per kind of level.
+- **Root ceilings are opt-in per policy.** The root caps a capability
+  only when an administrator enforces that policy, as GitHub enterprise
+  policies do. An organization that enforces nothing leaves every
+  workspace free to choose.
+- **Governance reaches through every limit.** Audit and the recovery of
+  abandoned work, held at the root, are not work permissions and are
+  never capped by an invited-members limit. Otherwise a private level
+  whose last member leaves could never be recovered.
 
 ### Friendly by default
 
@@ -135,7 +190,9 @@ Organization                 tenant root, governs
 - **A one-workspace customer never sees the word "organization".**
   Signup asks for a workspace name only. While exactly one workspace
   exists, governance settings (billing, SSO, members) appear inside
-  workspace settings, even though they live at the root.
+  workspace settings, even though they live at the root. An
+  administrator in this mode holds a grant at the root from the start,
+  so the reveal changes what is shown, never who holds which grant.
 - **The second workspace reveals the organization.** Creating it is the
   moment the product asks for an organization name, defaulting to the
   first workspace's name, and moves governance settings into an
@@ -163,6 +220,20 @@ Organization                 tenant root, governs
   layer above tenants. Products prevent accidental fragmentation at
   signup instead, by offering to join an existing organization that has
   claimed the person's verified email domain.
+  Google Workspace confirms the cost: it offers no tool to merge
+  separate customer accounts, and consolidation is a data migration.
+- This tree answers where work lives and who may reach it. Policy that
+  targets people regardless of where their work lives, such as
+  enforcing two-step verification for one department (Google
+  Workspace's organizational units and configuration groups), is a
+  separate axis and is not modeled by attaching people to nodes.
+- A workspace is not an isolation wall. Customers who need hard data
+  separation between parts of their company, such as regulated
+  subsidiaries, need separate organizations, not separate workspaces.
+- Billing is held at the root. Cost can be reported per workspace, but
+  there is one bill per organization.
+- The depth cap of ADR#4761776210 applies to the whole tree, so the
+  root and the workspace spend part of it and folders get what remains.
 - "Project" is unavailable as a name for any tree position, including
   the tenant root. A product that reaches for it to mean the tenant or a
   grouping of workspaces is using the wrong word.
@@ -178,3 +249,9 @@ Organization                 tenant root, governs
 - [GitHub: About enterprise accounts](https://docs.github.com/en/enterprise-cloud@latest/admin/overview/about-enterprise-accounts)
 - [Slack: Guide to Enterprise Grid](https://slack.com/help/articles/115005481226-Enterprise-Grid-launch-guide)
 - [Atlassian: What is an Atlassian organization?](https://support.atlassian.com/organization-administration/docs/what-is-an-atlassian-organization/)
+- [Google Drive: limited-access folders in shared drives](https://workspaceupdates.googleblog.com/2025/02/updating-access-experience-in-google-drive.html)
+- [Google Workspace: target audiences](https://knowledge.workspace.google.com/admin/groups/about-target-audiences)
+- [Google Workspace: identity merge and deduplication](https://knowledge.workspace.google.com/admin/domains/identity-merge-and-deduplication)
+- [GCP: IAM deny policies](https://docs.cloud.google.com/iam/docs/deny-overview)
+- [AWS: Service control policies](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html)
+- [GitHub: Enterprise policies](https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/security-and-compliance/enterprise-policies)
