@@ -106,8 +106,10 @@ Organization                 tenant root, governs
   projects, and projects never contain folders.
 - **Work inside a project references it by kinship.** Tasks and similar
   resources point at their project with the project's own id type
-  (`ProjectId project`), not with `parent`, so the tree stays the only
-  answer to position.
+  (`ProjectId project_id`), not with `parent`, so the tree stays the
+  only answer to position. The `_id` suffix stays in the field name
+  because readers of the JSON form often lack the schema, and a bare
+  `project` reads as an inline project rather than a pointer to one.
 
 ### The root governs; workspaces hold work
 
