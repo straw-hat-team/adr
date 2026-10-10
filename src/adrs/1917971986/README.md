@@ -155,6 +155,14 @@ Organization                 tenant root, governs
   organization-wide.
 - Dropping back to one workspace hides the organization again; its name
   and settings persist.
+- The organization is never optional in the data, only in the
+  interface. Separately created organizations that later need to become
+  one are consolidated by an explicit cross-tenant migration that
+  re-homes a workspace and everything below it under another tenant
+  root, never by an ordinary tree operation and never by introducing a
+  layer above tenants. Products prevent accidental fragmentation at
+  signup instead, by offering to join an existing organization that has
+  claimed the person's verified email domain.
 - "Project" is unavailable as a name for any tree position, including
   the tenant root. A product that reaches for it to mean the tenant or a
   grouping of workspaces is using the wrong word.
