@@ -1,13 +1,13 @@
 ---
 id: '1917971986'
-title: Organization, workspace, and folder name hierarchy positions
+title: Organization, workspace, folder, and project
 state: Draft
 created: 2026-10-10
 tags: [naming, multi-tenancy, hierarchy, product-vocabulary]
 category: Platform
 ---
 
-# Organization, workspace, and folder name hierarchy positions
+# Organization, workspace, folder, and project
 
 ## Context
 
@@ -89,6 +89,26 @@ all.
   per [ADR#6310044131](../6310044131/README.md). There is no
   `workspace` or `folder` field; a workspace is found by walking up.
 
+### Project is the work, not a position
+
+```text
+Organization                 tenant root, governs
+└── Workspace                child of the root, holds work
+    └── Folder (optional)    any deeper node, groups work
+        └── Project          a resource attached through `parent`
+```
+
+- **Project is the display word for the primary container of work**:
+  a body of work with a name, a goal, and an audience. It attaches
+  through `parent` to a workspace or any folder below it.
+- **A project is a resource, never a node.** It has fields and behavior;
+  nodes are bare identifiers. Folders and workspaces never become
+  projects, and projects never contain folders.
+- **Work inside a project references it by kinship.** Tasks and similar
+  resources point at their project with the project's own id type
+  (`ProjectId project`), not with `parent`, so the tree stays the only
+  answer to position.
+
 ### The root governs; workspaces hold work
 
 | Concern                                      | Organization (root) | Workspace and folders |
@@ -135,9 +155,9 @@ all.
   organization-wide.
 - Dropping back to one workspace hides the organization again; its name
   and settings persist.
-- A product that wants the word "project" for work (a board, an effort,
-  a body of tasks) uses it for a resource attached through `parent`,
-  never for a position in the tree.
+- "Project" is unavailable as a name for any tree position, including
+  the tenant root. A product that reaches for it to mean the tenant or a
+  grouping of workspaces is using the wrong word.
 
 ## Links
 
