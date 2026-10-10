@@ -107,8 +107,9 @@ Organization                 tenant root, governs
 - **Work inside a project references it by kinship.** Tasks and similar
   resources point at their project with the project's own id type
   (`ProjectId project_id`), not with `parent`, so the tree stays the
-  only answer to position. The `_id` suffix stays in the field name
-  because readers of the JSON form often lack the schema, and a bare
+  only answer to position. The suffix stays in the field name, so the
+  JSON key is `projectId`, per [ADR#6310044131](../6310044131/README.md)
+  rule 5: readers of the JSON form often lack the schema, and a bare
   `project` reads as an inline project rather than a pointer to one.
 
 ### The root governs; workspaces hold work
