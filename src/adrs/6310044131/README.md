@@ -115,12 +115,13 @@ arise under the qualification rule below.
    rule of this ADR is kinship qualification (rule 2); this spelling rule
    is a consistency rule on top of it.
 5. When ids are wrapper messages rather than bare strings, the `Id`
-   suffix belongs to the type and leaves the field name. Rule 4's two
-   shapes then read as `NodeId parent` for position and `SessionId
-parent_session` for kinship, rather than `parent_session_id`. The
-   principle is unchanged, a field states its role and the type states
-   what the role points at; only the spelling moves, because repeating
-   the suffix in a typed field is stutter.
+   suffix stays in the field name. Rule 4's two shapes then read as
+   `NodeId parent` for position and `SessionId parent_session_id` for
+   kinship. The name repeats what the type says on purpose: consumers of
+   the JSON form often have no schema and see only the key
+   (`parentSessionId`), so the key itself must say that the value points
+   at a session rather than embedding one. Position needs no such
+   signal, because a parent is never inline content.
 
 ## Consequences
 
