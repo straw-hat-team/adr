@@ -7,6 +7,7 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
     "lint:markdownlint": "markdownlint **/*.md",
+    "lint:adr-layout": "node scripts/check-adr-layout.mjs",
     "format:prettier": "prettier --ignore-unknown --no-error-on-unmatched-pattern --write '**/*'"
   },
   "dependencies": {
