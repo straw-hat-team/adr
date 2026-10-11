@@ -160,7 +160,6 @@ prove.
 | `/-/livez`    | every serving port | Liveness                                        |
 | `/-/readyz`   | every serving port | Readiness and load balancer health checks       |
 | `/-/startupz` | every serving port | Startup, when it differs from readiness         |
-| `/-/metrics`  | `debug` only       | Prometheus scrape, only when it is unavoidable  |
 
 ### Health checks
 
@@ -220,10 +219,10 @@ prove.
   Collector, configured through the standard `OTEL_*` environment variables
   (`OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_SERVICE_NAME`,
   `OTEL_RESOURCE_ATTRIBUTES`).
-- You **MUST NOT** require a scrape endpoint to observe a service. When a
-  consumer can only scrape, the Collector exposes Prometheus, not the service.
-  A service that must expose metrics itself **MUST** do so at `/-/metrics` on
-  the `debug` port, never on a serving port.
+- A service **MUST NOT** expose a metrics endpoint for scraping. Metrics leave
+  only over OTLP. A backend that wants to scrape reads from the Collector's
+  Prometheus exporter, and Prometheus itself can receive OTLP directly, so no
+  consumer needs the service to be scrapeable.
 - You **MUST** instrument every protocol on every serving port with the same
   pipeline, following the OpenTelemetry RPC semantic conventions for gRPC and
   Connect and the HTTP semantic conventions for everything else, so one
@@ -265,7 +264,7 @@ prove.
   │                  /-/livez, /-/readyz, /-/startupz, grpc.health.v1
   │                  ← Service ← other workloads, admin applications
   │                  ← kubelet probes
-  ├── debug port     profiling, /-/metrics only when unavoidable
+  ├── debug port     profiling and debugging
   │                  loopback by default, never in a Service, route or probe
   └── OTLP out  ──→  OpenTelemetry Collector  ──→  backends
   ```
@@ -286,6 +285,7 @@ prove.
 - [Prometheus management API](https://prometheus.io/docs/prometheus/latest/management_api/)
 - [Liveness probes are dangerous](https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html)
 - [OTLP metrics export to Prometheus](https://opentelemetry.io/docs/compatibility/prometheus/otlp-metrics-export/)
+- [Using Prometheus as an OpenTelemetry backend](https://prometheus.io/docs/guides/opentelemetry/)
 - [OpenTelemetry SDK environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/)
 - [OpenTelemetry RPC semantic conventions](https://opentelemetry.io/docs/specs/semconv/rpc/)
 - [OpenTelemetry HTTP semantic conventions](https://opentelemetry.io/docs/specs/semconv/http/)
