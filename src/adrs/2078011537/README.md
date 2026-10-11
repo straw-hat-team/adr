@@ -91,8 +91,16 @@ artifact, a compose service directory holds run-time input mounted over it.
 
 - You **MUST** place each chart under `devops/helm/charts/<chart>/`, named
   after the deployable it installs.
-- You **MUST** keep defaults in `values.yaml` and per-environment overrides in
-  `values.<environment>.yaml` beside it.
+- You **MUST** keep defaults in `values.yaml` and treat every other values
+  file as a case that overrides it, named after the case: an environment, a
+  feature combination, an authentication mode.
+- You **MUST** name a deployment case `values.<case>.yaml` beside
+  `values.yaml`.
+- You **MUST** name a chart-testing case `ci/<case>-values.yaml`. That is the
+  only pattern chart-testing discovers, and a case under any other name is
+  silently skipped, so CI passes without ever rendering it.
+- You **MUST NOT** keep a case anywhere else in the chart, or under a name
+  that does not say which case it is.
 - You **MUST** compose several charts through an umbrella chart with `file://`
   dependencies in the same directory, never by reaching into another chart's
   templates.
@@ -103,3 +111,4 @@ artifact, a compose service directory holds run-time input mounted over it.
 - [ADR#6561361204](../6561361204/README.md): Live infrastructure
 - [Compose file reference](https://docs.docker.com/reference/compose-file/)
 - [Helm chart file structure](https://helm.sh/docs/topics/charts/#the-chart-file-structure)
+- [chart-testing lint](https://github.com/helm/chart-testing/blob/main/doc/ct_lint.md)
