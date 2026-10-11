@@ -140,6 +140,10 @@ prove.
   lets every proxy, route and instrumentation filter match one pattern.
 - Operational endpoints **MUST** be mounted ahead of application routing and
   authentication, so a broken router or auth backend cannot hide them.
+- The `grpc.health.v1` methods are the one exception to the prefix. Their
+  paths, such as `/grpc.health.v1.Health/Check` and
+  `/grpc.health.v1.Health/Watch`, are fixed by the gRPC protocol and **MUST**
+  be treated as operational paths wherever this ADR says `/-/`.
 
 | Path          | Port               | Purpose                                         |
 | ------------- | ------------------ | ----------------------------------------------- |
@@ -154,8 +158,10 @@ prove.
   HTTP/1.1 on every serving port, gRPC services included, and **MUST** point
   Kubernetes probes at them with `httpGet`. A service whose initialization
   differs from readiness **MAY** also answer `GET /-/startupz` for the startup
-  probe. These follow the names the Kubernetes API server uses; you **MUST
-  NOT** add `healthz`, which Kubernetes deprecated. HTTP is the one check every
+  probe. These follow the names the Kubernetes API server uses since it
+  deprecated its own `/healthz` endpoint, and you **MUST NOT** add a
+  `/-/healthz` beside them, so every service has one spelling per probe. HTTP
+  is the one check every
   platform can run: kubelet, Cloud Run and every load balancer speak it, while
   GKE Ingress cannot build a gRPC health check and Cloud Run's HTTP probes
   require HTTP/1.
@@ -212,9 +218,10 @@ prove.
   pipeline, following the OpenTelemetry RPC semantic conventions for gRPC and
   Connect and the HTTP semantic conventions for everything else, so one
   dashboard covers every caller.
-- Requests under `/-/` **MUST NOT** start spans. Exclude the prefix where the
-  instrumentation is installed rather than filtering in the Collector, so
-  health checks never consume sampling budget or export bandwidth.
+- Requests to operational paths, both under `/-/` and to `grpc.health.v1`,
+  **MUST NOT** start spans. Exclude them where the instrumentation is
+  installed rather than filtering in the Collector, so health checks never
+  consume sampling budget or export bandwidth.
 
 ### Kubernetes
 
@@ -222,8 +229,15 @@ prove.
   serving port speaks HTTP/2 without TLS, it **MUST** set
   `appProtocol: kubernetes.io/h2c`.
 - An edge route **MUST** reference only the `public` port. It **SHOULD**
-  forward the `/` prefix and leave path routing to the service, and it **MUST
-  NOT** route the `/-/` prefix to the internet.
+  forward the `/` prefix and leave path routing to the service.
+- A `/` prefix also matches every operational path, so the edge **MUST** carry
+  a more specific rule for `/-/` and `/grpc.health.v1.Health/` that answers
+  without forwarding to the service. Both Ingress and Gateway API pick the
+  longest matching prefix, so that rule takes precedence over `/`: on Gateway
+  API it is an `HTTPRoute` rule with a `PathPrefix` match and no
+  `backendRefs`, and on Ingress it is a `Prefix` path pointing at a backend
+  that answers 404. Load balancer health checks are unaffected, since they
+  reach the pod directly rather than through the route.
 - A load balancer health check **MUST** target `/-/readyz` on the port it
   routes to. Where the controller does not read it from the readiness probe,
   such as GKE Gateway, you **MUST** declare it explicitly (a
