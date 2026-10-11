@@ -155,31 +155,43 @@ prove.
   `/grpc.health.v1.Health/Watch`, are fixed by the gRPC protocol and **MUST**
   be treated as operational paths wherever this ADR says `/-/`.
 
-| Path          | Port               | Purpose                                         |
-| ------------- | ------------------ | ----------------------------------------------- |
-| `/-/livez`    | every serving port | Liveness                                        |
-| `/-/readyz`   | every serving port | Readiness and load balancer health checks       |
-| `/-/startupz` | every serving port | Startup, when it differs from readiness         |
+| Path          | Port               | Purpose                                   | Required                   |
+| ------------- | ------------------ | ----------------------------------------- | -------------------------- |
+| `/-/readyz`   | every serving port | Readiness and load balancer health checks | always                     |
+| `/-/startupz` | every serving port | Startup                                   | with a startup probe       |
+| `/-/livez`    | every serving port | Liveness                                  | with a liveness probe      |
 
 ### Health checks
 
-- Every service **MUST** answer `GET /-/livez` and `GET /-/readyz` over
-  HTTP/1.1 on every serving port, gRPC services included, and **MUST** point
-  Kubernetes probes at them with `httpGet`. A service whose initialization
-  differs from readiness **MAY** also answer `GET /-/startupz` for the startup
-  probe. These follow the names the Kubernetes API server uses since it
-  deprecated its own `/healthz` endpoint, and you **MUST NOT** add a
-  `/-/healthz` beside them, so every service has one spelling per probe. HTTP
-  is the one check every
-  platform can run: kubelet, Cloud Run and every load balancer speak it, while
-  GKE Ingress cannot build a gRPC health check and Cloud Run's HTTP probes
-  require HTTP/1.
+- Every service **MUST** have a readiness probe. It is the only probe that
+  protects callers: without it, a pod gets traffic before it can serve and
+  keeps getting it while it cannot.
+- A service **SHOULD** have a startup probe when initialization can outlast a
+  few readiness periods, such as loading data or warming caches, and **MAY**
+  omit it otherwise.
+- A service **MAY** have a liveness probe, and **SHOULD** add one only when its
+  process can hang without exiting, such as a deadlocked event loop. A process
+  that crashes is restarted without one, and a liveness probe that checks the
+  wrong thing restarts healthy pods.
+- Probes **MUST** use the operational paths with `httpGet`, and a service
+  **MUST** answer the path of every probe it declares. These follow the names
+  the Kubernetes API server uses since it deprecated its own `/healthz`
+  endpoint, and you **MUST NOT** add a `/-/healthz` beside them, so every
+  service has one spelling per probe. HTTP is the one check every platform can
+  run: kubelet, Cloud Run and every load balancer speak it, while GKE Ingress
+  cannot build a gRPC health check and Cloud Run's HTTP probes require HTTP/1.
+- A service whose probed port serves only gRPC over plaintext **MAY** use
+  Kubernetes `grpc` probes against `grpc.health.v1` instead, naming the
+  `readiness`, `startup` and `liveness` services for each probe. The empty
+  service name **MUST** report readiness, since load balancers and clients
+  check it. The kubelet gRPC probe cannot use TLS, so a TLS port **MUST** use
+  `httpGet` with `scheme: HTTPS`.
 - Kubernetes probes **MUST** target the `private` port when the service has
   one, and the `public` port otherwise.
 - A service that serves gRPC or Connect **MUST** also implement
-  `grpc.health.v1` on its serving ports, reporting the same readiness as
-  `/-/readyz`, for gRPC clients and load balancers that check health
-  themselves.
+  `grpc.health.v1` on its serving ports, its empty service name reporting the
+  same readiness as `/-/readyz`, for gRPC clients and load balancers that check
+  health themselves.
 - A probe on a serving port takes the same listener, TLS and concurrency
   limits as real traffic, so a hung or saturated listener fails it. A probe on
   the `debug` port **MUST NOT** stand in for it.
