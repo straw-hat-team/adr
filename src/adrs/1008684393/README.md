@@ -207,6 +207,10 @@ prove.
   `grpc-health-probe`. Most gRPC frameworks ship it ready to register, so it
   costs little, while adding it later means touching every service once a proxy
   starts relying on it.
+- Registering `grpc.health.v1` on the `public` port does not expose it to the
+  internet. Like the `/-/` paths, it answers callers that reach the pod
+  directly, such as kubelet and load balancer health checks, while the edge
+  answers `/grpc.health.v1.Health/` itself and never forwards it.
 - `grpc.health.v1` **MUST** give the same answers as the `/-/` paths, so both
   report one state:
 
