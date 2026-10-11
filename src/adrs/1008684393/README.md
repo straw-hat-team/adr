@@ -335,3 +335,14 @@ prove.
 - [OpenTelemetry SDK environment variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/)
 - [OpenTelemetry RPC semantic conventions](https://opentelemetry.io/docs/specs/semconv/rpc/)
 - [OpenTelemetry HTTP semantic conventions](https://opentelemetry.io/docs/specs/semconv/http/)
+
+### Provider research
+
+How each provider names exposure levels and runs health checks, verified
+against its own documentation:
+
+- [Google Cloud](./references/gcp.md)
+- [AWS](./references/aws.md)
+- [Azure](./references/azure.md)
+- [Kubernetes](./references/kubernetes.md)
+- [Platforms and frameworks](./references/platforms.md)
