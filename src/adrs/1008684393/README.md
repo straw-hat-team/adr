@@ -199,12 +199,26 @@ prove.
   `httpGet` with `scheme: HTTPS`.
 - Kubernetes probes **MUST** target the `private` port when the service has
   one, and the `public` port otherwise.
-- A service that serves gRPC or Connect **MUST** also implement
-  `grpc.health.v1` on its serving ports, for gRPC clients and load balancers
-  that check health themselves. It **MUST** report the `readiness` and `liveness`
-  services, and `startup` where the service answers `/-/startup`, with the same
-  answers as the matching `/-/` paths, and the empty service name the same as
-  `readiness`.
+- A service that serves gRPC or Connect **MUST** also register the standard
+  `grpc.health.v1` service on every serving port, next to its own services and
+  in addition to the `/-/` paths, not instead of them. gRPC tooling checks
+  health only through it: clients that stop sending to an unhealthy backend,
+  gRPC-aware proxies such as Envoy, Istio and GKE Gateway, `grpcurl` and
+  `grpc-health-probe`. Most gRPC frameworks ship it ready to register, so it
+  costs little, while adding it later means touching every service once a proxy
+  starts relying on it.
+- `grpc.health.v1` **MUST** give the same answers as the `/-/` paths, so both
+  report one state:
+
+  | Service name | Answers as     |
+  | ------------ | -------------- |
+  | `readiness`  | `/-/readiness` |
+  | `liveness`   | `/-/liveness`  |
+  | `startup`    | `/-/startup`   |
+  | empty name   | `/-/readiness` |
+
+  The empty name is what gRPC clients and load balancers ask for by default.
+  `startup` is reported only by a service that answers `/-/startup`.
 - A probe on a serving port takes the same listener, TLS and concurrency
   limits as real traffic, so a hung or saturated listener fails it. A probe on
   the `debug` port **MUST NOT** stand in for it.
