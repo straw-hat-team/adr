@@ -30,8 +30,8 @@ const radarPlacement = computed(() => {
 <template>
   <Layout>
     <template #doc-before>
-      <div v-if="data.frontmatter.value.state" class="flex gap-4 items-center mb-4">
-        <div class="flex gap-2">
+      <div v-if="data.frontmatter.value.state" class="flex flex-wrap gap-4 items-center mb-4">
+        <div class="flex flex-wrap gap-2">
           <span
             class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset text-gray-900 dark:text-white"
             :class="{
@@ -63,7 +63,7 @@ const radarPlacement = computed(() => {
             <span class="font-bold">{{ data.frontmatter.value.id }}</span>
           </p>
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           <span
             v-for="tag in data.frontmatter.value.tags"
             class="rounded-full px-1.5 py-0.5 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 dark:ring-gray-200 dark:text-gray-200"
@@ -72,8 +72,8 @@ const radarPlacement = computed(() => {
           </span>
         </div>
       </div>
-      <div v-else-if="radarPlacement" class="flex gap-4 items-center mb-4">
-        <div class="flex gap-2">
+      <div v-else-if="radarPlacement" class="flex flex-wrap gap-4 items-center mb-4">
+        <div class="flex flex-wrap gap-2">
           <span
             class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-white"
           >
@@ -90,7 +90,7 @@ const radarPlacement = computed(() => {
           </span>
           <a class="inline-flex items-center text-xs" :href="href('/radar/')">Back to the radar</a>
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           <span
             v-for="tag in radarPlacement.tags"
             class="rounded-full px-1.5 py-0.5 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 dark:ring-gray-200 dark:text-gray-200"
