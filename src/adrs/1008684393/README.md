@@ -116,7 +116,7 @@ prove.
 - A service **MUST** open one serving port per audience it serves, and no more:
   a `private` port, a `public` port, or both. Everything one audience calls
   (gRPC, Connect, MCP, plain HTTP) **MUST** share that audience's port and be
-  told apart by path.
+  told apart by path and content type, as Path layout describes.
 - You **MUST NOT** add a port for a new protocol. A port exists only to put a
   trust boundary between audiences, so the network can expose one without the
   other.
@@ -128,6 +128,37 @@ prove.
 - You **MAY** run a `debug` port for profiling and debugging. It **MUST** bind
   loopback by default, **MUST** require an explicit opt-in to bind any other
   interface, and **MUST NOT** be referenced by a Service, a route or a probe.
+
+### Path layout
+
+One port carries every protocol because their paths cannot collide. gRPC
+needs the root of the path space, not a port of its own.
+
+| Traffic        | Path                                      | Told apart by                               |
+| -------------- | ----------------------------------------- | ------------------------------------------- |
+| gRPC, gRPC-Web | `/{package}.{Service}/{Method}`           | `Content-Type: application/grpc*`           |
+| Connect        | `/{package}.{Service}/{Method}`           | `Content-Type: application/proto` or `json` |
+| MCP, HTTP      | a first segment of the service's choosing | the path                                    |
+| Operational    | `/-/*`, `/grpc.health.v1.Health/*`        | the path                                    |
+
+- gRPC **MUST** be served at its canonical paths from the root and **MUST NOT**
+  be mounted under a prefix such as `/rpc/`. The protocol fixes the path to
+  `/{package}.{Service}/{Method}`: clients build it from the proto definition
+  and take only a host and port as their target, and grpcurl, server
+  reflection, Kubernetes gRPC probes, load balancer gRPC health checks, service
+  mesh routing and the OpenTelemetry RPC conventions all expect it at the root.
+  A prefix would need a proxy to strip it before any of them worked.
+- Connect **SHOULD** share gRPC's canonical paths, since the Connect protocol
+  uses the same procedure path and is told apart by content type. Connect
+  **MAY** move under a single prefix, such as `/rpc/`, only when its
+  implementation cannot share the gRPC handler; Connect clients take a base
+  URL, so they tolerate a prefix where gRPC clients do not.
+- Every other HTTP route **MUST NOT** start with a segment that is a fully
+  qualified proto service name, such as `/mcp` rather than
+  `/acme.billing.v1.Invoices`, and **MUST NOT** start with `/-/`.
+- Anything that classifies requests, such as telemetry, **MUST** use the
+  content type to tell gRPC and Connect from other HTTP traffic, not the path
+  alone.
 
 ### Operational paths
 
