@@ -1,21 +1,29 @@
 ---
 id: '1008684393'
-title: Service listeners, health checks and telemetry export
-state: Draft
+title: Service audiences, listeners, health checks and telemetry
+state: Approved
 created: 2026-10-11
-tags: [kubernetes, grpc, connect, http, health, probes, opentelemetry, ingress]
+tags: [kubernetes, grpc, connect, http, health, probes, opentelemetry, ingress, networkpolicy, security]
 category: Platform
 ---
 
-# Service listeners, health checks and telemetry export
+# Service audiences, listeners, health checks and telemetry
 
 ## Context
 
-Our services answer more than one protocol. A single Rust server can carry
-gRPC for SDKs and other services, Connect for browsers, and MCP or plain HTTP
-for agents and webhooks. Each addition invited a new port, and each new port
-then needed its own container port, Service port, probe, ingress rule and
-NetworkPolicy, so the chart grew faster than the service did.
+A service is called by very different parties: customers over the internet,
+other services inside the platform, staff operating the business, and the
+platform itself checking whether the service is alive. Each of these expects a
+different level of exposure and a different kind of authentication, and most
+services serve only some of them. Many services are called by other services
+and nobody else.
+
+Without shared names for these parties, every service decided its exposure on
+its own. Each protocol a service learned (gRPC, Connect, MCP, plain HTTP)
+invited a new port, and each port then needed its own container port, Service
+port, probe, ingress rule and NetworkPolicy, so the deployment grew faster than
+the service did. Whether a port was reachable from the internet depended on
+which ingress rules happened to exist, not on a decision anyone wrote down.
 
 Health checks drifted the same way. Some services probed a TCP socket, some an
 HTTP `/healthz`, some the gRPC health service. A few moved probes to a
@@ -26,7 +34,7 @@ the same moment and turned a short blip into an outage. Paths drifted too:
 some services answer at the root, others under `/~/health`, so every chart,
 ingress exclusion and dashboard had to learn each service's spelling.
 
-Telemetry is the third piece. OpenTelemetry is how we observe services: traces,
+Telemetry is the last piece. OpenTelemetry is how we observe services: traces,
 metrics and logs leave the process over OTLP and an OpenTelemetry Collector
 decides where they go. A per-service Prometheus scrape endpoint is a second
 metrics path that has to be secured, routed and kept in step with the first.
@@ -35,20 +43,91 @@ than real traffic on a quiet service.
 
 ## Resolution
 
+### Audiences
+
+Every caller of a service belongs to exactly one audience. The audience, not
+the protocol, decides where a request enters the service and what it must
+prove.
+
+| Audience | Who calls                                   | Reaches the service through                   |
+| -------- | ------------------------------------------- | --------------------------------------------- |
+| Public   | Clients outside the organization's network  | The edge: an ingress or Gateway API route     |
+| Private  | Other workloads inside the platform         | The Service, never the edge                   |
+| Admin    | Staff operating the business                | An admin application that calls Private APIs  |
+| Internal | The platform running the service            | The pod network or loopback                   |
+
+- Every service **MUST** document which of Public and Private it serves. A
+  service that does not serve Public **MUST NOT** be referenced by any edge
+  route. Serving only Private is the expected default; Public is the exception
+  that has to be argued for.
+- Every service serves Internal. Admin is never served by the service directly.
+
+#### Public
+
+- Public traffic **MUST** enter through the edge, which terminates TLS and is
+  the only component exposed to the internet. Rate limiting and request size
+  limits **SHOULD** be enforced at the edge.
+- Every Public request **MUST** be authenticated with credentials issued by
+  the identity provider, except for operations explicitly designed to be
+  anonymous, which **MUST** be listed as such in the service's API definition.
+- The service **MUST NOT** trust forwarding headers such as `X-Forwarded-For`
+  from anything other than the edge.
+
+#### Private
+
+- Private traffic **MUST** stay inside the platform network. A caller in another
+  cluster reaches it through an internal load balancer or the service mesh,
+  never through the public edge.
+- Every Private request **MUST** authenticate the calling workload, with mesh
+  mTLS or a workload identity token. Being inside the cluster is not an
+  identity.
+- When a Private call acts on behalf of a user, the caller **MUST** forward
+  that user's identity, and the service **MUST** authorize against it rather
+  than against the caller's own privileges.
+- A NetworkPolicy **SHOULD** admit only the workloads that are documented
+  callers.
+
+#### Admin
+
+- Tools for staff, such as dashboards and support consoles, **MUST** be
+  separate applications. A service **MUST NOT** host an admin UI or open an
+  admin port; every service that grew one would also grow its own login, CSRF
+  protection, session handling and UI dependencies.
+- Operations that only staff may perform **MUST** be ordinary Private API
+  operations guarded by authorization, so they share the service's validation,
+  audit trail and telemetry with every other call.
+- The admin application **MUST** authenticate staff through single sign-on with
+  multi-factor authentication, **MUST** call services with the operator's own
+  identity rather than a shared privileged account, and **MUST** be reachable
+  only through an identity-aware proxy or the private network.
+- Every state-changing admin operation **MUST** be audit logged with the
+  operator's identity.
+
+#### Internal
+
+- Internal callers are the kubelet, load balancer health checks, the service
+  mesh and engineers debugging a single pod. They reach the service only
+  through operational paths and the debug port.
+- Internal endpoints **MUST NOT** carry business data and **MUST NOT** change
+  business state.
+
 ### Listeners
 
-- You **MUST** choose ports by audience, not by protocol. Everything a client
-  outside the pod calls (gRPC, Connect, MCP, plain HTTP) **MUST** share one
-  serving port and be told apart by path.
-- You **MUST NOT** add a port for a new protocol. A new port is justified only
-  by a new trust boundary: an audience that needs different network exposure
-  than the existing one, such as a public webhook receiver beside a private
-  API.
-- The serving port **MUST** accept both HTTP/1.1 and HTTP/2. gRPC requires
+- A service **MUST** open one serving port per audience it serves, and no more:
+  a `private` port, a `public` port, or both. Everything one audience calls
+  (gRPC, Connect, MCP, plain HTTP) **MUST** share that audience's port and be
+  told apart by path.
+- You **MUST NOT** add a port for a new protocol. A port exists only to put a
+  trust boundary between audiences, so the network can expose one without the
+  other.
+- Container ports and Service ports **MUST** be named after their audience:
+  `public`, `private` and `debug`. Callers, routes and policies then refer to
+  the audience by name instead of to a number.
+- Every serving port **MUST** accept both HTTP/1.1 and HTTP/2. gRPC requires
   HTTP/2, while health probes and most MCP and browser clients use HTTP/1.1.
-- You **MAY** run an admin port for profiling and debugging. It **MUST** bind
+- You **MAY** run a `debug` port for profiling and debugging. It **MUST** bind
   loopback by default, **MUST** require an explicit opt-in to bind any other
-  interface, and **MUST NOT** be referenced by an ingress, a route or a probe.
+  interface, and **MUST NOT** be referenced by a Service, a route or a probe.
 
 ### Operational paths
 
@@ -62,24 +141,33 @@ than real traffic on a quiet service.
 - Operational endpoints **MUST** be mounted ahead of application routing and
   authentication, so a broken router or auth backend cannot hide them.
 
+| Path          | Port               | Purpose                                         |
+| ------------- | ------------------ | ----------------------------------------------- |
+| `/-/livez`    | every serving port | Liveness                                        |
+| `/-/readyz`   | every serving port | Readiness and load balancer health checks       |
+| `/-/startupz` | every serving port | Startup, when it differs from readiness         |
+| `/-/metrics`  | `debug` only       | Prometheus scrape, only when it is unavoidable  |
+
 ### Health checks
 
 - Every service **MUST** answer `GET /-/livez` and `GET /-/readyz` over
-  HTTP/1.1 on the serving port, gRPC services included, and **MUST** point
+  HTTP/1.1 on every serving port, gRPC services included, and **MUST** point
   Kubernetes probes at them with `httpGet`. A service whose initialization
   differs from readiness **MAY** also answer `GET /-/startupz` for the startup
   probe. These follow the names the Kubernetes API server uses; you **MUST
-  NOT** add `healthz`, which Kubernetes deprecated. HTTP is
-  the one check every platform can run: kubelet, Cloud Run and every load
-  balancer speak it, while GKE Ingress cannot build a gRPC health check and
-  Cloud Run's HTTP probes require HTTP/1.
+  NOT** add `healthz`, which Kubernetes deprecated. HTTP is the one check every
+  platform can run: kubelet, Cloud Run and every load balancer speak it, while
+  GKE Ingress cannot build a gRPC health check and Cloud Run's HTTP probes
+  require HTTP/1.
+- Kubernetes probes **MUST** target the `private` port when the service has
+  one, and the `public` port otherwise.
 - A service that serves gRPC or Connect **MUST** also implement
-  `grpc.health.v1` on the serving port, reporting the same readiness as
+  `grpc.health.v1` on its serving ports, reporting the same readiness as
   `/-/readyz`, for gRPC clients and load balancers that check health
   themselves.
-- A probe on the serving port takes the same listener, TLS and concurrency
+- A probe on a serving port takes the same listener, TLS and concurrency
   limits as real traffic, so a hung or saturated listener fails it. A probe on
-  any other port **MUST NOT** stand in for it.
+  the `debug` port **MUST NOT** stand in for it.
 
 #### What each probe may check
 
@@ -119,8 +207,8 @@ than real traffic on a quiet service.
 - You **MUST NOT** require a scrape endpoint to observe a service. When a
   consumer can only scrape, the Collector exposes Prometheus, not the service.
   A service that must expose metrics itself **MUST** do so at `/-/metrics` on
-  the admin port, never on the serving port.
-- You **MUST** instrument every protocol on the serving port with the same
+  the `debug` port, never on a serving port.
+- You **MUST** instrument every protocol on every serving port with the same
   pipeline, following the OpenTelemetry RPC semantic conventions for gRPC and
   Connect and the HTTP semantic conventions for everything else, so one
   dashboard covers every caller.
@@ -130,27 +218,31 @@ than real traffic on a quiet service.
 
 ### Kubernetes
 
-- The Service **MUST** expose only the serving port. When the backend speaks
-  HTTP/2 without TLS, the port **MUST** set `appProtocol: kubernetes.io/h2c`.
-- An ingress or Gateway API route **SHOULD** forward the `/` prefix to the
-  serving port and leave path routing to the service. It **MUST NOT** route
-  the `/-/` prefix to the outside world.
-- A load balancer health check **MUST** target `/-/readyz` on the serving
-  port.
-  Where the controller does not read it from the readiness probe, such as GKE
-  Gateway, you **MUST** declare it explicitly (a `HealthCheckPolicy` on GKE),
-  since the default check requests a path the service may not answer.
-- A NetworkPolicy **SHOULD** limit the admin port, when one exists, to the
-  namespaces that need it.
+- The Service **MUST** expose only serving ports, never `debug`. When a
+  serving port speaks HTTP/2 without TLS, it **MUST** set
+  `appProtocol: kubernetes.io/h2c`.
+- An edge route **MUST** reference only the `public` port. It **SHOULD**
+  forward the `/` prefix and leave path routing to the service, and it **MUST
+  NOT** route the `/-/` prefix to the internet.
+- A load balancer health check **MUST** target `/-/readyz` on the port it
+  routes to. Where the controller does not read it from the readiness probe,
+  such as GKE Gateway, you **MUST** declare it explicitly (a
+  `HealthCheckPolicy` on GKE), since the default check requests a path the
+  service may not answer.
+- A NetworkPolicy **SHOULD** admit the edge to the `public` port only, and
+  documented callers to the `private` port only.
 
   ```txt
   pod
-  ├── serving port   gRPC, Connect, MCP, HTTP, grpc.health.v1
-  │                  /-/livez, /-/readyz, /-/startupz
-  │                  ← Service ← ingress or route (prefix /, never /-/)
-  │                  ← kubelet probes, load balancer health checks
-  ├── admin port     profiling, debug, /-/metrics only when unavoidable
-  │                  loopback by default, never routed or probed
+  ├── public port    Public audience: gRPC, Connect, MCP, HTTP
+  │                  /-/livez, /-/readyz, /-/startupz, grpc.health.v1
+  │                  ← edge (prefix /, never /-/) ← internet
+  ├── private port   Private audience: gRPC, Connect, MCP, HTTP
+  │                  /-/livez, /-/readyz, /-/startupz, grpc.health.v1
+  │                  ← Service ← other workloads, admin applications
+  │                  ← kubelet probes
+  ├── debug port     profiling, /-/metrics only when unavoidable
+  │                  loopback by default, never in a Service, route or probe
   └── OTLP out  ──→  OpenTelemetry Collector  ──→  backends
   ```
 
@@ -160,10 +252,11 @@ than real traffic on a quiet service.
   services and programs
 - [Kubernetes API health endpoints](https://kubernetes.io/docs/reference/using-api/health-checks/)
 - [Configure liveness, readiness and startup probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+- [Service application protocol](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol)
+- [Network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 - [Cloud Run container health checks](https://docs.cloud.google.com/run/docs/configuring/healthchecks)
 - [GKE Ingress health checks](https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/ingress-health-checks)
 - [GKE Gateway health check policy](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources)
-- [Service application protocol](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol)
 - [gRPC health checking protocol](https://github.com/grpc/grpc/blob/master/doc/health-checking.md)
 - [GitLab health check endpoints](https://docs.gitlab.com/administration/monitoring/health_check/)
 - [Prometheus management API](https://prometheus.io/docs/prometheus/latest/management_api/)
