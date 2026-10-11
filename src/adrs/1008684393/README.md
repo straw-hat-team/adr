@@ -155,61 +155,74 @@ prove.
   `/grpc.health.v1.Health/Watch`, are fixed by the gRPC protocol and **MUST**
   be treated as operational paths wherever this ADR says `/-/`.
 
-| Path          | Port               | Purpose                                   |
-| ------------- | ------------------ | ----------------------------------------- |
-| `/-/readyz`   | every serving port | Readiness and load balancer health checks |
-| `/-/startupz` | every serving port | Startup                                   |
-| `/-/livez`    | every serving port | Liveness                                  |
+| Path           | Port               | Purpose                                   |
+| -------------- | ------------------ | ----------------------------------------- |
+| `/-/readiness` | every serving port | Readiness and load balancer health checks |
+| `/-/liveness`  | every serving port | Liveness and startup                      |
+| `/-/startup`   | every serving port | Startup, only when liveness cannot serve  |
 
 ### Health checks
 
-- Every service **MUST** answer `/-/readyz`, `/-/startupz` and `/-/livez`,
-  whether or not a deployment probes them today. Which probes run is a
-  deployment choice that changes with the platform and the load, and turning
-  one on **MUST NOT** wait for a code change. A service with nothing slow to
-  initialize answers `/-/startupz` the same as `/-/readyz` once it has started.
+- Every service **MUST** answer `/-/readiness` and `/-/liveness`, whether or
+  not a deployment probes them today. Which probes run is a deployment choice
+  that changes with the platform and the load, and turning one on **MUST NOT**
+  wait for a code change.
 - Every deployment **MUST** declare a readiness probe. It is the only probe
   that protects callers: without it, a pod gets traffic before it can serve and
   keeps getting it while it cannot.
 - A deployment **SHOULD** declare a startup probe when initialization can
-  outlast a few readiness periods, such as loading data or warming caches.
+  outlast a few readiness periods, such as loading data or warming caches. The
+  startup probe **SHOULD** target `/-/liveness` with a higher
+  `failureThreshold`, the way the Kubernetes control plane probes its own
+  components: it asks the same question as liveness with a longer budget, and
+  liveness does not run until it passes.
+- A service **MAY** answer `/-/startup` as well when its startup cannot be
+  judged by `/-/liveness`, such as a one-time step whose result the process
+  forgets once it is done. It **MUST NOT** add other probe paths.
 - A deployment **MAY** declare a liveness probe, and **SHOULD** do so when the
   process can hang without exiting, such as a deadlocked event loop. A process
   that crashes is restarted without one, and a liveness probe that checks the
   wrong thing restarts healthy pods.
-- Probes **MUST** use the operational paths with `httpGet`. These follow the
-  names the Kubernetes API server uses since it deprecated its own `/healthz`
-  endpoint, and you **MUST NOT** add a `/-/healthz` beside them, so every
-  service has one spelling per probe. HTTP is the one check every platform can
-  run: kubelet, Cloud Run and every load balancer speak it, while GKE Ingress
-  cannot build a gRPC health check and Cloud Run's HTTP probes require HTTP/1.
+- Probes **MUST** use the operational paths with `httpGet`. The paths take the
+  names of the Kubernetes probe fields and of the `grpc.health.v1` services
+  below, so each check has one name everywhere. HTTP is the one check every
+  platform can run: kubelet, Cloud Run and every load balancer speak it, while
+  GKE Ingress cannot build a gRPC health check and Cloud Run's HTTP probes
+  require HTTP/1.
+- A probe path **MAY** list its individual checks with `?verbose`, one check
+  name and its pass or fail per line, so an operator can see why a pod is not
+  ready.
 - A deployment whose probed port serves only gRPC over plaintext **MAY** use
   Kubernetes `grpc` probes against `grpc.health.v1` instead, naming the
-  `readiness`, `startup` and `liveness` services for each probe. The kubelet
-  gRPC probe cannot use TLS, so a TLS port **MUST** use `httpGet` with
-  `scheme: HTTPS`.
+  `readiness` and `liveness` services, and `startup` where the service answers
+  it. The kubelet gRPC probe cannot use TLS, so a TLS port **MUST** use
+  `httpGet` with `scheme: HTTPS`.
 - Kubernetes probes **MUST** target the `private` port when the service has
   one, and the `public` port otherwise.
 - A service that serves gRPC or Connect **MUST** also implement
   `grpc.health.v1` on its serving ports, for gRPC clients and load balancers
-  that check health themselves. It **MUST** report the `readiness`, `startup`
-  and `liveness` services with the same answers as the matching `/-/` paths,
-  and the empty service name the same as `readiness`.
+  that check health themselves. It **MUST** report the `readiness` and `liveness`
+  services, and `startup` where the service answers `/-/startup`, with the same
+  answers as the matching `/-/` paths, and the empty service name the same as
+  `readiness`.
 - A probe on a serving port takes the same listener, TLS and concurrency
   limits as real traffic, so a hung or saturated listener fails it. A probe on
   the `debug` port **MUST NOT** stand in for it.
 
 #### What each probe may check
 
-| Probe     | Answers                       | Failing it               | May check                                 |
-| --------- | ----------------------------- | ------------------------ | ----------------------------------------- |
-| Startup   | has initialization finished   | kills the container      | the service's own initialization          |
-| Liveness  | can the process make progress | restarts the container   | nothing outside the process               |
-| Readiness | should requests reach the pod | removes it from rotation | its own connections to required services  |
+| Probe     | Answers                   | Failing it               | May check                                 |
+| --------- | ------------------------- | ------------------------ | ----------------------------------------- |
+| Startup   | initialization finished   | kills the container      | its own initialization                    |
+| Liveness  | process can make progress | restarts the container   | its own initialization, then nothing else |
+| Readiness | requests should reach it  | removes it from rotation | its connections to required services      |
 
 - Startup **SHOULD** be used instead of a long initial delay on liveness. It
   **MUST** cover only the service's own initialization; a dependency that is
   down at boot is a readiness concern, not a reason to kill the container.
+- `/-/liveness` **MUST** fail until the service's own initialization is done,
+  so it can serve the startup probe. This is safe because liveness does not
+  run until startup passes.
 - Liveness **MUST NOT** depend on a database, broker or any other service,
   directly or through a shared check. A restart cannot fix a dependency, and
   every pod would restart at the same moment and reconnect to a dependency
@@ -262,7 +275,7 @@ prove.
   `backendRefs`, and on Ingress it is a `Prefix` path pointing at a backend
   that answers 404. Load balancer health checks are unaffected, since they
   reach the pod directly rather than through the route.
-- A load balancer health check **MUST** target `/-/readyz` on the port it
+- A load balancer health check **MUST** target `/-/readiness` on the port it
   routes to. Where the controller does not read it from the readiness probe,
   such as GKE Gateway, you **MUST** declare it explicitly (a
   `HealthCheckPolicy` on GKE), since the default check requests a path the
@@ -273,10 +286,10 @@ prove.
   ```txt
   pod
   ├── public port    Public audience: gRPC, Connect, MCP, HTTP
-  │                  /-/livez, /-/readyz, /-/startupz, grpc.health.v1
+  │                  /-/liveness, /-/readiness, grpc.health.v1
   │                  ← edge (prefix /, never /-/) ← internet
   ├── private port   Private audience: gRPC, Connect, MCP, HTTP
-  │                  /-/livez, /-/readyz, /-/startupz, grpc.health.v1
+  │                  /-/liveness, /-/readiness, grpc.health.v1
   │                  ← Service ← other workloads, admin applications
   │                  ← kubelet probes
   ├── debug port     profiling and debugging
