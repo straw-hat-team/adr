@@ -75,13 +75,21 @@ curl -s -D - -o /dev/null https://pubsub.googleapis.com/v1/projects/x/topics
 
 ## One port for gRPC and HTTP
 
-Application Load Balancers talk to backends over HTTP, HTTPS or HTTP/2. The
-gRPC backend protocol exists only for Cloud Service Mesh
+Application Load Balancers talk to backends over `HTTP`, `HTTPS`, `HTTP2` or
+`H2C`. `HTTP2` "uses HTTP/2 and TLS (HTTP/2 without encryption isn't
+supported.)", while `H2C` "uses HTTP/2 over TCP. TLS isn't required. H2C isn't
+supported for classic Application Load Balancers". The load balancer "doesn't
+fall back to a different protocol" when the backend does not speak the one
+configured. The gRPC backend protocol exists only for Cloud Service Mesh
 ([Backend services
 overview](https://docs.cloud.google.com/load-balancing/docs/backend-service)),
 so a load balancer reaches gRPC and other routes on one port through an
-HTTP/2 backend. The rule to "use only gRPC or TCP health checks" applies to
-backend services whose protocol is gRPC, not to an HTTP/2 backend
+`HTTP2` backend for a TLS port, or an `H2C` backend for a plaintext one. H2C
+is also available to load balancers created by the GKE Gateway controller
+([External Application Load Balancer
+overview](https://docs.cloud.google.com/load-balancing/docs/https)). The
+rule to "use only gRPC or TCP health checks" applies to backend services whose
+protocol is gRPC, not to an `HTTP2` or `H2C` backend
 ([Health checks
 overview](https://docs.cloud.google.com/load-balancing/docs/health-check-concepts)).
 A gRPC health check passes only on status `OK` with `SERVING`, and comes in

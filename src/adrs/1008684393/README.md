@@ -91,6 +91,12 @@ prove.
 - When a Private call acts on behalf of a user, the caller **MUST** forward
   that user's identity, and the service **MUST** authorize against it rather
   than against the caller's own privileges.
+- A forwarded user identity **MUST** be a signed token that the service
+  validates itself, checking its signature, issuer, audience and expiry, such
+  as the user's access token or one exchanged for it with OAuth 2.0 Token
+  Exchange ([RFC 8693](https://www.rfc-editor.org/rfc/rfc8693)). Workload
+  authentication proves which workload is calling, not which user, so a
+  service **MUST NOT** accept a plain header naming the user.
 - A NetworkPolicy **SHOULD** admit only the workloads that are documented
   callers.
 
@@ -113,8 +119,10 @@ prove.
 #### Platform
 
 - Platform callers are the kubelet, load balancer health checks, the service
-  mesh and engineers debugging a single pod. They reach the service only
-  through operational paths and the debug port.
+  mesh's own health and control traffic, and engineers debugging a single pod.
+  They reach the service only through operational paths and the debug port.
+- A service mesh that carries requests for other callers is transport, not a
+  caller: each request keeps the audience of the workload that sent it.
 - Platform endpoints **MUST NOT** carry business data and **MUST NOT** change
   business state.
 
@@ -322,8 +330,10 @@ prove.
   reach the pod directly rather than through the route.
 - A load balancer in front of a port that carries gRPC and other routes
   **MUST** send both to that one port, and you **MUST NOT** open a second port
-  to suit it. Where a backend protocol carries both, such as HTTP/2 on a
-  Google Cloud Application Load Balancer, use one backend. Where it does not,
+  to suit it. Where a backend protocol carries both, use one backend: on a
+  Google Cloud Application Load Balancer that is `HTTP2` for a TLS port and
+  `H2C` for a plaintext one, which classic Application Load Balancers do not
+  support. Where it does not,
   such as an AWS Application Load Balancer, whose HTTP/2 target groups reject
   HTTP/1.1 clients, point two target groups at the same port: a gRPC one for
   the gRPC paths and an HTTP/1.1 one for everything else

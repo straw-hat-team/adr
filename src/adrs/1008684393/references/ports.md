@@ -9,8 +9,10 @@ NetworkPolicy controls "traffic flow at the IP address or port level (OSI
 layer 3 or 4)" and has no way to match an HTTP path
 ([Network
 Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)).
-Services, edge routes and load balancer target groups also point at ports, not
-paths.
+Services and load balancer target groups also select ports, not paths. Edge
+routes do match paths, at layer 7, but only for traffic already admitted to
+the port they point at, and the pod cannot tell which route a request came
+through.
 
 So a port is where one audience can be admitted and another refused. Two
 protocols spoken by the same audience gain nothing from separate ports: every
@@ -100,7 +102,8 @@ The full protocol table and health check defaults are in the
 
 ### Google Cloud Application Load Balancer
 
-One backend service with the HTTP/2 protocol carries both. The gRPC backend
+One backend service carries both: `HTTP2` for a TLS port, or `H2C` for a
+plaintext one, which classic Application Load Balancers do not support. The gRPC backend
 protocol belongs to Cloud Service Mesh
 ([Google Cloud research](./gcp.md#one-port-for-grpc-and-http)).
 
