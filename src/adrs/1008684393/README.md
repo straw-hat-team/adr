@@ -119,7 +119,10 @@ prove.
   told apart by path.
 - You **MUST NOT** add a port for a new protocol. A port exists only to put a
   trust boundary between audiences, so the network can expose one without the
-  other.
+  other. gRPC is HTTP/2 requests to `/{package}.{Service}/{Method}`, so it
+  shares a port with other routes the way Google's own APIs serve gRPC and
+  REST/JSON on one host and port
+  ([Google Cloud research](./references/gcp.md#one-endpoint-for-grpc-and-rest)).
 - Container ports and Service ports **MUST** be named after their audience:
   `public`, `private` and `debug`. Callers, routes and policies then refer to
   the audience by name instead of to a number.

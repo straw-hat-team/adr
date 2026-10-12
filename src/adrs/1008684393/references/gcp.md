@@ -43,6 +43,36 @@ require external administrative access"
 ([Private cluster
 concepts](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/legacy/network-isolation)).
 
+## One endpoint for gRPC and REST
+
+Google's own APIs serve gRPC and REST/JSON on the same host and port, told
+apart by path. An API service endpoint is "a network address that an API
+service uses to handle incoming API requests", such as
+`https://pubsub.googleapis.com`
+([API design
+glossary](https://docs.cloud.google.com/apis/design/glossary)). Each method is
+defined once as an RPC, and an HTTP binding on it also presents that method as
+a REST/JSON resource path
+([AIP-127: HTTP and gRPC
+Transcoding](https://google.aip.dev/127)). The URLs differ, the endpoint does
+not:
+
+| Call                   | Path on `pubsub.googleapis.com:443`           | Answers with                      |
+| ---------------------- | --------------------------------------------- | --------------------------------- |
+| gRPC `ListTopics`      | `POST /google.pubsub.v1.Publisher/ListTopics` | `application/grpc`, `grpc-status` |
+| REST `projects.topics` | `GET /v1/projects/{project}/topics`           | `application/json`                |
+
+Observed on 2026-10-12 with unauthenticated requests: the gRPC path answered
+`content-type: application/grpc` with a `grpc-status` trailer, and the REST
+path answered `content-type: application/json`, both over HTTP/2 on port 443:
+
+```sh
+curl -s --http2 -D - -o /dev/null -X POST \
+  -H 'content-type: application/grpc' -H 'te: trailers' \
+  https://pubsub.googleapis.com/google.pubsub.v1.Publisher/ListTopics
+curl -s -D - -o /dev/null https://pubsub.googleapis.com/v1/projects/x/topics
+```
+
 ## Identity
 
 Network reach and identity are separate settings. On Cloud Run, "IAM
