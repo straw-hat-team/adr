@@ -24,7 +24,9 @@ The kubelet requests whatever path a probe names. An `httpGet` probe passes on
 any status from 200 to 399. The `grpc` probe, generally available since 1.27,
 calls `grpc.health.v1` `Check` with an optional service name over HTTP/2
 without TLS
-([KEP-2727](https://www.kubernetes.dev/resources/keps/2727/)).
+([KEP-2727](https://www.kubernetes.dev/resources/keps/2727/)). TLS needs the
+`GRPCContainerProbeTLS` feature gate, alpha and off by default since 1.37
+([Probes](https://kubernetes.io/docs/concepts/workloads/pods/probes/)).
 
 The API server serves `/livez` and `/readyz`. `/healthz` has been deprecated
 since 1.16 because one endpoint could not say whether the server should be

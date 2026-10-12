@@ -122,7 +122,8 @@ prove.
   other. gRPC is HTTP/2 requests to `/{Service}/{Method}`, so it
   shares a port with other routes the way Google's own APIs serve gRPC and
   REST/JSON on one host and port
-  ([Google Cloud research](./references/gcp.md#one-endpoint-for-grpc-and-rest)).
+  ([Google Cloud research](./references/gcp.md#one-endpoint-for-grpc-and-rest);
+  [port research](./references/ports.md)).
 - Serving container ports and Service ports **MUST** be named after their
   audience: `public` or `private`. Callers, routes and policies then refer to
   the audience by name instead of to a number.
@@ -204,8 +205,8 @@ prove.
 - A deployment whose probed port serves only gRPC over plaintext **MAY** use
   Kubernetes `grpc` probes against `grpc.health.v1` instead, naming the
   `readiness` and `liveness` services, and `startup` where the service answers
-  it. The kubelet gRPC probe cannot use TLS, so a TLS port **MUST** use
-  `httpGet` with `scheme: HTTPS`.
+  it. The kubelet gRPC probe uses TLS only behind an alpha feature gate, so a
+  TLS port **MUST** use `httpGet` with `scheme: HTTPS`.
 - Kubernetes probes **MUST** target the `private` port when the service has
   one, and the `public` port otherwise.
 - A service that serves gRPC or Connect **MUST** also register the standard
@@ -376,3 +377,4 @@ against its own documentation:
 - [Azure](./references/azure.md)
 - [Kubernetes](./references/kubernetes.md)
 - [Platforms and frameworks](./references/platforms.md)
+- [Ports](./references/ports.md)
