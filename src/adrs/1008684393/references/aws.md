@@ -35,6 +35,25 @@ reached through a VPC Ingress Connection
 ([Enabling private
 endpoints](https://docs.aws.amazon.com/apprunner/latest/dg/network-pl.html)).
 
+## One port for gRPC and HTTP
+
+An Application Load Balancer target group has a protocol version of HTTP/1.1,
+HTTP/2 or gRPC, and each accepts only some client protocols
+([Target groups for Application Load
+Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html)):
+
+| Client sends | `HTTP1` target group | `HTTP2` target group          | `GRPC` target group |
+| ------------ | -------------------- | ----------------------------- | ------------------- |
+| HTTP/1.1     | success              | error                         | error               |
+| HTTP/2       | success              | success                       | success for `POST`  |
+| gRPC         | error                | success if targets speak gRPC | success             |
+
+No single target group accepts both HTTP/1.1 clients and gRPC. A gRPC target
+group lets the load balancer route "based on the package, service, and
+method", so a port that carries both is served by two target groups pointing
+at it: a gRPC one behind listener rules for the gRPC paths, and an HTTP/1.1
+one for everything else. Both versions need an HTTPS listener.
+
 ## Identity
 
 Network reach and identity are separate settings. Lambda function URLs take an

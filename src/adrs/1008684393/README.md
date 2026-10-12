@@ -304,11 +304,24 @@ prove.
   `backendRefs`, and on Ingress it is a `Prefix` path pointing at a backend
   that answers 404. Load balancer health checks are unaffected, since they
   reach the pod directly rather than through the route.
+- A load balancer in front of a port that carries gRPC and other routes
+  **MUST** send both to that one port, and you **MUST NOT** open a second port
+  to suit it. Where a backend protocol carries both, such as HTTP/2 on a
+  Google Cloud Application Load Balancer, use one backend. Where it does not,
+  such as an AWS Application Load Balancer, whose HTTP/2 target groups reject
+  HTTP/1.1 clients, point two target groups at the same port: a gRPC one for
+  the gRPC paths and an HTTP/1.1 one for everything else
+  ([AWS research](./references/aws.md#one-port-for-grpc-and-http);
+  [Google Cloud research](./references/gcp.md#one-port-for-grpc-and-http)).
 - A load balancer health check **MUST** target `/-/readiness` on the port it
-  routes to. Where the controller does not read it from the readiness probe,
+  routes to, except that a target group or backend that speaks only gRPC
+  **MUST** check `grpc.health.v1` with the empty service name and expect
+  `SERVING`. Where the controller does not read it from the readiness probe,
   such as GKE Gateway, you **MUST** declare it explicitly (a
   `HealthCheckPolicy` on GKE), since the default check requests a path the
-  service may not answer.
+  service may not answer. On AWS, a gRPC health check **MUST** expect status
+  `0`, since the default of `12` (`UNIMPLEMENTED`) passes a service that does
+  not answer health at all.
 - A NetworkPolicy **SHOULD** admit the edge to the `public` port only, and
   documented callers to the `private` port only.
 

@@ -73,6 +73,20 @@ curl -s --http2 -D - -o /dev/null -X POST \
 curl -s -D - -o /dev/null https://pubsub.googleapis.com/v1/projects/x/topics
 ```
 
+## One port for gRPC and HTTP
+
+Application Load Balancers talk to backends over HTTP, HTTPS or HTTP/2. The
+gRPC backend protocol exists only for Cloud Service Mesh
+([Backend services
+overview](https://docs.cloud.google.com/load-balancing/docs/backend-service)),
+so a load balancer reaches gRPC and other routes on one port through an
+HTTP/2 backend. The rule to "use only gRPC or TCP health checks" applies to
+backend services whose protocol is gRPC, not to an HTTP/2 backend
+([Health checks
+overview](https://docs.cloud.google.com/load-balancing/docs/health-check-concepts)).
+A gRPC health check passes only on status `OK` with `SERVING`, and comes in
+`grpc` and `grpc_with_tls` forms.
+
 ## Identity
 
 Network reach and identity are separate settings. On Cloud Run, "IAM
