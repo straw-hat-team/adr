@@ -165,13 +165,12 @@ This approach provides both coarse-grained control (drop sensitive errors entire
 
 - Other services the organization owns, even within the same security domain
 - Internal tools used by the organization's own people
-- Trusted partner integrations
 - Multi-tenant shared infrastructure
 
 **PUBLIC Boundary:**
 
 - External client applications
-- Third-party integrations
+- Third-party integrations, including trusted partners, since they are outside the organization
 - Internet-facing APIs
 - Untrusted or unknown consumers
 
@@ -195,6 +194,8 @@ internal failures.
 - Access to telemetry backends **MUST** be treated as access to the `INTERNAL` detail they hold.
 - Secrets, such as credentials inside a connection string, **MUST** be redacted before they are recorded, even as
   `INTERNAL`. `INTERNAL` means the detail does not leave the service, not that it is safe to store anywhere.
+- `debug_info` follows the same rule at every visibility level: it is recorded in the producing service's telemetry
+  and stripped before the error leaves that service.
 
 ### Validation and Input Handling
 
@@ -286,7 +287,7 @@ The debug information consists of:
 - **Stack Entries**: Call stack frames showing the execution path leading to the error, typically including file names, method names, and line numbers
 - **Detail**: Contextual information about what the system was attempting when the error occurred, such as database queries, timeout values, or other technical specifics
 
-**Critical**: This information must be stripped when errors cross trust boundaries to prevent information leakage. Generate debug information conditionally based on error severity or type rather than automatically for every error.
+**Critical**: This information must be stripped whenever an error leaves the service that produced it, whatever the error's visibility, and kept in that service's telemetry as described in [Where INTERNAL Detail Goes](#where-internal-detail-goes). Generate debug information conditionally based on error severity or type rather than automatically for every error.
 
 ### Localized User Communication
 
@@ -311,7 +312,7 @@ The new metadata structure with granular visibility control addresses the need f
 - **Granular Visibility Control**: Each metadata field has its own visibility level (`PUBLIC`, `PRIVATE`, `INTERNAL`), allowing precise control over information exposure
 - **Automatic Filtering**: Implementations must filter metadata entries based on the current trust boundary, only including entries where `entry.visibility <= currentBoundary`
 - **Principle of Least Information**: Set appropriate visibility levels - use `INTERNAL` for sensitive debugging data, `PRIVATE` for organizational context, and `PUBLIC` for client-safe information
-- **Critical Security Risk**: The entire `debug_info` field (including both `stack_entries` and `detail`) contains sensitive internal information and must be completely stripped at trust boundaries
+- **Critical Security Risk**: The entire `debug_info` field (including both `stack_entries` and `detail`) contains sensitive internal information and must be completely stripped whenever the error leaves the service that produced it
 - **Regular Audits**: Periodically audit metadata visibility assignments and debug information for compliance with data protection policies
 
 **Filtering Logic Example:**
@@ -337,7 +338,7 @@ First, check the error's top-level `visibility` field:
 
 For errors that pass Tier 1, apply field-level filtering:
 
-- **Always strip**: `debug_info` at all external boundaries
+- **Always strip**: `debug_info` whenever the error leaves the service that produced it
 - **Conditionally strip**: `source_id`, `time` based on trust level
 - **Metadata filtering**: Remove metadata entries where `entry.visibility > currentBoundary`
 - **Nested errors**: Apply both tiers recursively to `causes` array
@@ -399,7 +400,8 @@ const publicResponse = {
 
 #### Boundary Examples
 
-**Internal Systems**: Generate complete error information with all fields for comprehensive debugging.
+**Inside the Producing Service**: Generate complete error information with all fields for comprehensive
+debugging, and record it in that service's telemetry.
 
 **API Boundaries**:
 
@@ -708,12 +710,11 @@ enum Visibility {
    */
   INTERNAL = 0,
   /**
-   * The error can be shared with other services within the same organization
-   * or trusted environment, but not with external third parties. This allows
-   * for more detailed error information, including `debug_info`, to be
-   * exchanged between internal systems. The `debug_info` field MUST be
-   * stripped before the error is sent outside the trusted organization
-   * boundary.
+   * The error can be shared with other services the organization owns and
+   * with internal tools used by its own people, but never with anyone outside
+   * the organization, including trusted partners. The `debug_info` field MUST
+   * be stripped before the error leaves the service that produced it, at
+   * every visibility level.
    */
   PRIVATE = 1,
   /**
@@ -784,11 +785,10 @@ type Help = {
 /**
  * Contains the stack trace of the error and other debug information.
  *
- * This field is intended for internal logging and debugging only. It MUST be
- * stripped from any error payload sent to an external client or end-user.
- * Exposure of this information can lead to severe security vulnerabilities.
- * In practice, you should only send the debug information to internal logging
- * systems and remove it when sending the error to the client.
+ * This field is intended for the producing service's own telemetry only. It
+ * MUST be stripped from any error payload that leaves that service, including
+ * one sent to another service the organization owns. Exposure of this
+ * information can lead to severe security vulnerabilities.
  */
 type DebugInfo = {
   /**
