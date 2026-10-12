@@ -111,6 +111,13 @@ controller infers what it can, such as path, port and protocol, from the
 serving Pods' `readinessProbe`, and uses defaults for the rest
 ([Troubleshooting Ingress health
 checks](https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/ingress-health-checks)).
+It reads the probe only when its port "must match the actual port your
+application is listening on within the container", that `containerPort` "must
+match the Service's `targetPort`", and the Ingress backend references that
+Service port. A readiness probe on another port, such as `private` while the
+Ingress routes to `public`, leaves the default `/` check in place, so the
+health check has to come from a `BackendConfig` with `healthCheck.requestPath`
+and `healthCheck.port`.
 GKE Gateway does not: it requests `/` unless a `HealthCheckPolicy` says
 otherwise
 ([Configure Gateway

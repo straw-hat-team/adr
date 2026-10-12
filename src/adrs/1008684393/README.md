@@ -216,7 +216,9 @@ prove.
   it. The kubelet gRPC probe uses TLS only behind an alpha feature gate, so a
   TLS port **MUST** use `httpGet` with `scheme: HTTPS`.
 - Kubernetes probes **MUST** target the `private` port when the service has
-  one, and the `public` port otherwise.
+  one, and the `public` port otherwise. A load balancer that routes to
+  `public` then needs its health check declared explicitly, as described
+  under load balancers below.
 - A service that serves gRPC or Connect **MUST** also register the standard
   `grpc.health.v1` service on every serving port, next to its own services and
   in addition to the `/-/` paths, not instead of them. gRPC tooling checks
@@ -333,7 +335,15 @@ prove.
   `SERVING`. Where the controller does not read it from the readiness probe,
   such as GKE Gateway, you **MUST** declare it explicitly (a
   `HealthCheckPolicy` on GKE), since the default check requests a path the
-  service may not answer. On AWS, a gRPC health check **MUST** set its path
+  service may not answer. GKE Ingress and the Application Gateway Ingress
+  Controller read it from the readiness probe only when that probe targets
+  the port they route to, so a service that has both `public` and `private`,
+  whose probes target `private`, **MUST** declare the health check for
+  `public` explicitly: a `BackendConfig` on GKE Ingress, and the
+  `appgw.ingress.kubernetes.io/health-probe-path` and `health-probe-port`
+  annotations on the Application Gateway Ingress Controller
+  ([Google Cloud research](./references/gcp.md#health-checks);
+  [Azure research](./references/azure.md#health-checks)). On AWS, a gRPC health check **MUST** set its path
   to `/grpc.health.v1.Health/Check` and expect status `0`, since the defaults,
   `/AWS.ALB/healthcheck` and `12` (`UNIMPLEMENTED`), pass a service that does
   not answer health at all.

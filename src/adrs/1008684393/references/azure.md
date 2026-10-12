@@ -83,6 +83,13 @@ answers at the `backend-path-prefix` annotation or the Ingress path, and it
 uses defaults, such as `/`, only for properties it cannot infer
 ([Health probes with
 AGIC](https://learn.microsoft.com/azure/application-gateway/ingress-controller-add-health-probes)).
+It reads only `httpGet` probes, and "probing on a port other than the one
+exposed on the pod is currently not supported". A probe on another port is
+replaced by the `appgw.ingress.kubernetes.io/health-probe-path` and
+`appgw.ingress.kubernetes.io/health-probe-port` annotations on the Ingress,
+which default to `/` and `80`
+([AGIC
+annotations](https://learn.microsoft.com/azure/application-gateway/ingress-controller-annotations#custom-health-probe)).
 
 Microsoft documents the Health Endpoint Monitoring pattern but prescribes no
 path names
