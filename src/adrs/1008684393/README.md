@@ -115,6 +115,11 @@ prove.
   only through an identity-aware proxy or the private network.
 - Every state-changing operation made through an internal tool **MUST** be
   audit logged with that person's identity.
+- Internal tools receive errors at `PRIVATE` visibility, the same as any other
+  Private caller, and never `INTERNAL` detail. A person investigating a failure
+  follows the error's `id` and trace context into the producing service's
+  telemetry
+  ([ADR#0129349218](../0129349218/README.md#where-internal-detail-goes)).
 
 #### Platform
 
@@ -150,6 +155,12 @@ prove.
   Its container port **MUST** be named `debug`. When it binds anything other
   than loopback, a NetworkPolicy **MUST** admit only the callers allowed to
   debug it, since a pod port is reachable without a Service.
+- The `debug` port carries what looks inside the running process: CPU and heap
+  profiles, async runtime inspectors such as `tokio-console`, and runtime
+  switches such as a log level. It **MUST NOT** move to a `/-/debug` path on a
+  serving port. Heap dumps can hold tokens and user data, profiles cost real
+  CPU and memory, and everyone who reaches a serving port would reach them.
+  On loopback, only someone allowed to `kubectl port-forward` to the pod can.
 
 ### Path layout
 
@@ -251,6 +262,10 @@ prove.
 
   The empty name is what gRPC clients and load balancers ask for by default.
   `startup` is reported only by a service that answers `/-/startup`.
+- A service **MUST NOT** register `grpc.health.v1` service names other than
+  those above, such as one per gRPC service or per dependency. Every caller
+  can then check any service the same way, and the state cannot split across
+  names that answer differently. Individual checks belong in `?verbose`.
 - A probe on a serving port takes the same listener, TLS and concurrency
   limits as real traffic, so a hung or saturated listener fails it. A probe on
   the `debug` port **MUST NOT** stand in for it.
@@ -378,6 +393,8 @@ prove.
 
 - [ADR#1631648331](../1631648331/README.md): Rust is the language for new
   services and programs
+- [ADR#0129349218](../0129349218/README.md): error visibility levels, and
+  where `INTERNAL` detail goes
 - [Kubernetes API health endpoints](https://kubernetes.io/docs/reference/using-api/health-checks/)
 - [Configure liveness, readiness and startup probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 - [Service application protocol](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol)
