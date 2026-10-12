@@ -30,6 +30,9 @@ public endpoint, so an app with external ingress inside it is still not on the
 internet
 ([Ingress](https://learn.microsoft.com/azure/container-apps/ingress-overview);
 [Networking](https://learn.microsoft.com/azure/container-apps/networking)).
+Internal ingress is not a complete boundary: "An app with internal ingress can
+still receive traffic from outside the environment if it's referenced as a
+target in an environment-level HTTP route configuration".
 The app declares its audience and the environment decides whether that
 audience includes the internet.
 
@@ -75,7 +78,9 @@ must not block
 ([Manage health
 probes](https://learn.microsoft.com/azure/load-balancer/manage-probes-how-to)).
 The Application Gateway Ingress Controller derives its probe from the Pod's
-`readinessProbe` or `livenessProbe` and falls back to `/`
+`readinessProbe` or `livenessProbe`. Without either, it assumes the service
+answers at the `backend-path-prefix` annotation or the Ingress path, and it
+uses defaults, such as `/`, only for properties it cannot infer
 ([Health probes with
 AGIC](https://learn.microsoft.com/azure/application-gateway/ingress-controller-add-health-probes)).
 

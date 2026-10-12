@@ -119,23 +119,28 @@ prove.
   told apart by path.
 - You **MUST NOT** add a port for a new protocol. A port exists only to put a
   trust boundary between audiences, so the network can expose one without the
-  other. gRPC is HTTP/2 requests to `/{package}.{Service}/{Method}`, so it
+  other. gRPC is HTTP/2 requests to `/{Service}/{Method}`, so it
   shares a port with other routes the way Google's own APIs serve gRPC and
   REST/JSON on one host and port
   ([Google Cloud research](./references/gcp.md#one-endpoint-for-grpc-and-rest)).
-- Container ports and Service ports **MUST** be named after their audience:
-  `public`, `private` and `debug`. Callers, routes and policies then refer to
+- Serving container ports and Service ports **MUST** be named after their
+  audience: `public` or `private`. Callers, routes and policies then refer to
   the audience by name instead of to a number.
 - Every serving port **MUST** accept both HTTP/1.1 and HTTP/2. gRPC requires
   HTTP/2, while health probes and most MCP and browser clients use HTTP/1.1.
 - You **MAY** run a `debug` port for profiling and debugging. It **MUST** bind
   loopback by default, **MUST** require an explicit opt-in to bind any other
   interface, and **MUST NOT** be referenced by a Service, a route or a probe.
+  Its container port **MUST** be named `debug`. When it binds anything other
+  than loopback, a NetworkPolicy **MUST** admit only the callers allowed to
+  debug it, since a pod port is reachable without a Service.
 
 ### Path layout
 
 - gRPC **MUST** be served at its canonical root paths,
-  `/{package}.{Service}/{Method}`, and **MUST NOT** be mounted under a prefix
+  `/{Service}/{Method}`, where `{Service}` is the fully qualified service
+  name (`acme.billing.v1.Invoices`, or just `Invoices` for a proto file with
+  no package), and **MUST NOT** be mounted under a prefix
   such as `/rpc/`. gRPC clients, grpcurl, reflection, gRPC probes, load
   balancer health checks and service meshes all expect it there, and gRPC
   servers put it there by default.
@@ -319,8 +324,9 @@ prove.
   `SERVING`. Where the controller does not read it from the readiness probe,
   such as GKE Gateway, you **MUST** declare it explicitly (a
   `HealthCheckPolicy` on GKE), since the default check requests a path the
-  service may not answer. On AWS, a gRPC health check **MUST** expect status
-  `0`, since the default of `12` (`UNIMPLEMENTED`) passes a service that does
+  service may not answer. On AWS, a gRPC health check **MUST** set its path
+  to `/grpc.health.v1.Health/Check` and expect status `0`, since the defaults,
+  `/AWS.ALB/healthcheck` and `12` (`UNIMPLEMENTED`), pass a service that does
   not answer health at all.
 - A NetworkPolicy **SHOULD** admit the edge to the `public` port only, and
   documented callers to the `private` port only.

@@ -73,10 +73,11 @@ works](https://docs.aws.amazon.com/verified-access/latest/ug/how-it-works.html))
 
 ## Health checks
 
-Target group health checks request `/` and expect `200` by default. For gRPC
-targets the default success code is `12`, `UNIMPLEMENTED`, so a service that
-does not implement the gRPC health protocol still passes; a service that does
-should expect `0`
+HTTP target group health checks request `/` and expect `200` by default. gRPC
+target group health checks call `/AWS.ALB/healthcheck` and expect `12`,
+`UNIMPLEMENTED`, by default, so a service that implements no health method at
+all still passes. Checking `grpc.health.v1` takes setting the path to
+`/grpc.health.v1.Health/Check` and the success code to `0`
 ([Target group health
 checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html)).
 

@@ -38,7 +38,8 @@ apps](https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps
 
 - GitLab serves `/-/health`, `/-/readiness` and `/-/liveness` on its main port
   ([Health check](https://docs.gitlab.com/administration/monitoring/health_check/)).
-- Prometheus serves `/-/healthy`, `/-/ready`, `/-/reload` and `/-/quit`
+- Prometheus serves `/-/healthy` and `/-/ready`, plus `/-/reload` and
+  `/-/quit` once `--web.enable-lifecycle` is set
   ([Management API](https://prometheus.io/docs/prometheus/latest/management_api/)).
 - Spring Boot Actuator serves `/actuator/health/liveness` and
   `/actuator/health/readiness`, optionally on a separate management port

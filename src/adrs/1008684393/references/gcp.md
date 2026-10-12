@@ -105,8 +105,10 @@ overview](https://docs.cloud.google.com/iap/docs/concepts-overview)).
 
 ## Health checks
 
-GKE Ingress builds its load balancer health check outside the cluster and
-derives the path and port from the Pod's `readinessProbe`
+GKE Ingress builds its load balancer health check outside the cluster. A
+`BackendConfig` on the Service takes precedence; without one, the GKE Ingress
+controller infers what it can, such as path, port and protocol, from the
+serving Pods' `readinessProbe`, and uses defaults for the rest
 ([Troubleshooting Ingress health
 checks](https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/ingress-health-checks)).
 GKE Gateway does not: it requests `/` unless a `HealthCheckPolicy` says
@@ -114,7 +116,12 @@ otherwise
 ([Configure Gateway
 resources](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources)).
 
-Load balancer health checks come from `35.191.0.0/16` and `130.211.0.0/22`
+Health check source ranges depend on the load balancer and backend type.
+For an external Application Load Balancer with instance group or zonal NEG
+backends, probes come from `35.191.0.0/16` (`2600:2d00:1:b029::/64` for IPv6)
+and proxied traffic also from `130.211.0.0/22`; regional and cross-region
+load balancers send traffic from their proxy-only subnet instead of
+`130.211.0.0/22`
 ([Firewall rules for health
 checks](https://docs.cloud.google.com/load-balancing/docs/firewall-rules)).
 For backend services that use gRPC, Google says to "use only gRPC or TCP
