@@ -12,7 +12,8 @@ category: Platform
 ## Context
 
 A service is called by very different parties: customers over the internet,
-other services inside the platform, staff operating the business, and the
+other services inside the platform, the organization's own people running the
+business, and the
 platform itself checking whether the service is alive. Each of these expects a
 different level of exposure and a different kind of authentication, and most
 services serve only some of them. Many services are called by other services
@@ -49,18 +50,23 @@ Every caller of a service belongs to exactly one audience. The audience, not
 the protocol, decides where a request enters the service and what it must
 prove.
 
-| Audience | Who calls                                   | Reaches the service through                   |
-| -------- | ------------------------------------------- | --------------------------------------------- |
-| Public   | Clients outside the organization's network  | The edge: an ingress or Gateway API route     |
-| Private  | Other workloads inside the platform         | The Service, never the edge                   |
-| Admin    | Staff operating the business                | An admin application that calls Private APIs  |
-| Internal | The platform running the service            | The pod network or loopback                   |
+| Audience | Who calls                                  | Reaches the service through               |
+| -------- | ------------------------------------------ | ----------------------------------------- |
+| Public   | Clients outside the organization's network | The edge: an ingress or Gateway API route |
+| Private  | Other workloads inside the platform        | The Service, never the edge               |
+| Internal | The organization's own people              | An internal tool that calls Private APIs  |
+| Platform | The platform running the service           | The pod network or loopback               |
 
 - Every service **MUST** document which of Public and Private it serves. A
   service that does not serve Public **MUST NOT** be referenced by any edge
   route. Serving only Private is the expected default; Public is the exception
   that has to be argued for.
-- Every service serves Internal. Admin is never served by the service directly.
+- Every service serves Platform. Internal is never served by the service
+  directly.
+- Internal names who is calling, not where a network reaches. Roles such as
+  admin or support are permissions granted inside Internal, not audiences of
+  their own, and "admin" is left free for a customer's own administrators.
+  ([audience research](./references/audiences.md)).
 
 #### Public
 
@@ -76,7 +82,8 @@ prove.
 #### Private
 
 - Private traffic **MUST** stay inside the platform network. A caller in another
-  cluster reaches it through an internal load balancer or the service mesh,
+  cluster reaches it through a load balancer that is not exposed to the
+  internet or through the service mesh,
   never through the public edge.
 - Every Private request **MUST** authenticate the calling workload, with mesh
   mTLS or a workload identity token. Being inside the cluster is not an
@@ -87,28 +94,28 @@ prove.
 - A NetworkPolicy **SHOULD** admit only the workloads that are documented
   callers.
 
-#### Admin
-
-- Tools for staff, such as dashboards and support consoles, **MUST** be
-  separate applications. A service **MUST NOT** host an admin UI or open an
-  admin port; every service that grew one would also grow its own login, CSRF
-  protection, session handling and UI dependencies.
-- Operations that only staff may perform **MUST** be ordinary Private API
-  operations guarded by authorization, so they share the service's validation,
-  audit trail and telemetry with every other call.
-- The admin application **MUST** authenticate staff through single sign-on with
-  multi-factor authentication, **MUST** call services with the operator's own
-  identity rather than a shared privileged account, and **MUST** be reachable
-  only through an identity-aware proxy or the private network.
-- Every state-changing admin operation **MUST** be audit logged with the
-  operator's identity.
-
 #### Internal
 
-- Internal callers are the kubelet, load balancer health checks, the service
+- Internal tools, such as dashboards and support consoles, **MUST** be
+  separate applications. A service **MUST NOT** host an internal UI or open a
+  port for one; every service that grew one would also grow its own login, CSRF
+  protection, session handling and UI dependencies.
+- Operations that only the organization's own people may perform **MUST** be
+  ordinary Private API operations guarded by authorization, so they share the
+  service's validation, audit trail and telemetry with every other call.
+- An internal tool **MUST** authenticate people through single sign-on with
+  multi-factor authentication, **MUST** call services with that person's own
+  identity rather than a shared privileged account, and **MUST** be reachable
+  only through an identity-aware proxy or the private network.
+- Every state-changing operation made through an internal tool **MUST** be
+  audit logged with that person's identity.
+
+#### Platform
+
+- Platform callers are the kubelet, load balancer health checks, the service
   mesh and engineers debugging a single pod. They reach the service only
   through operational paths and the debug port.
-- Internal endpoints **MUST NOT** carry business data and **MUST NOT** change
+- Platform endpoints **MUST NOT** carry business data and **MUST NOT** change
   business state.
 
 ### Listeners
@@ -153,7 +160,8 @@ prove.
 - The `/-/` prefix **MUST** be reserved for operational endpoints on every
   listener, and application routes **MUST NOT** live under it. A `-` segment
   cannot collide with a username, a resource ID or an API version, and GitLab
-  and Prometheus already use the same prefix, so operators recognize it.
+  and Prometheus already use the same prefix, so platform engineers recognize
+  it.
 - You **MUST NOT** use `/~/` or other prefixes for operational endpoints. `~`
   conventionally names a user's home directory in URLs, and a single prefix
   lets every proxy, route and instrumentation filter match one pattern.
@@ -200,8 +208,8 @@ prove.
   GKE Ingress cannot build a gRPC health check and Cloud Run's HTTP probes
   require HTTP/1.
 - A probe path **MAY** list its individual checks with `?verbose`, one check
-  name and its pass or fail per line, so an operator can see why a pod is not
-  ready.
+  name and its pass or fail per line, so a platform engineer can see why a pod
+  is not ready.
 - A deployment whose probed port serves only gRPC over plaintext **MAY** use
   Kubernetes `grpc` probes against `grpc.health.v1` instead, naming the
   `readiness` and `liveness` services, and `startup` where the service answers
@@ -339,7 +347,7 @@ prove.
   │                  ← edge (prefix /, never /-/) ← internet
   ├── private port   Private audience: gRPC, Connect, MCP, HTTP
   │                  /-/liveness, /-/readiness, grpc.health.v1
-  │                  ← Service ← other workloads, admin applications
+  │                  ← Service ← other workloads, internal tools
   │                  ← kubelet probes
   ├── debug port     profiling and debugging
   │                  loopback by default, never in a Service, route or probe
@@ -377,4 +385,5 @@ against its own documentation:
 - [Azure](./references/azure.md)
 - [Kubernetes](./references/kubernetes.md)
 - [Platforms and frameworks](./references/platforms.md)
+- [Audience names](./references/audiences.md)
 - [Ports](./references/ports.md)
