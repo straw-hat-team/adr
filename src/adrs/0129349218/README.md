@@ -133,15 +133,17 @@ The specification provides two levels of visibility control to handle different 
 
 The top-level `visibility` field determines whether the entire error should be exposed at a given trust boundary:
 
-- `INTERNAL`: **Drop the entire error** at PRIVATE/PUBLIC boundaries. Log internally but return a generic error message to external callers.
-- `PRIVATE`: **Show the error** within trusted organization boundaries, but drop it entirely at PUBLIC boundaries.
+- `INTERNAL`: **Never leaves the service that produced it.** Drop the entire error at PRIVATE/PUBLIC
+  boundaries, record it in the service's own telemetry, and return a generic error to the caller.
+- `PRIVATE`: **Show the error** to callers the organization owns, such as its other services and internal tools, but
+  drop it entirely at PUBLIC boundaries.
 - `PUBLIC`: **Safe for any client** including end-users; the error structure can be transmitted to external systems.
 
 #### Metadata-Level Visibility
 
 Each metadata entry has its own `visibility` field that controls field-level exposure within errors that are allowed through:
 
-- `INTERNAL`: Strip this metadata field when crossing PRIVATE/PUBLIC boundaries
+- `INTERNAL`: Strip this metadata field when the error leaves the service, at PRIVATE/PUBLIC boundaries
 - `PRIVATE`: Include in PRIVATE contexts, strip at PUBLIC boundaries
 - `PUBLIC`: Safe to include at any boundary
 
@@ -156,15 +158,13 @@ This approach provides both coarse-grained control (drop sensitive errors entire
 
 **INTERNAL Boundary:**
 
-- Same process/service internal operations
-- Database connections, internal APIs
-- Development and staging environments
-- Service-to-service within same security domain
+- Code inside the service that produced the error
+- That service's own telemetry: logs, span events and error reporting
 
 **PRIVATE Boundary:**
 
-- Cross-service within organization
-- Internal APIs behind authentication
+- Other services the organization owns, even within the same security domain
+- Internal tools used by the organization's own people
 - Trusted partner integrations
 - Multi-tenant shared infrastructure
 
@@ -180,6 +180,21 @@ This approach provides both coarse-grained control (drop sensitive errors entire
 - Service mesh proxies: Consider PRIVATE unless crossing organization boundary
 - Load balancers: Inherit boundary from upstream service
 - Multi-tenant systems: Each tenant represents separate boundary
+
+#### Where INTERNAL Detail Goes
+
+An `INTERNAL` error, and `INTERNAL` metadata on any error, stays in the service that produced it: in its code, and in
+its own telemetry, such as OpenTelemetry log records, exception events on the active span, and error reporting as
+described in [Logging Level and Error Reporting Usage](../7565730517/README.md). Being owned by the same organization
+does not make another service part of that boundary. `INTERNAL` detail such as connection details and stack traces
+would otherwise spread into every caller's logs and retries, and callers would come to depend on another service's
+internal failures.
+
+- Callers **MUST** receive the filtered error, whose `id` and trace context lead back to the producing service's
+  telemetry. Debugging across services follows the trace, not `INTERNAL` detail passed between them.
+- Access to telemetry backends **MUST** be treated as access to the `INTERNAL` detail they hold.
+- Secrets, such as credentials inside a connection string, **MUST** be redacted before they are recorded, even as
+  `INTERNAL`. `INTERNAL` means the detail does not leave the service, not that it is safe to store anywhere.
 
 ### Validation and Input Handling
 
@@ -313,7 +328,8 @@ The Error specification defines a rich structure that errors _can_ generate inte
 
 First, check the error's top-level `visibility` field:
 
-- **INTERNAL errors**: At PRIVATE/PUBLIC boundaries, drop the entire error. Log internally and return a generic error like `{"code": "INTERNAL", "message": "An internal error occurred"}`
+- **INTERNAL errors**: At PRIVATE/PUBLIC boundaries, drop the entire error. Record it in the service's own telemetry
+  and return a generic error like `{"code": "INTERNAL", "message": "An internal error occurred"}`
 - **PRIVATE errors**: At PUBLIC boundaries, drop the entire error and return a generic error
 - **PUBLIC errors**: Allow the error structure to proceed to Tier 2 filtering
 
@@ -683,8 +699,9 @@ type Metadata = Record<string, MetadataValue>;
 
 enum Visibility {
   /**
-   * The error is intended for internal consumption and must not be shown to
-   * the client. When an error with `INTERNAL` visibility is caught at a service
+   * The error is intended for internal consumption and never leaves the
+   * service that produced it, not even to another service in the same
+   * organization. When an error with `INTERNAL` visibility is caught at a service
    * boundary, it should be logged for debugging, but a generic, non-revealing
    * error message should be returned to the client. This is the most
    * restrictive scope.
