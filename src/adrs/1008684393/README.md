@@ -160,6 +160,7 @@ prove.
 | `/-/readiness` | every serving port | Readiness and load balancer health checks |
 | `/-/liveness`  | every serving port | Liveness and startup                      |
 | `/-/startup`   | every serving port | Startup, only when liveness cannot serve  |
+| `/-/metrics`   | `private` only     | Scraping, only where OTLP cannot reach    |
 
 ### Health checks
 
@@ -265,10 +266,17 @@ prove.
   Collector, configured through the standard `OTEL_*` environment variables
   (`OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_SERVICE_NAME`,
   `OTEL_RESOURCE_ATTRIBUTES`).
-- A service **MUST NOT** expose a metrics endpoint for scraping. Metrics leave
-  only over OTLP. A backend that wants to scrape reads from the Collector's
-  Prometheus exporter, and Prometheus itself can receive OTLP directly, so no
-  consumer needs the service to be scrapeable.
+- Metrics **MUST** leave over OTLP, and a service **SHOULD NOT** expose a
+  metrics endpoint for scraping. A backend that wants to scrape reads from the
+  Collector's Prometheus exporter, and Prometheus itself can receive OTLP
+  directly, so almost no consumer needs the service to be scrapeable.
+- Only when a consumer can reach neither OTLP nor a Collector, such as an
+  installation run by someone else with nothing but a Prometheus server,
+  **MAY** a service also serve `GET /-/metrics` in the Prometheus exposition
+  format. It **MUST** be off unless explicitly enabled, **MUST** be served
+  only on the `private` port, **MUST** expose the same instruments as the
+  OTLP export rather than metrics of its own, and the reason **MUST** be
+  documented with the service. OTLP export stays on beside it.
 - You **MUST** instrument every protocol on every serving port with the same
   pipeline, following the OpenTelemetry RPC semantic conventions for gRPC and
   Connect and the HTTP semantic conventions for everything else, so one
