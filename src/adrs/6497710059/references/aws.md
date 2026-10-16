@@ -28,7 +28,7 @@ The registry host is `<aws_account_id>.dkr.ecr.<region>.amazonaws.com`, and a
 push reference is that host followed by the repository name and tag, as in
 `docker push aws_account_id.dkr.ecr.region.amazonaws.com/prefix/my-new-repository:tag`
 (same page). The repository name is the whole path after the host, so
-`images/api` and `wasm-components/acme/greeter` are both valid names.
+`images/shop/api` and `wasm-components/acme/greeter` are both valid names.
 
 A Helm chart is pushed with `helm push <chart>.tgz oci://<host>/`, and the
 repository must already exist with "the name you used when creating the Helm
@@ -36,8 +36,8 @@ chart"
 ([Pushing a Helm
 chart](https://docs.aws.amazon.com/AmazonECR/latest/userguide/push-oci-artifact.html)).
 The documented example pushes to the bare host and so names the repository
-after the chart alone. Pushing to `oci://<host>/charts` and letting Helm append
-the chart name gives the repository `charts/<name>`. The ECR page does not
+after the chart alone. Pushing to `oci://<host>/charts/<system>` and letting Helm
+append the chart name gives the repository `charts/<system>/<name>`. The ECR page does not
 show that form, so it rests on Helm's behavior, not on AWS documentation.
 
 ## Creating repositories

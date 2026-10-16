@@ -62,8 +62,8 @@ enforced".
 On OCI, "the registry reference basename is inferred from the chart's name, and
 the tag is inferred from the chart's semantic version". The reference given to
 `helm push` "must not contain the basename or tag", so
-`helm push api-1.4.0.tgz oci://<registry>/charts` pushes to
-`<registry>/charts/api:1.4.0`
+`helm push api-1.4.0.tgz oci://<registry>/charts/shop` pushes to
+`<registry>/charts/shop/api:1.4.0`
 ([Use OCI-based registries](https://helm.sh/docs/topics/registries/)).
 
 Plus signs in versions are rewritten. The Helm source says "OCI artifact
@@ -136,7 +136,7 @@ commit SHA, and `prefix=` with an empty value removes the `sha-` mark.
 - id: meta
   uses: docker/metadata-action@v5
   with:
-    images: ghcr.io/${{ github.repository_owner }}/images/api
+    images: ghcr.io/${{ github.repository_owner }}/images/shop/api
     tags: |
       type=semver,pattern={{version}}
       type=semver,pattern={{major}}.x
@@ -155,7 +155,7 @@ registry.example.com/library/ubuntu:v1` and `crane tag
 registry.example.com/library/ubuntu:v0 v1`. A release then reads:
 
 ```sh
-crane tag ghcr.io/<owner>/images/api:<commit> "${GITHUB_REF_NAME#v}"
+crane tag ghcr.io/<owner>/images/shop/api:<commit> "${GITHUB_REF_NAME#v}"
 ```
 
 For a chart, the version comes from the git tag by the same shell expansion,

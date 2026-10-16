@@ -159,8 +159,8 @@ contain the basename or tag". The basename "is inferred from the chart's name"
 and the tag "is inferred from the chart's semantic version", which Helm calls
 "a strict requirement"
 ([Helm: Use OCI-based registries](https://helm.sh/docs/topics/registries/)).
-So `helm push api-1.4.0.tgz oci://ghcr.io/<owner>/charts` publishes
-`ghcr.io/<owner>/charts/api:1.4.0`. Helm's page has no `ghcr.io` push example,
+So `helm push api-1.4.0.tgz oci://ghcr.io/<owner>/charts/shop` publishes
+`ghcr.io/<owner>/charts/shop/api:1.4.0`. Helm's page has no `ghcr.io` push example,
 and says of `helm registry login` that the host is given without a scheme or a
 path. The same layout is observed in public use at
 `ghcr.io/stefanprodan/charts/podinfo` and

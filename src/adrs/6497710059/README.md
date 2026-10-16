@@ -44,10 +44,11 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 
 ### Paths
 
-- You **MUST** publish every artifact to
-  `<registry>/<kind>/<name>`, where `<registry>` is the prefix the registry
-  imposes (the ECR host, `ghcr.io/<owner>`, or
-  `<location>-docker.pkg.dev/<project>`).
+- You **MUST** publish every image and chart to
+  `<registry>/<kind>/<system>/<name>`, where `<registry>` is the prefix the
+  registry imposes (the ECR host, `ghcr.io/<owner>`, or
+  `<location>-docker.pkg.dev/<project>`). Wasm components and mirrors take
+  their own path, below.
 - You **MUST** use one of these kinds as the first segment after the prefix:
 
   | Kind              | Artifact                            |
@@ -74,10 +75,19 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   tag when the upstream moves it
   ([ECR](./references/aws.md#creating-repositories)). Deployments still pin
   it by digest.
+- You **MUST** set `<system>` to the stable identifier of the product or
+  platform the deployable belongs to, such as `atlas`, chosen once and shared
+  by every image and chart of that system. It groups the deployables of one
+  system, and lets a registry rule, such as an ECR lifecycle policy or an IAM
+  resource pattern, target that system by prefix. It is not a source
+  repository, so a deployable that moves to another repository keeps its
+  path. We call it a system, not a project, because
+  [ADR#1917971986](../1917971986/README.md) uses project for a resource of the
+  product.
 - You **MUST** name an image or chart after the deployable it produces, the
   same `<name>` as its directory under `devops/docker/images/` or
-  `devops/helm/charts/`. Push a chart to `oci://<registry>/charts` and let
-  Helm append the name.
+  `devops/helm/charts/`. Push a chart to `oci://<registry>/charts/<system>`
+  and let Helm append the name.
 - You **MUST** publish a Wasm component at
   `<registry>/wasm-components/<namespace>/<package>`, from its WIT package
   `<namespace>:<package>`. In `wkg`, set `oci.registry` to the registry host
@@ -87,8 +97,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   ([wkg metadata](./references/versions.md#wkg-and-the-wasm-component-path)).
   On GitHub Container Registry that turns `acme:greeter` into
   `ghcr.io/<owner>/wasm-components/acme/greeter`.
-- You **MUST** keep every name unique within its kind across the registry
-  prefix, because nothing else in the path tells two deployables apart.
+- You **MUST** keep every name unique within its kind and system, because
+  nothing else in the path tells two deployables apart.
 - You **MUST** write every path segment we name in lowercase `[a-z0-9-]`,
   and **MUST NOT** use `.`, `_` or `__` even where the OCI grammar allows
   them. The upstream path of a mirror is not ours, so it stays as it is.
@@ -198,8 +208,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 
   ```txt
   ghcr.io/<owner>
-  ├── images/api                          1.4.0, <commit>, pr-<commit>
-  ├── charts/api                          1.4.0, 0.0.0-sha-<commit>
+  ├── images/shop/api                     1.4.0, <commit>, pr-<commit>
+  ├── charts/shop/api                     1.4.0, 0.0.0-sha-<commit>
   ├── wasm-components/acme/greeter        0.3.0
   └── mirrors/docker-hub/library/postgres 16
   ```

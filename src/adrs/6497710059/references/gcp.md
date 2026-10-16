@@ -33,8 +33,9 @@ Not stated by Google, so not verified:
   Registry, pulled as `us-west1-docker.pkg.dev/my-project/my-repo/owner-name/test-image:staging`
   ([Push and pull
   images](https://docs.cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling)).
-  The ADR's Wasm path `wasm-components/<namespace>/<package>` relies on a
-  nested image name in a standard repository, so this stays unverified.
+  The ADR's paths `images/<system>/<name>`, `charts/<system>/<name>` and
+  `wasm-components/<namespace>/<package>` rely on a nested image name in a
+  standard repository, so this stays unverified.
 
 ## Repositories
 
