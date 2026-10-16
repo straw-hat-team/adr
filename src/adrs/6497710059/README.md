@@ -70,8 +70,10 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   Registry the remote repository name takes the place of both segments, so
   the same image is `mirrors-docker-hub/library/postgres:16`.
 - A mirror is exempt from the [Tags](#tags) rules. It has no build commit of
-  ours, and its tags follow the upstream, so a cache refresh moves a mirrored
-  tag whenever the upstream moves it. Deployments still pin it by digest.
+  ours, and its tags follow the upstream, so a refresh can move a mirrored
+  tag when the upstream moves it
+  ([ECR](./references/aws.md#creating-repositories)). Deployments still pin
+  it by digest.
 - You **MUST** name an image or chart after the deployable it produces, the
   same `<name>` as its directory under `devops/docker/images/` or
   `devops/helm/charts/`. Push a chart to `oci://<registry>/charts` and let
@@ -79,7 +81,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 - You **MUST** publish a Wasm component at
   `<registry>/wasm-components/<namespace>/<package>`, from its WIT package
   `<namespace>:<package>`, by configuring `wasm-components/` as the namespace
-  prefix in `wkg`.
+  prefix in `wkg` ([wkg metadata](./references/versions.md#wkg-and-the-wasm-component-path)), which
+  turns `acme:greeter` into `wasm-components/acme/greeter`.
 - You **MUST** keep every name unique within its kind across the registry
   prefix, because nothing else in the path tells two deployables apart.
 - You **MUST** write every path segment we name in lowercase `[a-z0-9-]`,
@@ -135,8 +138,11 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 - You **SHOULD** expire pull request builds after an age the project sets,
   through the registry's cleanup policy matched on the `pr-` and `0.0.0-pr-`
   prefixes, or a scheduled job where the registry has none, as on GitHub
-  Container Registry. You **MUST NOT** delete an artifact that carries a
-  release tag.
+  Container Registry. Artifact Registry cannot delete a tagged artifact from
+  a repository with immutable tags, so there immutability wins and pull
+  request builds are kept
+  ([Artifact Registry](./references/gcp.md#tag-immutability)). You **MUST
+  NOT** delete an artifact that carries a release tag.
 - You **MUST NOT** move a version or commit tag once it is published.
 - You **MUST NOT** publish a tag that moves, such as `latest`, `main`, a
   branch name or a partial version like `1.4`, for an artifact only we deploy.
@@ -165,7 +171,9 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   image repository that carries moving tags **MUST** exempt exactly those
   tags, which rules out Artifact Registry, since it cannot exempt any.
   GitHub Container Registry has no tag immutability, so there the tag rules
-  hold only by convention.
+  hold only by convention. A variant of a moving tag, such as
+  `latest-debug`, moves too, so on ECR the exemptions are `latest*`,
+  `canary*` and `*.x*` ([ECR](./references/aws.md#tag-immutability)).
 - You **MUST** reference an artifact from a deployment by tag and digest,
   `<name>:<tag>@sha256:<digest>`. The digest is what gets pulled; the tag
   tells a reader which release or commit it is.
@@ -179,7 +187,10 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   repository as the artifact they describe, attached to its digest. You
   **MUST NOT** publish them under another path or kind.
 - You **MUST** copy them with the artifact whenever it moves to another
-  registry. A plain pull and push copies the artifact and leaves them behind.
+  registry, with a tool that follows referrers such as `oras copy -r`. A
+  plain pull and push copies the artifact and leaves them behind, and
+  `cosign copy` is deprecated
+  ([signatures](./references/versions.md#signatures)).
 
   ```txt
   ghcr.io/<owner>
@@ -191,6 +202,11 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 
 ## Links
 
+- [Walkthrough: one service from pull request to production](./references/walkthrough.md)
+- [Amazon ECR research](./references/aws.md)
+- [Artifact Registry research](./references/gcp.md)
+- [GitHub Container Registry research](./references/github.md)
+- [Versions and tooling research](./references/versions.md)
 - [ADR#2078011537](../2078011537/README.md): Operational assets
 - [OCI Distribution Specification](https://github.com/opencontainers/distribution-spec/blob/main/spec.md)
 - [OCI pre-defined annotation keys](https://github.com/opencontainers/image-spec/blob/main/annotations.md)
