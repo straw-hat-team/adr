@@ -50,12 +50,12 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   `<location>-docker.pkg.dev/<project>`).
 - You **MUST** use one of these kinds as the first segment after the prefix:
 
-  | Kind         | Artifact                            |
-  | ------------ | ----------------------------------- |
-  | `images`     | Container images                    |
-  | `charts`     | Helm charts                         |
-  | `components` | Wasm components                     |
-  | `mirrors`    | Third-party images we copy or cache |
+  | Kind              | Artifact                            |
+  | ----------------- | ----------------------------------- |
+  | `images`          | Container images                    |
+  | `charts`          | Helm charts                         |
+  | `wasm-components` | Wasm components                     |
+  | `mirrors`         | Third-party images we copy or cache |
 
   In Artifact Registry each kind is a Docker-format repository of that name,
   except `mirrors`, which is a remote repository per upstream named
@@ -77,8 +77,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   `devops/helm/charts/`. Push a chart to `oci://<registry>/charts` and let
   Helm append the name.
 - You **MUST** publish a Wasm component at
-  `<registry>/components/<namespace>/<package>`, from its WIT package
-  `<namespace>:<package>`, by configuring `components/` as the namespace
+  `<registry>/wasm-components/<namespace>/<package>`, from its WIT package
+  `<namespace>:<package>`, by configuring `wasm-components/` as the namespace
   prefix in `wkg`.
 - You **MUST** keep every name unique within its kind across the registry
   prefix, because nothing else in the path tells two deployables apart.
@@ -133,7 +133,9 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   artifacts claiming the same commit.
 - You **SHOULD** expire pull request builds after an age the project sets,
   through the registry's cleanup policy matched on the `pr-` and `0.0.0-pr-`
-  prefixes. You **MUST NOT** delete an artifact that carries a release tag.
+  prefixes, or a scheduled job where the registry has none, as on GitHub
+  Container Registry. You **MUST NOT** delete an artifact that carries a
+  release tag.
 - You **MUST NOT** move a version or commit tag once it is published.
 - You **MUST NOT** publish a tag that moves, such as `latest`, `main`, a
   branch name or a partial version like `1.4`, for an artifact only we deploy.
@@ -161,6 +163,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 - You **MUST** turn on tag immutability wherever the registry offers it. An
   image repository that carries moving tags **MUST** exempt exactly those
   tags, which rules out Artifact Registry, since it cannot exempt any.
+  GitHub Container Registry has no tag immutability, so there the tag rules
+  hold only by convention.
 - You **MUST** reference an artifact from a deployment by tag and digest,
   `<name>:<tag>@sha256:<digest>`. The digest is what gets pulled; the tag
   tells a reader which release or commit it is.
@@ -180,7 +184,7 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   ghcr.io/<owner>
   ├── images/api                          1.4.0, <commit>, pr-<commit>
   ├── charts/api                          1.4.0, 0.0.0-sha-<commit>
-  ├── components/acme/greeter             0.3.0
+  ├── wasm-components/acme/greeter        0.3.0
   └── mirrors/docker-hub/library/postgres 16
   ```
 
