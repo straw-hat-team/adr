@@ -188,9 +188,11 @@ pulling.
 The `ghcr.io/webassembly/wasi/http` repository exists with tags such as `0.3.2`,
 which matches the documented shape.
 
-What this supports for the ADR: a registry entry with `registry` set to the
-registry prefix and `namespacePrefix` set to `wasm-components/` yields
-`<registry>/wasm-components/<namespace>/<package>`. The prefix is joined
+What this supports for the ADR: `registry` holds the host alone, as in the
+`ghcr.io` example, so the owner or project belongs in `namespacePrefix`.
+`<owner>/wasm-components/` on GitHub Container Registry,
+`<project>/wasm-components/` on Artifact Registry and `wasm-components/` on
+ECR all yield `<registry>/wasm-components/<namespace>/<package>`. The prefix is joined
 directly to the namespace, so the trailing slash in `wasm-components/` matters.
 The metadata document describes the prefix in the registry's discovery file
 (`/.well-known/wasm-pkg/registry.json`). This reference did not verify how the

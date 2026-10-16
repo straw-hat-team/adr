@@ -80,9 +80,13 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   Helm append the name.
 - You **MUST** publish a Wasm component at
   `<registry>/wasm-components/<namespace>/<package>`, from its WIT package
-  `<namespace>:<package>`, by configuring `wasm-components/` as the namespace
-  prefix in `wkg` ([wkg metadata](./references/versions.md#wkg-and-the-wasm-component-path)), which
-  turns `acme:greeter` into `wasm-components/acme/greeter`.
+  `<namespace>:<package>`. In `wkg`, set `oci.registry` to the registry host
+  alone and put the rest of the prefix in `oci.namespacePrefix`:
+  `wasm-components/` on ECR, `<owner>/wasm-components/` on GitHub Container
+  Registry, and `<project>/wasm-components/` on Artifact Registry
+  ([wkg metadata](./references/versions.md#wkg-and-the-wasm-component-path)).
+  On GitHub Container Registry that turns `acme:greeter` into
+  `ghcr.io/<owner>/wasm-components/acme/greeter`.
 - You **MUST** keep every name unique within its kind across the registry
   prefix, because nothing else in the path tells two deployables apart.
 - You **MUST** write every path segment we name in lowercase `[a-z0-9-]`,
@@ -169,11 +173,11 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   `latest-debug`, and **MUST NOT** publish it under another name.
 - You **MUST** turn on tag immutability wherever the registry offers it. An
   image repository that carries moving tags **MUST** exempt exactly those
-  tags, which rules out Artifact Registry, since it cannot exempt any.
-  GitHub Container Registry has no tag immutability, so there the tag rules
-  hold only by convention. A variant of a moving tag, such as
-  `latest-debug`, moves too, so on ECR the exemptions are `latest*`,
+  tags and their variants, such as `latest-debug`, which rules out Artifact
+  Registry, since it cannot exempt any. On ECR the exemptions are `latest*`,
   `canary*` and `*.x*` ([ECR](./references/aws.md#tag-immutability)).
+  GitHub Container Registry has no tag immutability, so there the tag rules
+  hold only by convention.
 - You **MUST** reference an artifact from a deployment by tag and digest,
   `<name>:<tag>@sha256:<digest>`. The digest is what gets pulled; the tag
   tells a reader which release or commit it is.
