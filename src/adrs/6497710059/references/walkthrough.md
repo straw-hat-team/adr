@@ -1,8 +1,9 @@
 # Walkthrough: one service from pull request to production
 
-This follows the `api` service of the `shop` system, owned by `acme` on
+This follows the `api` service of the `shop` repository, owned by `acme` on
 GitHub Container Registry, from a pull request to a release. `<commit>` stands
-for the full 40-character commit SHA, `3f2c…4e3f` here.
+for the full 40-character commit SHA, `3f2c…4e3f` here, and the namespace
+is `shop`.
 
 ## Pull request
 
@@ -11,7 +12,7 @@ multi-platform image and a prerelease chart, both marked `pr-`:
 
 ```sh
 docker buildx build --platform linux/amd64,linux/arm64 \
-  --annotation "index:org.opencontainers.image.source=https://github.com/acme/api" \
+  --annotation "index:org.opencontainers.image.source=https://github.com/acme/shop" \
   --annotation "index:org.opencontainers.image.revision=3f2c…4e3f" \
   -t ghcr.io/acme/images/shop/api:pr-3f2c…4e3f --push .
 

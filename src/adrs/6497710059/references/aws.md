@@ -36,8 +36,8 @@ chart"
 ([Pushing a Helm
 chart](https://docs.aws.amazon.com/AmazonECR/latest/userguide/push-oci-artifact.html)).
 The documented example pushes to the bare host and so names the repository
-after the chart alone. Pushing to `oci://<host>/charts/<system>` and letting Helm
-append the chart name gives the repository `charts/<system>/<name>`. The ECR page does not
+after the chart alone. Pushing to `oci://<host>/charts/<namespace>` and letting Helm
+append the chart name gives the repository `charts/<namespace>/<name>`. The ECR page does not
 show that form, so it rests on Helm's behavior, not on AWS documentation.
 
 ## Creating repositories
