@@ -66,7 +66,12 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   `<upstream>` names the source registry (`docker-hub`, `quay`) and `<path>`
   and the tags are the upstream ones, unchanged, such as
   `mirrors/docker-hub/library/postgres:16`. It is not ours to rename, and
-  keeping it out of `images/` keeps our builds apart from copies.
+  keeping it out of `images/` keeps our builds apart from copies. In Artifact
+  Registry the remote repository name takes the place of both segments, so
+  the same image is `mirrors-docker-hub/library/postgres:16`.
+- A mirror is exempt from the [Tags](#tags) rules. It has no build commit of
+  ours, and its tags follow the upstream, so a cache refresh moves a mirrored
+  tag whenever the upstream moves it. Deployments still pin it by digest.
 - You **MUST** name an image or chart after the deployable it produces, the
   same `<name>` as its directory under `devops/docker/images/` or
   `devops/helm/charts/`. Push a chart to `oci://<registry>/charts` and let
@@ -104,8 +109,9 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 - You **MUST NOT** count releases within a day with a prerelease such as
   `2026.1015.0-1`, because SemVer sorts a prerelease below its release.
 - You **MUST** tag every published artifact with the full commit SHA it was
-  built from, marked by where the build came from. A digest identifies the
-  bytes but cannot be looked up in git; the commit can.
+  built from, marked by where the build came from, except a released chart or
+  component. A digest identifies the bytes but cannot be looked up in git;
+  the commit can.
 
   | Build          | Image tag            | Chart or component tag |
   | -------------- | -------------------- | ---------------------- |
@@ -114,7 +120,10 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   | Pull request   | `pr-<commit>`        | `0.0.0-pr-<commit>`    |
 
   Charts and components only accept SemVer, so their builds that are not a
-  release use a prerelease, which sorts below every release. The `pr-` mark
+  release use a prerelease, which sorts below every release. Helm requires a
+  chart's tag to equal its version, so a released chart or component carries
+  only the version tag and its commit is read from
+  `org.opencontainers.image.revision`. The `pr-` mark
   keeps a pull request build from taking the tag of the same commit built
   later on the default branch.
 
