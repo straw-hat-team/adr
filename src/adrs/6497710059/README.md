@@ -1,7 +1,7 @@
 ---
 id: '6497710059'
 title: OCI artifact paths and tags
-state: Draft
+state: Approved
 created: 2026-10-15
 tags: [oci, registry, docker, helm, wasm, sigstore, naming]
 category: Platform
