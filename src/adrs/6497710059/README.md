@@ -105,7 +105,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 - You **MUST NOT** pad the month (`2026.0405.0`), add a `v` prefix, or add
   `+` build metadata. A leading zero, a prefix and build metadata all break
   SemVer, which charts and components require, and Helm rewrites `+` to `_`,
-  which turns one version into two different tags.
+  which turns one version into two different tags. A git tag **MAY** keep
+  the `v`, as in `v1.4.0`, and the build drops it from the artifact tag.
 - You **MUST NOT** count releases within a day with a prerelease such as
   `2026.1015.0-1`, because SemVer sorts a prerelease below its release.
 - You **MUST** tag every published artifact with the full commit SHA it was
