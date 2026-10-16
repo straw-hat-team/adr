@@ -44,10 +44,11 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 
 ### Paths
 
-- You **MUST** publish every artifact to
-  `<registry>/<kind>/<name>`, where `<registry>` is the prefix the registry
-  imposes (the ECR host, `ghcr.io/<owner>`, or
-  `<location>-docker.pkg.dev/<project>`).
+- You **MUST** publish every image and chart to
+  `<registry>/<kind>/<namespace>/<name>`, where `<registry>` is the prefix the
+  registry imposes (the ECR host, `ghcr.io/<owner>`, or
+  `<location>-docker.pkg.dev/<project>`). Wasm components and mirrors take
+  their own path, below.
 - You **MUST** use one of these kinds as the first segment after the prefix:
 
   | Kind              | Artifact                            |
@@ -74,27 +75,36 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   tag when the upstream moves it
   ([ECR](./references/aws.md#creating-repositories)). Deployments still pin
   it by digest.
+- You **MUST** set `<namespace>` to the logical group that builds and ships
+  the image or chart together, usually named after the source repository
+  that holds them, such as `atlas`. Every image and chart of that group
+  shares it, and a registry rule, such as an ECR lifecycle policy or an IAM
+  resource pattern, can target the group by prefix. You **MUST NOT** change
+  it once published, so a renamed or split repository keeps publishing under
+  the namespace it started with. It is not a Kubernetes namespace.
 - You **MUST** name an image or chart after the deployable it produces, the
   same `<name>` as its directory under `devops/docker/images/` or
-  `devops/helm/charts/`. Push a chart to `oci://<registry>/charts` and let
-  Helm append the name.
+  `devops/helm/charts/`. Push a chart to `oci://<registry>/charts/<namespace>`
+  and let Helm append the name.
 - You **MUST** publish a Wasm component at
   `<registry>/wasm-components/<namespace>/<package>`, from its WIT package
-  `<namespace>:<package>`. In `wkg`, set `oci.registry` to the registry host
-  alone and put the rest of the prefix in `oci.namespacePrefix`:
+  `<namespace>:<package>`. That namespace is the WIT one, global across the
+  registry, and need not match the namespace of any image or chart. In
+  `wkg`, set `oci.registry` to the registry host alone and put the rest of
+  the prefix in `oci.namespacePrefix`:
   `wasm-components/` on ECR, `<owner>/wasm-components/` on GitHub Container
   Registry, and `<project>/wasm-components/` on Artifact Registry
   ([wkg metadata](./references/versions.md#wkg-and-the-wasm-component-path)).
   On GitHub Container Registry that turns `acme:greeter` into
   `ghcr.io/<owner>/wasm-components/acme/greeter`.
-- You **MUST** keep every name unique within its kind across the registry
-  prefix, because nothing else in the path tells two deployables apart.
+- You **MUST** keep every name unique within its kind and namespace, because
+  nothing else in the path tells two deployables apart.
 - You **MUST** write every path segment we name in lowercase `[a-z0-9-]`,
   and **MUST NOT** use `.`, `_` or `__` even where the OCI grammar allows
   them. The upstream path of a mirror is not ours, so it stays as it is.
-- You **MUST NOT** put an environment, a team or a source repository name in
-  the path. Every environment pulls the same artifact, and a source repository
-  is linked through `org.opencontainers.image.source` instead.
+- You **MUST NOT** put an environment or a team in the path. Every
+  environment pulls the same artifact, and the exact source repository is
+  linked through `org.opencontainers.image.source`, whatever the namespace.
 
 ### Tags
 
@@ -198,8 +208,8 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
 
   ```txt
   ghcr.io/<owner>
-  ├── images/api                          1.4.0, <commit>, pr-<commit>
-  ├── charts/api                          1.4.0, 0.0.0-sha-<commit>
+  ├── images/shop/api                     1.4.0, <commit>, pr-<commit>
+  ├── charts/shop/api                     1.4.0, 0.0.0-sha-<commit>
   ├── wasm-components/acme/greeter        0.3.0
   └── mirrors/docker-hub/library/postgres 16
   ```
