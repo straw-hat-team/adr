@@ -88,8 +88,10 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   and let Helm append the name.
 - You **MUST** publish a Wasm component at
   `<registry>/wasm-components/<namespace>/<package>`, from its WIT package
-  `<namespace>:<package>`. In `wkg`, set `oci.registry` to the registry host
-  alone and put the rest of the prefix in `oci.namespacePrefix`:
+  `<namespace>:<package>`. That namespace is the WIT one, global across the
+  registry, and need not match the namespace of any image or chart. In
+  `wkg`, set `oci.registry` to the registry host alone and put the rest of
+  the prefix in `oci.namespacePrefix`:
   `wasm-components/` on ECR, `<owner>/wasm-components/` on GitHub Container
   Registry, and `<project>/wasm-components/` on Artifact Registry
   ([wkg metadata](./references/versions.md#wkg-and-the-wasm-component-path)).
