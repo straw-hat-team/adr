@@ -16,7 +16,8 @@ docker buildx build --platform linux/amd64,linux/arm64 \
   --annotation "index:org.opencontainers.image.revision=3f2c…4e3f" \
   -t ghcr.io/acme/images/shop/api:pr-3f2c…4e3f --push .
 
-helm package devops/helm/charts/api --version 0.0.0-pr-3f2c…4e3f
+helm package devops/helm/charts/api --version 0.0.0-pr-3f2c…4e3f \
+  --app-version pr-3f2c…4e3f
 helm push api-0.0.0-pr-3f2c…4e3f.tgz oci://ghcr.io/acme/charts/shop
 ```
 
@@ -27,7 +28,8 @@ Helm appends the chart name, so the chart lands at
 
 The pull request merges with a fast-forward, so `main` builds the same commit
 and publishes it without the `pr-` mark, as `images/shop/api:3f2c…4e3f` and
-`charts/shop/api:0.0.0-sha-3f2c…4e3f`. A squash or merge commit gets its own SHA
+`charts/shop/api:0.0.0-sha-3f2c…4e3f`, whose default image is that same
+commit. A squash or merge commit gets its own SHA
 and tags the same way. The pull request tags stay where they are and expire
 later.
 
@@ -41,9 +43,14 @@ digest stays the same:
 crane tag ghcr.io/acme/images/shop/api:3f2c…4e3f 1.4.0
 ```
 
-The chart is packaged with `--version "${GITHUB_REF_NAME#v}"` and pushed as
-`charts/shop/api:1.4.0`. Helm requires the tag to equal the chart version, so the
-commit is read from its `org.opencontainers.image.revision` annotation.
+The chart does not follow the image. Its version is the `version` in its
+`Chart.yaml`, `2.1.0` here, which changed because the chart did, and a chart
+release is cut when the chart changes, not when the image does. Its `appVersion`
+and image tag default are set to `1.4.0` in that change, so the chart deploys
+this release unless a user overrides the image. It is pushed as
+`charts/shop/api:2.1.0`. Helm requires the tag to equal the chart version, so the
+commit is read from its `org.opencontainers.image.revision` annotation. An image
+release that leaves the chart as it is, such as `1.4.1`, publishes no chart.
 
 With `docker/metadata-action`, the same tag names come from:
 
@@ -119,7 +126,7 @@ tagged `1.4.0` is deleted.
 ```txt
 ghcr.io/acme
 ├── images/shop/api                     1.4.0, 1.4.0-debug, 3f2c…4e3f, latest, 1.x
-├── charts/shop/api                     1.4.0, 0.0.0-sha-3f2c…4e3f
+├── charts/shop/api                     2.1.0, 0.0.0-sha-3f2c…4e3f
 ├── wasm-components/acme/greeter        0.3.0
 └── mirrors/docker-hub/library/postgres 16
 ```
