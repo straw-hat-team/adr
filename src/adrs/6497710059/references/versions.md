@@ -158,11 +158,14 @@ registry.example.com/library/ubuntu:v0 v1`. A release then reads:
 crane tag ghcr.io/<owner>/images/shop/api:<commit> "${GITHUB_REF_NAME#v}"
 ```
 
-For a chart, the version comes from the git tag by the same shell expansion,
-which removes a leading `v` and leaves a name without one unchanged:
+A chart is versioned on its own, so a release takes its version from the
+`version` in its `Chart.yaml`, not from the image's git tag. Only a build that
+is not a release overrides it:
 
 ```sh
-helm package devops/helm/charts/api --version "${GITHUB_REF_NAME#v}"
+helm package devops/helm/charts/api
+helm package devops/helm/charts/api --version "0.0.0-sha-<commit>" \
+  --app-version "<commit>"
 ```
 
 ## wkg and the Wasm component path

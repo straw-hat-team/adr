@@ -145,6 +145,23 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   keeps a pull request build from taking the tag of the same commit built
   later on the default branch.
 
+  The version in the Release row belongs to the artifact in that column. A
+  chart's version is not the version of its image, see the next rule.
+
+- You **MUST** version a chart on its own, by changes to the chart (its
+  templates, values or schema), and **MUST NOT** derive its version from the
+  release of the image it deploys. The chart's `appVersion`, and the image tag
+  default in its values, name the image it deploys by default, and users
+  **MAY** override the image to deploy another one. A new image release does
+  not release the chart by itself. Moving the chart's default image is a chart
+  change, so it releases a new chart version. Charts evolve on their own
+  schedule, and lockstep versions would publish chart releases with no chart
+  change and block a chart-only fix until the application releases.
+- The `0.0.0-sha-<commit>` chart of the default branch still points at the
+  image of that same commit, and the `0.0.0-pr-<commit>` chart at the `pr-`
+  image of its commit. They are builds of one commit, not releases, so the
+  chart and image agree there and nowhere else.
+
 - You **MUST** release an image by adding the version tag to the artifact
   already built for that commit, never by building it again. A rebuild
   produces a new digest, which would either move the commit tag or leave two
@@ -209,7 +226,7 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   ```txt
   ghcr.io/<owner>
   ├── images/shop/api                     1.4.0, <commit>, pr-<commit>
-  ├── charts/shop/api                     1.4.0, 0.0.0-sha-<commit>
+  ├── charts/shop/api                     2.1.0, 0.0.0-sha-<commit>
   ├── wasm-components/acme/greeter        0.3.0
   └── mirrors/docker-hub/library/postgres 16
   ```
