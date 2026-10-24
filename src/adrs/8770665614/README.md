@@ -109,7 +109,7 @@ be mistaken for each other:
 - Bad, because a single-licensed project is not REUSE compliant until it
   adds `LICENSES/<SPDX-License-Identifier>.txt`.
 - Bad, because a multi-licensed project still reports `other` as its
-  top-line license. That is an accurate summary rather than a defect, and
+  top-line license, except for the LGPL pair from rule 5. That is an accurate summary rather than a defect, and
   no layout avoids it.
 
 ## Resolution
@@ -124,11 +124,15 @@ license to list.
    primary license is the one covering the source code; where a repository
    is mostly prose, it is the one covering the prose.
 2. A repository distributed under more than one license **MUST** have a
-   top-level `LICENSES/` directory containing one file per license under which any part of the repository
-   is distributed, including the primary license. Filenames **MUST** be
+   top-level `LICENSES/` directory containing one file per license and per
+   license exception under which any part of the repository is
+   distributed, including the primary license. Filenames **MUST** be
    `<SPDX-License-Identifier>.txt`, spelled exactly as the
-   [SPDX License List](https://spdx.org/licenses/) spells it, with
-   verbatim text. Licensee validates the identifier's shape and not its
+   [SPDX License List](https://spdx.org/licenses/) or the
+   [SPDX License Exceptions List](https://spdx.org/licenses/exceptions-index.html)
+   spells it, with verbatim text. A repository distributed under
+   `GPL-3.0-only WITH Classpath-exception-2.0` carries both
+   `LICENSES/GPL-3.0-only.txt` and `LICENSES/Classpath-exception-2.0.txt`. Licensee validates the identifier's shape and not its
    existence, so `Apache2.0.txt` scores as high as `Apache-2.0.txt` and no
    tool reports the typo.
 3. Within `LICENSES/`, terms not on the SPDX License List **MUST** use
@@ -150,9 +154,10 @@ license to list.
    beside `COPYING`, and Licensee has a dedicated rule for that pair.
    `COPYRIGHT` is permitted, because Licensee excludes it when deciding
    whether a project is multi-licensed.
-6. `LICENSES/` **MUST NOT** contain anything but license files, and
-   **MUST NOT** contain a license nothing in the repository uses. Removing
-   a license from the repository removes its file.
+6. `LICENSES/` **MUST NOT** contain anything but license and license
+   exception files, and **MUST NOT** contain a license or exception nothing
+   in the repository uses. Removing one from the repository removes its
+   file.
 7. Where `LICENSES/` exists, the root `LICENSE` and its counterpart in
    `LICENSES/` **MUST** hold the same text. Where the license carries placeholder fields, the year and
    holder are filled in identically in both. No other edit to license text
@@ -160,7 +165,8 @@ license to list.
    falls to `other`.
 8. Where a package manifest has a `license` field, it **MUST** carry an
    SPDX expression naming exactly the licenses the repository carries
-   (`"MIT"`, `"MIT AND CC-BY-4.0"`, `"MIT OR Apache-2.0"`), and
+   (`"MIT"`, `"MIT AND CC-BY-4.0"`, `"MIT OR Apache-2.0"`), except for
+   npm's `"UNLICENSED"` as described below, and
    `SPDX-License-Identifier` headers **SHOULD** be used to attribute
    individual files where a repository is multi-licensed. npm's
    `"UNLICENSED"` is an npm-only string, not an SPDX identifier: it is
@@ -177,7 +183,9 @@ license to list.
 - Single-licensed repositories need nothing beyond the root `LICENSE` and
   report the same license as before.
 - Multi-licensed repositories report `other` as their top-line license and
-  list every match in the licenses array. This is the honest answer, and
+  list every match in the licenses array. The exception is the LGPL pair
+  from rule 5: Licensee reports the LGPL license when exactly an LGPL and
+  a GPL file match, in that order. This is the honest answer, and
   the `LICENSES/` directory is where the detail lives.
 - Repositories currently using `LICENSE.md` or `COPYING` rename to
   `LICENSE`. The rename is the whole migration for a single-licensed
