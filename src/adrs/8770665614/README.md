@@ -94,39 +94,44 @@ be mistaken for each other:
 - Bad, because the top-level answer then depends on the `LICENSES/` scan,
   which several consumers of license metadata do not implement.
 
-**Both, with the root file as the primary license.**
+**Root file, plus `LICENSES/` once a second license appears.**
 
-- Good, because Licensee deduplicates by license, so a single-licensed
-  project reports its license exactly as before.
+- Good, because a single-licensed project keeps the one file every tool
+  and reader already looks for, with no copy that can drift from it.
+- Good, because Licensee deduplicates by license, so adding `LICENSES/`
+  to a project changes nothing about how its primary license is reported.
 - Good, because REUSE ignores the root file by specification, so the two
   layouts cannot invalidate each other.
 - Good, because a multi-licensed project gets one place, `LICENSES/`, that
   lists every license in use in a form no tool has to guess at.
-- Bad, because the primary license text exists twice and the two copies
-  can drift. Rule 7 below handles that.
+- Bad, because the primary license text exists twice in a multi-licensed
+  project and the two copies can drift. Rule 7 below handles that.
+- Bad, because a single-licensed project is not REUSE compliant until it
+  adds `LICENSES/<SPDX-License-Identifier>.txt`.
 - Bad, because a multi-licensed project still reports `other` as its
   top-line license. That is an accurate summary rather than a defect, and
   no layout avoids it.
 
 ## Resolution
 
-Chosen option: both, because REUSE and Licensee ask for different files
-and the specification of each permits the other, so the only cost of
-satisfying both is one duplicated file.
+Chosen option: root file, plus `LICENSES/` once a second license appears,
+because a single license is fully stated by the root file, and the
+duplicate only earns its maintenance cost when there is more than one
+license to list.
 
 1. Every repository **MUST** have a `LICENSE` file in its root, with no
    extension, containing the verbatim text of its primary license. The
    primary license is the one covering the source code; where a repository
    is mostly prose, it is the one covering the prose.
-2. Every repository **MUST** have a top-level `LICENSES/` directory
-   containing one file per license under which any part of the repository
+2. A repository distributed under more than one license **MUST** have a
+   top-level `LICENSES/` directory containing one file per license under which any part of the repository
    is distributed, including the primary license. Filenames **MUST** be
    `<SPDX-License-Identifier>.txt`, spelled exactly as the
    [SPDX License List](https://spdx.org/licenses/) spells it, with
    verbatim text. Licensee validates the identifier's shape and not its
    existence, so `Apache2.0.txt` scores as high as `Apache-2.0.txt` and no
    tool reports the typo.
-3. Terms not on the SPDX License List **MUST** use
+3. Within `LICENSES/`, terms not on the SPDX License List **MUST** use
    `LICENSES/LicenseRef-<idstring>.txt`. This is the only correct way to
    declare proprietary or all-rights-reserved terms, and the file holds
    the actual terms.
@@ -135,7 +140,7 @@ satisfying both is one duplicated file.
    purpose. It is a public domain dedication; adding it dedicates the work
    to the public domain, which is the reverse of the intent. A repository
    deliberately dedicating to the public domain uses it correctly, as
-   `LICENSE` plus `LICENSES/Unlicense.txt`.
+   `LICENSE`.
 5. No other license-bearing filename **MAY** appear in the repository
    root: not `LICENSE.md`, `LICENCE`, `COPYING`, `LICENSE-MIT`,
    `MIT-LICENSE`, `OFL`, or `PATENTS`. Each is scored as an independent
@@ -148,44 +153,47 @@ satisfying both is one duplicated file.
 6. `LICENSES/` **MUST NOT** contain anything but license files, and
    **MUST NOT** contain a license nothing in the repository uses. Removing
    a license from the repository removes its file.
-7. The root `LICENSE` and its counterpart in `LICENSES/` **MUST** hold the
-   same text. Where the license carries placeholder fields, the year and
+7. Where `LICENSES/` exists, the root `LICENSE` and its counterpart in
+   `LICENSES/` **MUST** hold the same text. Where the license carries placeholder fields, the year and
    holder are filled in identically in both. No other edit to license text
    is permitted: Licensee matches at 98% similarity, and an edited text
    falls to `other`.
 8. Where a package manifest has a `license` field, it **MUST** carry an
-   SPDX expression naming exactly the licenses in `LICENSES/`
+   SPDX expression naming exactly the licenses the repository carries
    (`"MIT"`, `"MIT AND CC-BY-4.0"`, `"MIT OR Apache-2.0"`), and
    `SPDX-License-Identifier` headers **SHOULD** be used to attribute
    individual files where a repository is multi-licensed. npm's
    `"UNLICENSED"` is an npm-only string, not an SPDX identifier: it is
    correct in `package.json` for a package that grants no rights, and
-   **MUST NOT** be written into `LICENSES/` or a `SPDX-License-Identifier`
-   header, where rule 3 applies instead.
-9. A repository under exactly one license **MUST** still carry both files.
-   The duplication is what makes rule 1 and rule 2 hold at once, and it is
-   free of ambiguity because Licensee deduplicates by license.
+   **MUST NOT** be written into a license file or a
+   `SPDX-License-Identifier` header, where rule 3 applies instead.
+9. A repository under exactly one license **MUST NOT** have a `LICENSES/`
+   directory. The root `LICENSE` already states the license, and a second
+   copy only adds a file that can drift from it. The directory appears
+   with the second license, holding both.
 
 ## Consequences
 
-- Single-licensed repositories report the same license as before. Adding
-  `LICENSES/<id>.txt` next to an existing `LICENSE` changes the detected
-  set by nothing, because both files match the same license.
+- Single-licensed repositories need nothing beyond the root `LICENSE` and
+  report the same license as before.
 - Multi-licensed repositories report `other` as their top-line license and
   list every match in the licenses array. This is the honest answer, and
   the `LICENSES/` directory is where the detail lives.
 - Repositories currently using `LICENSE.md` or `COPYING` rename to
   `LICENSE`. The rename is the whole migration for a single-licensed
-  repository, plus one file in `LICENSES/`.
+  repository.
 - Repositories with root-level `LICENSE-<ID>` files move each one to
   `LICENSES/<SPDX-ID>.txt` and put the primary license in `LICENSE`.
-- REUSE tooling can be run against any repository following this rule
-  without further layout work. The remaining work for full REUSE
+- REUSE tooling can be run against any multi-licensed repository following
+  this rule without further layout work. A single-licensed repository
+  does not pass REUSE, which is accepted: no tool this decision relies on
+  needs more than the root `LICENSE` to report a single license. The remaining work for full REUSE
   compliance is per-file licensing information, which rule 8 asks for as
   a **SHOULD** rather than adopting REUSE wholesale.
-- The duplicated primary license is a maintenance obligation. It is one
-  file that changes only when the license changes, which is rare enough
-  that rule 7 is cheaper than either convention's absence.
+- In a multi-licensed repository the duplicated primary license is a
+  maintenance obligation. It is one file that changes only when the
+  license changes, which is rare enough that rule 7 is cheaper than either
+  convention's absence.
 - This repository is itself affected: it distributes prose under
   CC-BY-4.0 and code samples under MIT, and currently declares that split
   only in prose in the README. Under this decision it carries
