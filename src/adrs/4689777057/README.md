@@ -68,21 +68,33 @@ how a value is carried, not what it is.
 - You **SHOULD** decode when the configuration is loaded and fail at startup,
   not each time the secret is used.
 
-### Combining with other formats
+### Combining with the secret value syntax
 
-The prefix is the outermost layer. A value in the
-[ADR#3610135900](../3610135900/README.md) syntax, or a provider format such as
-`whsec_`, is encoded as a whole and comes back unchanged after decoding:
+The [ADR#3610135900](../3610135900/README.md) marker is what tells scanners,
+logs and people that a value is sensitive, so it has to stay readable.
 
-```txt
-base64:c2VjcmV0OmdpdGh1YjpnaHA6Z2hwXzAwMDA=
-```
+- You **MUST** keep the [ADR#3610135900](../3610135900/README.md) marker
+  outside the encoding: put `base64:` at the start of the secret value part,
+  after the namespace identifiers.
 
-decodes to `secret:github:ghp:ghp_0000`.
+  ```txt
+  secret:gcp:service-account:base64:eyJ0eXBlIjoic2VydmljZV9hY2NvdW50In0=
+  ```
 
-A scanner sees only the encoded text, so encoding a value hides its
-[ADR#3610135900](../3610135900/README.md) marker and any provider prefix. A
-value that already fits on one line gains nothing from being encoded.
+- You **MUST NOT** encode a marked value as a whole, such as
+  `base64:c2VjcmV0Oi4uLg==`, since that hides the marker.
+- You **SHOULD** mark every encoded value with the
+  [ADR#3610135900](../3610135900/README.md) syntax. Encoding hides any
+  provider prefix, such as `whsec_`, from scanners, and the marker restores
+  what they lose:
+
+  ```txt
+  secret:svix:whsec:base64:d2hzZWNfZEdWemRDMXpaV055WlhRPQ==
+  ```
+
+- When reading, you **MUST** parse the
+  [ADR#3610135900](../3610135900/README.md) syntax first, then apply
+  [Reading a value](#reading-a-value) to its secret value part.
 
 ## Links
 
