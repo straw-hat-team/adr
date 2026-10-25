@@ -39,9 +39,12 @@ how a value is carried, not what it is.
 ### Writing a value
 
 - You **MAY** write any secret value as `base64:` followed by the standard
-  base64 encoding of the value, as defined in
+  base64 encoding of the value's bytes, as defined in
   [RFC 4648 section 4](https://datatracker.ietf.org/doc/html/rfc4648#section-4),
   with padding.
+- You **MUST** encode a text value as its UTF-8 bytes.
+- You **MUST NOT** change the bytes before encoding, such as by normalizing
+  newlines or trimming whitespace, so the decoded value is the original one.
 - You **MUST** write the prefix in lowercase.
 - You **SHOULD** write the encoded part as a single line, such as the output
   of `base64 -w0` or of `base64` on macOS.
@@ -83,10 +86,10 @@ logs and people that a value is sensitive, so it has to stay readable.
 
 - You **MUST NOT** encode a marked value as a whole, such as
   `base64:c2VjcmV0Oi4uLg==`, since that hides the marker.
-- You **SHOULD** mark every encoded value with the
+- You **MUST** mark every encoded value with the
   [ADR#3610135900](../3610135900/README.md) syntax. Encoding hides any
-  provider prefix, such as `whsec_`, from scanners, and the marker restores
-  what they lose:
+  provider prefix, such as `whsec_`, from scanners, and the marker keeps
+  every encoded value detectable without decoding it:
 
   ```txt
   secret:svix:whsec:base64:d2hzZWNfZEdWemRDMXpaV055WlhRPQ==
