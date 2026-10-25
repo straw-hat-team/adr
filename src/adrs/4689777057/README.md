@@ -1,13 +1,13 @@
 ---
 id: '4689777057'
-title: Base64 prefix for secret values
+title: Base64-encoded configuration values
 state: Approved
 created: 2026-10-25
 tags: [secret, encoding, configuration]
 category: Platform
 ---
 
-# Base64 prefix for secret values
+# Base64-encoded configuration values
 
 ## Context
 
