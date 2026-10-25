@@ -36,9 +36,25 @@ how a value is carried, not what it is.
 
 ## Resolution
 
+### When to encode
+
+Encoding is a last resort for a value its carrier cannot hold unchanged. It
+costs readability: people, diffs and scanners can no longer see what the value
+is.
+
+- You **SHOULD NOT** encode a value that already fits on one line of
+  printable ASCII, such as an API token or a `whsec_` signing secret.
+- You **SHOULD NOT** encode a value when the carrier already preserves it,
+  such as a Kubernetes Secret, whose `data` field is already base64 and is
+  decoded before the program sees it, or a secret manager that returns the
+  exact bytes.
+- You **MAY** encode a value only when its carrier cannot hold it unchanged,
+  such as a multi-line PEM key in a `.env` file or a CI store that strips
+  newlines.
+
 ### Writing a value
 
-- You **MAY** write any secret value as `base64:` followed by the standard
+- You **MUST** write an encoded value as `base64:` followed by the standard
   base64 encoding of the value's bytes, as defined in
   [RFC 4648 section 4](https://datatracker.ietf.org/doc/html/rfc4648#section-4),
   with padding.
@@ -87,12 +103,12 @@ logs and people that a value is sensitive, so it has to stay readable.
 - You **MUST NOT** encode a marked value as a whole, such as
   `base64:c2VjcmV0Oi4uLg==`, since that hides the marker.
 - You **MUST** mark every encoded value with the
-  [ADR#3610135900](../3610135900/README.md) syntax. Encoding hides any
-  provider prefix, such as `whsec_`, from scanners, and the marker keeps
-  every encoded value detectable without decoding it:
+  [ADR#3610135900](../3610135900/README.md) syntax. Encoding hides the
+  content from scanners, and the marker keeps every encoded value detectable
+  without decoding it:
 
   ```txt
-  secret:svix:whsec:base64:d2hzZWNfZEdWemRDMXpaV055WlhRPQ==
+  secret:tls:private-key:base64:LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUUKLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQo=
   ```
 
 - When reading, you **MUST** parse the
