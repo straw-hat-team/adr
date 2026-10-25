@@ -3,7 +3,7 @@ id: '4689777057'
 title: Base64-encoded configuration values
 state: Approved
 created: 2026-10-25
-tags: [secret, encoding, configuration]
+tags: [secret, encoding, configuration, environment-variables]
 category: Platform
 ---
 
