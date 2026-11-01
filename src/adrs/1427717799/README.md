@@ -26,19 +26,22 @@ second level has to be decided here.
 - You **MUST** add `openapi/` and `asyncapi/` to the schema source directories
   reserved by [ADR#9316364013](../9316364013/README.md), one directory per
   specification, named after the specification and not after a tool.
-- You **MUST NOT** place these documents in `docs/`, `api/`, `spec/` or any
-  other directory.
-- You **MUST** keep only hand-written specification documents, and the files
-  they reference, in the directory. Configuration that drives a tool, such as
-  linting or code generation, goes under `.config/<tool>/`. Generated code
-  **MUST** live in the language workspace that consumes it.
+- You **MUST NOT** place these documents in `docs/`, `api/` or `spec/`, or
+  loose at the repository root.
+- You **MUST** keep only hand-written specification documents, and the
+  specification fragments and examples they reference, in the directory.
+  Configuration that drives a tool, such as linting or code generation, goes
+  under `.config/<tool>/`. Generated code **MUST** live in the language
+  workspace that consumes it.
 - You **MUST NOT** commit a document generated from another schema source, such
   as `proto/`, or from code. Generate it at build time instead.
 - You **MUST** write documents in YAML.
 - You **MUST** name the document `openapi.yaml` or `asyncapi.yaml`, and place
   it directly in the directory when the repository describes one interface.
-  When it describes more than one, you **MUST** use `<service>/` per interface,
-  where `<service>` is the name of the component that owns it.
+  When it describes more than one, you **MUST** use `<interface>/` per
+  interface, where `<interface>` is unique within the directory and names the
+  component and, when that component exposes several, the audience or version,
+  such as `payments-public` or `payments-admin`.
 - You **MAY** place the directory next to a single component or service when
   the document belongs to that component alone. It **MUST** still use the same
   name.
@@ -49,11 +52,11 @@ second level has to be decided here.
   ```txt
   .
   ├── openapi
-  │   ├── openapi.yaml            # one interface
-  │   └── <service>/openapi.yaml  # more than one interface
+  │   ├── openapi.yaml              # one interface
+  │   └── <interface>/openapi.yaml  # more than one interface
   └── asyncapi
       ├── asyncapi.yaml
-      └── <service>/asyncapi.yaml
+      └── <interface>/asyncapi.yaml
   ```
 
 ## Links
