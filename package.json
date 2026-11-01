@@ -13,8 +13,8 @@
   "dependencies": {
     "fast-glob": "3.3.3",
     "gray-matter": "4.0.3",
-    "vite": "8.3.3",
-    "zod": "4.6.5"
+    "vite": "8.3.5",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@braintree/sanitize-url": "^7.1.2",
