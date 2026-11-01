@@ -103,9 +103,15 @@ deny = [
   ] },
   { crate = "opentelemetry_sdk", wrappers = ["telemetry", "opentelemetry-otlp", "opentelemetry-proto"] },
   { crate = "tracing-opentelemetry", wrappers = ["telemetry"] },
+  { crate = "opentelemetry-http", wrappers = ["telemetry"] },
+  { crate = "opentelemetry-otlp", wrappers = ["telemetry"] },
+  { crate = "opentelemetry-proto", wrappers = ["telemetry", "opentelemetry-otlp"] },
+  { crate = "opentelemetry-appender-tracing", wrappers = ["telemetry"] },
 ]
 ```
 
+The wrapper crates need their own entries, because `wrappers` only allows a
+listed crate to depend on a banned one; it does not ban the wrapper itself.
 Replace `telemetry` with the telemetry crate's name. Third-party middleware
 that depends on `opentelemetry` has to be added to the first entry's
 `wrappers` when the telemetry crate adopts it.
@@ -132,5 +138,16 @@ await-holding-invalid-types = [
 ]
 ```
 
+Clippy leaves `disallowed_macros` allowed by default, so set the lint levels in
+the workspace:
+
+```toml
+# Cargo.toml
+[workspace.lints.clippy]
+disallowed_macros = "deny"
+await_holding_invalid_type = "deny"
+```
+
 A command line tool that writes its output to stdout allows `println!` in the
-module that renders that output.
+module that renders that output, with
+`#![allow(clippy::disallowed_macros)]` scoped to that module.

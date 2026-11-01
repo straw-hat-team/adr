@@ -87,8 +87,8 @@ open).
 ### Links
 
 Links are added after the span starts, so the sampler never sees them.
-`follows_from` becomes a link only while both spans are alive, and has
-panicked on multithreaded runtimes. Batch and fan-in consumers, where links
+`follows_from` becomes a link only while both spans are alive, and panicked
+on multithreaded runtimes before `tracing-opentelemetry` 0.32.1. Batch and fan-in consumers, where links
 are the model, get sampling decisions that ignore them.
 
 - **Handle with:** telemetry crate for consumer spans. `add_link` is
@@ -105,6 +105,9 @@ are the model, get sampling decisions that ignore them.
 
 - **Handle with:** tracing, by recording `error = &err as &dyn Error` on an
   event; or the telemetry crate, with `record_error` on the span's context.
+  Both are partial: they record the error message and its source chain, not a
+  call-site stacktrace, and neither sets `exception.type`. Record the type
+  explicitly as its own attribute.
 - **Evidence:**
   [tracing-opentelemetry#242](https://github.com/tokio-rs/tracing-opentelemetry/issues/242),
   [tracing#3560](https://github.com/tokio-rs/tracing/issues/3560),
@@ -115,7 +118,9 @@ are the model, get sampling decisions that ignore them.
 `u64`, `i128` and `u128` fields fall back to `Debug` and export as strings,
 which breaks numeric queries on them. `tracing` fields cannot carry arrays.
 
-- **Handle with:** tracing, by converting to `i64` before recording. Arrays go
+- **Handle with:** tracing, by converting to `i64` with `i64::try_from` before
+  recording, and recording a string or omitting the field when the value is out
+  of range; an `as` cast silently changes it. Arrays go
   through the telemetry crate with `set_attribute` and `Value::Array`.
 - **Evidence:** derived from the `tracing-opentelemetry` layer source, which
   has no `record_u64`.
@@ -133,9 +138,11 @@ recorded later.
 
 ### Span events
 
-Events inside a span become span events with no cap, and the span layer drops
-events outside any span. Long-lived spans grow without bound, and
-OpenTelemetry is moving from span events to log-based events.
+Events inside a span become span events, and the span layer drops events
+outside any span. The bridge imposes no cap, but the OpenTelemetry SDK limits
+a span to 128 events by default (configurable) and drops the rest, so
+long-lived spans lose events and still hold them in memory until the limit.
+OpenTelemetry is also moving from span events to log-based events.
 
 - **Handle with:** tracing. Keep spans short and filter long-lived connection
   spans off the layer.
@@ -189,8 +196,10 @@ crate created it, so backends cannot attribute or filter spans by library.
 
 ### Mixing both APIs
 
-Creating OpenTelemetry API spans and `tracing` spans side by side in the same
-code produces traces with the wrong shape.
+Creating OpenTelemetry API spans and `tracing` spans side by side produces
+traces with the wrong shape when each keeps its own context stack. It can work
+when one place manages activation and parenting, for example with
+`with_context_activation(true)`.
 
 - **Handle with:** telemetry crate. Its OpenTelemetry API spans become the
   current `Context` for the code below them.

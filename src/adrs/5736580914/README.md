@@ -143,7 +143,8 @@ short.
   timeout.
 - Edge spans (server, client, producer and consumer) **MUST** be created by
   boundary middleware in the telemetry crate, which extracts or injects the
-  W3C `traceparent` and sets the span kind when the span is created. It
+  W3C `traceparent` and `baggage` headers and sets the span kind when the span
+  is created. It
   **SHOULD** use the OpenTelemetry Tracing API for them, and **MUST** make
   the span the current `Context` for the handler, so the handler's `tracing`
   spans and events nest under it.
@@ -151,9 +152,12 @@ short.
   declared in the telemetry crate and exposed to application code as
   functions or types named for the domain. Metrics **MUST NOT** go through the
   `tracing-opentelemetry` `MetricsLayer`.
-- Recorded spans with explicit timestamps, array attributes, structured log
-  bodies and baggage **MUST** be emitted through functions in the telemetry
-  crate that use the OpenTelemetry API, parented on the current `tracing` span.
+- Recorded spans with explicit timestamps, array attributes and structured log
+  bodies **MUST** be emitted through functions in the telemetry crate that use
+  the OpenTelemetry API, parented on the current `tracing` span.
+- Baggage is context propagation, not span data. The telemetry crate **MUST**
+  create it, attach it to the `Context`, and extract and inject it at service
+  boundaries alongside the trace context.
 - All OpenTelemetry crates **MUST** stay on one minor version across the
   workspace, upgraded together with the matching `tracing-opentelemetry`.
 
