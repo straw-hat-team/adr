@@ -1,0 +1,350 @@
+asyncapi: 3.1.0
+id: urn:example:review-coordinator
+info:
+  title: Review coordinator
+  version: 0.1.0
+  description: Proposed application contract for reviewing a document with a selected group.
+defaultContentType: application/json
+servers:
+  example:
+    host: nats.example.test:4222
+    protocol: nats
+    description: Illustrative dedicated account; connection settings are deployment inputs.
+channels:
+  reviewRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.review.request
+    parameters:
+      scopeId:
+        description: Scope containing the recipient.
+      peerId:
+        description: Intended logical peer, whose receiving instances must share one identity contract.
+    messages:
+      request:
+        $ref: '#/components/messages/ReviewRequest'
+  reviewResults:
+    address: demo.v1.{scopeId}.review.{operationId}.result
+    parameters:
+      scopeId:
+        description: Scope of the operation.
+      operationId:
+        description: Correlated review operation.
+    messages:
+      result:
+        $ref: '#/components/messages/ReviewResult'
+  completions:
+    address: demo.v1.{scopeId}.review.completed
+    parameters:
+      scopeId:
+        description: Scope of the completed operation.
+    messages:
+      completed:
+        $ref: '#/components/messages/ReviewCompleted'
+  pingRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.ping
+    parameters:
+      scopeId:
+        description: Scope containing the recipient.
+      peerId:
+        description: Intended peer.
+    messages:
+      ping:
+        payload:
+          type: object
+          additionalProperties: false
+  pingReplies:
+    address: null
+    description: A fresh native NATS reply inbox chosen for each request.
+    messages:
+      pong:
+        payload:
+          type: object
+          required: [ready]
+          properties:
+            ready:
+              type: boolean
+          additionalProperties: false
+operations:
+  sendReview:
+    action: send
+    channel:
+      $ref: '#/channels/reviewRequests'
+  receiveReview:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewResults'
+  publishCompleted:
+    action: send
+    channel:
+      $ref: '#/channels/completions'
+  observeCompleted:
+    action: receive
+    channel:
+      $ref: '#/channels/completions'
+    summary: Observe live traffic without replay or consumer acknowledgments.
+  auditCompleted:
+    action: receive
+    channel:
+      $ref: '#/channels/completions'
+    summary: Read completion events through a durable JetStream consumer.
+  ping:
+    action: send
+    channel:
+      $ref: '#/channels/pingRequests'
+    reply:
+      channel:
+        $ref: '#/channels/pingReplies'
+components:
+  messages:
+    ReviewRequest:
+      payload:
+        $ref: '#/components/schemas/ReviewRequest'
+      correlationId:
+        location: $message.payload#/operationId
+    ReviewResult:
+      payload:
+        $ref: '#/components/schemas/ReviewResult'
+      correlationId:
+        location: $message.payload#/operationId
+    ReviewCompleted:
+      payload:
+        $ref: '#/components/schemas/ReviewSummary'
+      correlationId:
+        location: $message.payload#/operationId
+  schemas:
+    DocumentRef:
+      type: string
+      minLength: 1
+    ReviewRequest:
+      type: object
+      required: [operationId, branchId, attempt, peerId, documentRef]
+      properties:
+        operationId:
+          type: string
+        branchId:
+          type: string
+        attempt:
+          type: integer
+          minimum: 1
+        peerId:
+          type: string
+        documentRef:
+          $ref: '#/components/schemas/DocumentRef'
+      additionalProperties: false
+    ReviewResult:
+      type: object
+      required: [operationId, branchId, attempt, peerId, verdict]
+      properties:
+        operationId:
+          type: string
+        branchId:
+          type: string
+        attempt:
+          type: integer
+          minimum: 1
+        peerId:
+          type: string
+        verdict:
+          type: string
+          enum: [approved, rejected]
+      additionalProperties: false
+    ReviewSummary:
+      type: object
+      required: [operationId, approvedPeers, outcome]
+      properties:
+        operationId:
+          type: string
+        approvedPeers:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        outcome:
+          type: string
+          enum: [quorum-met, partial, failed]
+      additionalProperties: false
+    AudienceQuery:
+      type: object
+      required: [scopeId, groupId]
+      properties:
+        scopeId:
+          type: string
+        groupId:
+          type: string
+    AudienceSnapshot:
+      type: array
+      items:
+        type: object
+        required: [peerId, online]
+        properties:
+          peerId:
+            type: string
+          online:
+            type: boolean
+    AuthorizationInput:
+      type: object
+      description: Trusted caller context, action, scope, peer and current authorization data.
+    AuthorizationDecision:
+      type: boolean
+    ResultVerificationInput:
+      type: object
+      description: Result message, trusted verification material and frozen branch manifest.
+    ResultVerificationOutput:
+      type: object
+      required: [accepted, peerId]
+      properties:
+        accepted:
+          type: boolean
+        peerId:
+          type: string
+    AggregationInput:
+      type: object
+      required: [operationId, results, outcome]
+      properties:
+        operationId:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewResult'
+        outcome:
+          type: string
+          enum: [quorum-met, partial, failed]
+      additionalProperties: false
+x-nats-contract:
+  version: 0.1.0-draft
+  tokenTypes:
+    ScopeId:
+      pattern: '^[a-z][a-z0-9_-]{0,31}$'
+    PeerId:
+      pattern: '^[a-z][a-z0-9_-]{0,31}$'
+    GroupId:
+      pattern: '^[a-z][a-z0-9_-]{0,31}$'
+    OperationId:
+      pattern: '^[a-z][a-z0-9_-]{0,63}$'
+  channels:
+    reviewRequests:
+      parameters: { scopeId: ScopeId, peerId: PeerId }
+      filters:
+        byScope: demo.v1.{scopeId}.peer.*.review.request
+    reviewResults:
+      parameters: { scopeId: ScopeId, operationId: OperationId }
+    completions:
+      parameters: { scopeId: ScopeId }
+    pingRequests:
+      parameters: { scopeId: ScopeId, peerId: PeerId }
+  operations:
+    sendReview:
+      publish: { api: core, confirmation: none }
+    receiveReview:
+      subscribe: { api: core }
+    publishCompleted:
+      publish: { api: jetstream, confirmation: stream-ack, stream: completed }
+    observeCompleted:
+      subscribe: { api: core }
+    auditCompleted:
+      subscribe: { api: jetstream, consumer: completedAudit }
+    ping:
+      publish: { api: core, confirmation: none }
+      requestReply:
+        routing: native-inbox
+        completion: first-response
+        timeoutMs: 1000
+  streams:
+    completed:
+      name: REVIEW_COMPLETED
+      subjects: [demo.v1.*.review.completed]
+      retention: limits
+      storage: file
+      max_age: 86400000000000
+  consumers:
+    completedAudit:
+      stream: completed
+      config:
+        durable_name: review_audit
+        filter_subject: demo.v1.*.review.completed
+        ack_policy: explicit
+        deliver_policy: all
+  adapters:
+    groupDirectory:
+      kind: audience
+      version: 1.0.0
+      inputSchema: '#/components/schemas/AudienceQuery'
+      outputSchema: '#/components/schemas/AudienceSnapshot'
+      description: Proposed interface resolving a group inside a scope into distinct peers and current online status.
+    reviewPolicy:
+      kind: authorization
+      version: 1.0.0
+      inputSchema: '#/components/schemas/AuthorizationInput'
+      outputSchema: '#/components/schemas/AuthorizationDecision'
+      description: Proposed policy interface authorizing dispatch and result admission, including current revocation.
+    verifiedResults:
+      kind: result-verifier
+      version: 1.0.0
+      inputSchema: '#/components/schemas/ResultVerificationInput'
+      outputSchema: '#/components/schemas/ResultVerificationOutput'
+      description: Bind a result to its authenticated logical peer and frozen branch; a payload peerId alone is insufficient.
+    summarize:
+      kind: aggregation
+      version: 1.0.0
+      inputSchema: '#/components/schemas/AggregationInput'
+      outputSchema: '#/components/schemas/ReviewSummary'
+      description: Return operation identity, unique approved peers and the coordinator's outcome from typed aggregation input.
+    completedEvent:
+      kind: transform
+      version: 1.0.0
+      inputSchema: '#/components/schemas/ReviewSummary'
+      outputSchema: '#/components/schemas/ReviewSummary'
+      description: Identity mapping from a successful review summary to the completion event payload.
+  interactions:
+    reviewGroup:
+      requestOperation: sendReview
+      resultOperation: receiveReview
+      inputs:
+        scopeId: { tokenType: ScopeId, source: argument }
+        groupId: { tokenType: GroupId, source: argument }
+        operationId: { tokenType: OperationId, source: generated }
+        documentRef: { schema: '#/components/schemas/DocumentRef', source: argument }
+      audience:
+        kind: group
+        input: groupId
+        scopeInput: scopeId
+        resolver: groupDirectory
+        authorization: reviewPolicy
+        membership: snapshot-at-admission
+        includeSender: false
+        offline: exclude
+        lateJoiners: exclude
+        onRevocation: cancel-open-branches
+      dispatch:
+        mode: independent
+        branchKey: recipient
+        targetParameter: peerId
+      delivery:
+        mode: online-best-effort
+        state: memory
+        restart: fail-unknown
+        maxAttempts: 1
+      correlation:
+        operation: $message.payload#/operationId
+        branch: $message.payload#/branchId
+        attempt: $message.payload#/attempt
+        peer: $message.payload#/peerId
+        verifier: verifiedResults
+      completion:
+        mode: quorum
+        count: 2
+        unit: distinct-branches
+        success: { field: $message.payload#/verdict, equals: approved }
+        deadlineMs: 10000
+        onTimeout: partial
+        onImpossible: fail
+        lateResults: discard
+        remaining: detach
+      aggregation: summarize
+  pipelines:
+    reviewAndAnnounce:
+      steps:
+        - interaction: reviewGroup
+        - operation: publishCompleted
+          inputAdapter: completedEvent
+      onFailure: stop

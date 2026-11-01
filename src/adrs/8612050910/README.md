@@ -77,7 +77,8 @@ fail offline validation; a dynamic audience requires the corresponding admission
 
 - Use ordinary YAML and reuse standard operations, messages and payload-schema definitions where their semantics match.
 - An application-scoped profile **MAY** use schema-defined AsyncAPI extension fields. A cross-application interaction
-  manifest **MAY** reference application contracts. The final packaging and extension names remain open.
+  manifest **MAY** reference application contracts. The proposed application packaging is defined below;
+  cross-application packaging remains open.
 - A custom profile **MUST** have a version, documented semantics, structural validation and semantic checks. Passing
   standard AsyncAPI validation **MUST NOT** be reported as validation of custom interaction semantics.
 - A portable distribution **MUST** include the definitions needed to interpret the contract offline, including its
@@ -89,6 +90,18 @@ fail offline validation; a dynamic audience requires the corresponding admission
 Application AsyncAPI documents follow the proposed location rules in [ADR#1427717799](../1427717799/README.md), which is
 also Draft. This ADR does not reserve a directory or filename for a new interaction specification. Documentation follows
 [ADR#3223845695](../3223845695/README.md).
+
+### Proposed application file
+
+The concrete proposal is one `asyncapi/asyncapi.yaml` per application, containing standard AsyncAPI channels, messages
+and operations plus a versioned `x-nats-contract` extension. The extension supplies token domains, permitted filters,
+operation bindings, native resource declarations, adapter requirements and composable interaction rules.
+
+The [proposed specification](./references/specification.md) defines the fields and their meaning. Its
+[complete example](./references/example.md) combines Core request/reply, JetStream publication and consumption, and a
+multicast scatter-gather interaction with a quorum. The [profile JSON Schema](./references/profile-schema.md) validates
+extension structure; semantic validation and execution remain separate responsibilities. These artifacts are Draft
+proposals, not existing tool capabilities.
 
 ### Optional generation
 
@@ -130,8 +143,8 @@ where promised and verification of deployed resources and business effects.
 
 ## Open questions
 
-- Should the authoring artifact be an AsyncAPI extension or a companion interaction manifest, and where does a companion
-  belong?
+- Does the proposed application extension cover the required authoring cases, and how should cross-application
+  interactions reference independently owned contracts?
 - Which existing workflow definitions cover the required composition semantics, and which gaps require the interaction
   profile?
 - What subject parameter domains, overlap rules and standard policy operators are required?
@@ -141,6 +154,7 @@ where promised and verification of deployed resources and business effects.
 
 ## Links
 
+- [Proposed specification and worked example](./references/specification.md)
 - [Supporting research and reading guide](./references/README.md)
 - [Declarative coverage and specification packaging](./references/declarative-coverage.md)
 - [Interaction patterns and NATS mappings](./references/interaction-patterns.md)

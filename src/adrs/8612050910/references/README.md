@@ -8,6 +8,8 @@ these references explain its evidence and alternatives.
 
 ## Explanations
 
+- [Proposed application contract](./specification.md): the concrete file format, a worked execution trace, field
+  semantics, and validation boundaries. Start here to understand how someone would write and use a contract.
 - [Declarative coverage and specification packaging](./declarative-coverage.md): what a contract can define, which facts
   remain dynamic, where checks run, and why a versioned interaction profile may be needed.
 - [Subject code generation](./subject-code-generation.md): the intended Rust/TypeScript outputs, subject grammar
@@ -19,6 +21,8 @@ these references explain its evidence and alternatives.
 
 ## References
 
+- [Complete proposed AsyncAPI file](./example.md) and [profile JSON Schema](./profile-schema.md): draft artifacts for
+  reviewing the proposed format.
 - [Technology landscape, maturity and licensing](./technology-landscape.md): standards, catalogs, generators,
   registries, native NATS tools, configuration, testing, diagramming and legacy alternatives, with primary-source links.
 - [Evaluation approaches and open questions](./evaluation.md): candidate approaches, entity relationships and
@@ -39,6 +43,6 @@ a selected workflow engine.
 
 ## Continuing the draft
 
-Document the vocabulary and validation boundary first. Resolve the ADR's open questions, compare existing workflow and
-messaging definitions against the requirements, and select packaging only after its scope is clear. Optional generation
-follows that contract; it does not replace the documentation.
+Review the proposed file and its worked example, refine adapter and validation contracts, and compare existing workflow
+definitions against the remaining composition requirements. Cross-application packaging remains open. Optional
+generation follows that contract; it does not replace the documentation.

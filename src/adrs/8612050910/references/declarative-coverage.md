@@ -3,6 +3,9 @@
 Research snapshot: 2026-11-01. This material supports the Draft [ADR#8612050910](../README.md). Proposed semantics are
 distinct from verified standard or product capabilities. See the [reading guide](./README.md).
 
+The [proposed application file](./specification.md) now makes an AsyncAPI extension candidate concrete. This research
+retains the alternative packaging choices and their tradeoffs.
+
 ## What can be defined statically
 
 The current focus is documenting **how much of the subject and interaction behavior can be declared in a contract**,
