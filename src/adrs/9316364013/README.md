@@ -35,6 +35,7 @@ decided by the ADR that owns it, linked from the table.
   | `devops/`                 | operational assets that reach nothing live | [ADR#2078011537](../2078011537/README.md) |
   | `devops/infra/`           | the live estate: Terragrunt and GitOps     | [ADR#6561361204](../6561361204/README.md) |
   | `proto/`, `wit/`, `otel/` | schema sources, one directory per language | [ADR#4711775939](../4711775939/README.md) |
+  | `openapi/`, `asyncapi/`   | interface documents, one per specification | [ADR#1427717799](../1427717799/README.md) |
 
 - You **MUST NOT** reuse a reserved directory name for another purpose at the
   repository root, and you **MUST NOT** place these files anywhere else unless
@@ -51,3 +52,4 @@ decided by the ADR that owns it, linked from the table.
 - [ADR#2078011537](../2078011537/README.md): Operational assets
 - [ADR#6561361204](../6561361204/README.md): Live infrastructure
 - [ADR#4711775939](../4711775939/README.md): Schema source directories
+- [ADR#1427717799](../1427717799/README.md): OpenAPI and AsyncAPI documents
