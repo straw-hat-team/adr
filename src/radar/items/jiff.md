@@ -3,7 +3,7 @@ name: Jiff
 quadrant: languages-and-frameworks
 history:
   - edition: '2026.3'
-    ring: adopt
+    ring: assess
 tags: [rust, datetime, time-zones]
 ---
 
@@ -14,11 +14,11 @@ datetimes as distinct types, does time zone aware arithmetic and rounding, and r
 from the system or embeds it when the target has none, so daylight saving transitions are handled by the library
 instead of by every caller.
 
-It sits in Adopt because the alternative is going away. The maintainer of [Chrono](./chrono.md) soft-deprecated it
-and chrono-tz in [chronotope/chrono#1768](https://github.com/chronotope/chrono/issues/1768), named Jiff as the
-replacement they are comfortable recommending, and an unmaintained advisory is queued in RustSec for after Jiff
-1.0. Picking Jiff now means one migration instead of two.
+It sits in Assess because it is the likely successor rather than a settled one. The maintainer of
+[Chrono](./chrono.md) soft-deprecated it and chrono-tz in
+[chronotope/chrono#1768](https://github.com/chronotope/chrono/issues/1768) and named Jiff as the replacement they
+are comfortable recommending, which makes it the first library to prototype against when Chrono comes up.
 
-Jiff is still on 0.x, so a minor version can carry breaking changes. Pin it like any other pre-1.0 dependency and
-expect one more API adjustment at 1.0; that is a smaller cost than starting on a library whose time zone data has
-stopped being updated.
+What keeps it out of Trial is that Jiff is still on 0.x, so a minor version can carry breaking changes, and the
+RustSec unmaintained advisory for Chrono is deliberately waiting for Jiff 1.0. Learn the API, try it where a
+datetime dependency is new, and revisit the placement at 1.0.

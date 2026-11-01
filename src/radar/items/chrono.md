@@ -20,5 +20,4 @@ next time a government moves a clock. A RustSec unmaintained advisory is planned
 1.0.
 
 Hold is not a removal order. Code using Chrono keeps working, and a dependency pulling it in transitively is not a
-reason to fork anything. New code should use Jiff, and code that depends on chrono-tz for correctness should move
-first.
+reason to fork anything. New code should not add it, and Jiff is the candidate being assessed to replace it.
