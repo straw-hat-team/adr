@@ -1,0 +1,28 @@
+{
+  "streams": {
+    "requests": {
+      "name": "REVIEW_REQUESTS",
+      "subjects": ["demo.v1.*.peer.*.review.request"],
+      "retention": "limits",
+      "storage": "file",
+      "num_replicas": 3,
+      "max_age": 86400000000000,
+      "max_msgs": 100000,
+      "max_bytes": 67108864,
+      "discard": "new",
+      "duplicate_window": 120000000000
+    },
+    "results": {
+      "name": "REVIEW_RESULTS",
+      "subjects": ["demo.v1.*.review.*.result.*"],
+      "retention": "limits",
+      "storage": "file",
+      "num_replicas": 3,
+      "max_age": 86400000000000,
+      "max_msgs": 100000,
+      "max_bytes": 67108864,
+      "discard": "new",
+      "duplicate_window": 120000000000
+    }
+  }
+}

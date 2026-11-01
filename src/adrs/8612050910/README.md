@@ -76,9 +76,8 @@ fail offline validation; a dynamic audience requires the corresponding admission
 ### Reuse and packaging
 
 - Use ordinary YAML and reuse standard operations, messages and payload-schema definitions where their semantics match.
-- An application-scoped profile **MAY** use schema-defined AsyncAPI extension fields. A cross-application interaction
-  manifest **MAY** reference application contracts. The proposed application packaging is defined below;
-  cross-application packaging remains open.
+- Application contracts **MUST** use the versioned AsyncAPI extension. Cross-application references **MUST** use locked
+  imports and explicit operation links. System topology is a projection, not a second handwritten messaging spec.
 - A custom profile **MUST** have a version, documented semantics, structural validation and semantic checks. Passing
   standard AsyncAPI validation **MUST NOT** be reported as validation of custom interaction semantics.
 - A portable distribution **MUST** include the definitions needed to interpret the contract offline, including its
@@ -141,27 +140,31 @@ A profile requires maintained semantics, versioning, validation and conformance 
 display extensions while ignoring their meaning. Declarative policy still requires a functioning executor, durable state
 where promised and verification of deployed resources and business effects.
 
-## Open questions
+## Resolved design questions
 
-- Does the proposed application extension cover the required authoring cases, and how should cross-application
-  interactions reference independently owned contracts?
-- Which existing workflow definitions cover the required composition semantics, and which gaps require the interaction
-  profile?
-- What subject parameter domains, overlap rules and standard policy operators are required?
-- What are the membership, ownership, completion, cancellation and recovery rules for each supported pattern?
-- Which checks run offline, at admission, at deployment and during execution?
-- Which generators and executor capabilities can pass shared contract fixtures?
+The [decision record](./references/decisions.md) closes packaging, workflow reuse, domains/overlap, operators,
+membership/ownership/completion/cancellation/recovery, validation stages and generator capability selection. The
+[v0.2 field reference](./references/profile-reference.md), [runtime semantics](./references/runtime-semantics.md) and
+[conformance contract](./references/conformance.md) define the resulting requirements.
+
+The selected generation direction is a profile-owned compiler producing standalone Rust/TypeScript subject/filter APIs
+and descriptors. No existing generator or executor is certified without its capability evidence. Draft remains the ADR
+approval state; implementation evidence is distinct from both approval and specified policy.
 
 ## Links
 
 - [Proposed specification and worked example](./references/specification.md)
+- [Resolved decisions](./references/decisions.md)
+- [Profile v0.2 reference](./references/profile-reference.md)
+- [Runtime semantics](./references/runtime-semantics.md)
+- [Conformance requirements](./references/conformance.md)
 - [Supporting research and reading guide](./references/README.md)
 - [Declarative coverage and specification packaging](./references/declarative-coverage.md)
 - [Interaction patterns and NATS mappings](./references/interaction-patterns.md)
 - [Subject generation and Rust/TypeScript candidates](./references/subject-code-generation.md)
 - [Technology landscape, maturity and licensing](./references/technology-landscape.md)
 - [Research context and evidence limits](./references/research-context.md)
-- [Evaluation scenarios, alternatives and open questions](./references/evaluation.md)
+- [Evaluation scenarios, alternatives and resolved questions](./references/evaluation.md)
 - [ADR#1427717799](../1427717799/README.md): OpenAPI and AsyncAPI source locations (Draft)
 - [ADR#4711775939](../4711775939/README.md): Schema source directories
 - [ADR#3223845695](../3223845695/README.md): Documentation structure

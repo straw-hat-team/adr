@@ -3,10 +3,14 @@
 This material supports the Draft [ADR#8612050910](../README.md), Declarative NATS subject and interaction contracts.
 
 The research snapshot is **2026-11-01**. It preserves the technology survey, the required interaction vocabulary, the
-declarative-versus-runtime analysis, and the open packaging/generation questions. The ADR states the proposed direction;
-these references explain its evidence and alternatives.
+declarative-versus-runtime analysis, and the answers to packaging/generation questions. The ADR states the proposed
+direction; these references explain its evidence and alternatives.
 
 ## Explanations
+
+- [Resolved decisions](./decisions.md): answers and rationale for the prior open design questions.
+- [Profile v0.2 reference](./profile-reference.md): exact vocabulary, authority, bindings and supported surface.
+- [Runtime semantics](./runtime-semantics.md): trust, admission, guarded state, recovery, ownership and closure.
 
 - [Proposed application contract](./specification.md): the concrete file format, a worked execution trace, field
   semantics, and validation boundaries. Start here to understand how someone would write and use a contract.
@@ -21,11 +25,14 @@ these references explain its evidence and alternatives.
 
 ## References
 
+- [Conformance](./conformance.md): offline checks, shared fixtures and provider acceptance gates.
+- [Adapter protocol schemas](./adapter-contracts.md): closed control/context records and typed method data.
+
 - [Complete proposed AsyncAPI file](./example.md) and [profile JSON Schema](./profile-schema.md): draft artifacts for
   reviewing the proposed format.
 - [Technology landscape, maturity and licensing](./technology-landscape.md): standards, catalogs, generators,
   registries, native NATS tools, configuration, testing, diagramming and legacy alternatives, with primary-source links.
-- [Evaluation approaches and open questions](./evaluation.md): candidate approaches, entity relationships and
+- [Evaluation approaches and resolved questions](./evaluation.md): candidate approaches, entity relationships and
   representative acceptance scenarios.
 
 ## Evidence limits
@@ -34,15 +41,14 @@ Public specifications, project repositories and vendor documentation supply the 
 the claims they support. Product versions, licenses, archive states and integrations are dated findings and should be
 refreshed before adoption.
 
-No surveyed generator was installed or tested against a NATS deployment. Proposed policy fields and examples are design
-requirements, not an implemented or standardized schema. No candidate has demonstrated the complete required interaction
-coverage in this research.
+No surveyed generator was tested against a NATS deployment. Proposed fields, schemas and protocols are this Draft
+contract, not established ecosystem runtime capabilities. Offline fixtures establish their checked static slices. No
+candidate has demonstrated complete required interaction execution in this research.
 
-The examples define intended semantics. They do not establish an existing application protocol, a new wire envelope, or
-a selected workflow engine.
+The examples define proposed schemas and protocols, not an already deployed application protocol. No generator or
+workflow engine is certified by the presence of an example.
 
-## Continuing the draft
+## Approval and implementation
 
-Review the proposed file and its worked example, refine adapter and validation contracts, and compare existing workflow
-definitions against the remaining composition requirements. Cross-application packaging remains open. Optional
-generation follows that contract; it does not replace the documentation.
+Design questions have proposed answers. Draft remains the approval state. Implementation follows the specified compiler,
+adapter and conformance boundaries; it must not silently reopen policy or claim untested provider guarantees.

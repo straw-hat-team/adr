@@ -1,9 +1,12 @@
-# Evaluation approaches and open questions
+# Evaluation approaches and resolved questions
 
 Research snapshot: 2026-11-01. This material supports the Draft [ADR#8612050910](../README.md). Proposed semantics are
 distinct from verified standard or product capabilities. See the [reading guide](./README.md).
 
-## Recommended approaches
+## Research alternatives
+
+The [decision record](./decisions.md) selects the current profile direction. These dated alternatives remain preserved
+as supporting research, not unanswered current design choices.
 
 ### Practical default: one contract, optional subject generation
 
@@ -17,10 +20,10 @@ configuration into the portable contract artifact. Where the contract is to own 
 configuration from it. Do not independently edit equivalent copies. Physical deployment and live observations remain
 optional linked views.
 
-The unresolved cost is the semantic profile and any missing subject-generation capabilities, especially Rust/TypeScript
-parity. The Codegen Project is a concrete TypeScript evaluation lead; the Rust community template needs practical
-validation. A small custom subject generator may be appropriate if neither preserves the required semantics, but
-implementation has not been selected or authorized.
+The implementation cost is maintaining the semantic profile and delivering subject-generation parity across
+Rust/TypeScript. The Codegen Project is a concrete TypeScript evaluation lead; the Rust community template needs
+practical validation. A small custom subject generator may be appropriate if neither preserves the required semantics,
+but implementation has not been selected or authorized.
 
 Choose EventCatalog, Backstage, Bump.sh or static AsyncAPI HTML only after the contract and generation behavior are
 clear. None is required for the document itself to serve as the reference.
@@ -156,17 +159,24 @@ An eventual evaluation should use a representative system rather than a single h
 For each candidate, inspect the generated artifacts, machine-readable export, ownership workflow and documented
 limitations. No such evaluation was run as part of this report.
 
-## Questions for the discussion
+## Resolved questions from the discussion
 
-- Which domain types and token constraints must subject builders preserve in both Rust and TypeScript?
-- Which subscription-filter constructions should be allowed, and how should overlapping subject families be handled?
-- For the required pattern set, which membership timing, per-recipient delivery, ownership and completion policies must
-  be expressible?
-- Should the contract generate native topology configuration, or bundle/reference configuration owned elsewhere?
-- Are standalone subject libraries sufficient initially, with client generation left optional?
-- Which immutable contract/version reference should appear in generated API documentation?
-- Must the portable contract work entirely offline, including its payload schemas and profile definition?
+- Which domains and constraints must both languages preserve? **Answer:** the closed ASCII token/enum grammar, byte
+  bounds and prefixes, enforced identically in constructors and parsers.
+- Which filters and overlap rules are allowed? **Answer:** named NATS wildcard templates separately typed from
+  addresses; disjoint local concrete channels and explicit equal-language links across apps. Partial overlap fails.
+- Which membership, delivery, ownership and completion policies are expressible? **Answer:** frozen authorized
+  audiences, independent/durable or one-eligible dispatch, fenced claims/retries, identified branches, fixed/fractional
+  quorums, bounded cancellation and separate decision/settlement boundaries.
+- Generate native topology or reference another owner? **Answer:** explicit contract/external authority, using locked
+  artifacts and pointers for external facts. Never independently edit both.
+- Are standalone subject libraries sufficient first? **Answer:** yes, Rust/TypeScript value objects, parsers, filters
+  and descriptors first; broker clients and execution are separate capability targets.
+- Which immutable source reference appears in generated docs? **Answer:** contract ID/version, exact digest and source
+  channel/operation/interaction identity.
+- Must dependencies work offline? **Answer:** yes; lock every required contract, schema, native artifact and workflow
+  source. Validation/generation reject network resolution.
 
-**Suggested starting point for the conversation:** define a representative subject family, its valid/invalid values,
-allowed subscription filters and delivery relationships. Judge the Rust and TypeScript outputs against that same
-contract. Keep code generation optional and preserve the document as the usable source of truth.
+The [decisions](./decisions.md) give rationale, the [profile](./profile-reference.md) supplies fields, and
+[conformance](./conformance.md) defines evidence. Earlier research alternatives remain the basis for these choices.
+Untested products have not become certified implementations.

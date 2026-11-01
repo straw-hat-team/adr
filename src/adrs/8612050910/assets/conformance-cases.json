@@ -1,0 +1,887 @@
+{
+  "version": 1,
+  "evidence": "Offline structure, subject algebra and pure completion vectors only; not broker or executor certification.",
+  "cases": [
+    {
+      "id": "peer-domain",
+      "kind": "token",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "tokenType": "PeerId",
+      "valid": ["alfa", "bravo", "peer_1"],
+      "invalid": ["", "*", ">", "alfa.extra", "alfa beta", "ALFA", "\u00f1"]
+    },
+    {
+      "id": "operation-domain",
+      "kind": "token",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "tokenType": "OperationId",
+      "valid": [
+        "opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "op0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "invalid": [
+        "wrong",
+        "op.x",
+        "opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "opgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+        "OPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ]
+    },
+    {
+      "id": "request-round-trip",
+      "kind": "render-parse",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "channel": "reviewRequests",
+      "parameters": {
+        "scopeId": "lab",
+        "peerId": "alfa"
+      },
+      "subject": "demo.v1.lab.peer.alfa.review.request",
+      "invalidSubjects": [
+        "demo.v1.lab.peer.*.review.request",
+        "demo.v1.lab.peer.alfa.extra.review.request",
+        "demo.v1.lab.peer.ALFA.review.request"
+      ]
+    },
+    {
+      "id": "result-round-trip",
+      "kind": "render-parse",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "channel": "reviewResults",
+      "parameters": {
+        "scopeId": "lab",
+        "operationId": "opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "peerId": "alfa"
+      },
+      "subject": "demo.v1.lab.review.opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.result.alfa",
+      "invalidSubjects": [
+        "demo.v1.lab.review.opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.result",
+        "demo.v1.lab.review.opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.result.*"
+      ]
+    },
+    {
+      "id": "core-cannot-claim-storage-ack",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/operations/sendReview/publish/confirmation",
+          "value": "stream-ack"
+        }
+      ],
+      "diagnostic": "PROFILE_STRUCTURE"
+    },
+    {
+      "id": "operation-direction",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/operations/sendReview/action",
+          "value": "receive"
+        }
+      ],
+      "diagnostic": "DIRECTION_MISMATCH"
+    },
+    {
+      "id": "missing-required-request-binding",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/x-nats-contract/interactions/reviewGroup/bindings/payload/~1documentRef"
+        }
+      ],
+      "diagnostic": "UNBOUND_PAYLOAD"
+    },
+    {
+      "id": "wrong-token-domain",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/channels/reviewRequests/parameters/peerId",
+          "value": "Missing"
+        }
+      ],
+      "diagnostic": "TOKEN_TYPE"
+    },
+    {
+      "id": "overlapping-channel-families",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "copy",
+          "from": "/channels/reviewRequests",
+          "path": "/channels/otherReviewRequests"
+        },
+        {
+          "op": "copy",
+          "from": "/x-nats-contract/channels/reviewRequests",
+          "path": "/x-nats-contract/channels/otherReviewRequests"
+        }
+      ],
+      "diagnostic": "CHANNEL_OVERLAP"
+    },
+    {
+      "id": "quorum-must-have-threshold",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/x-nats-contract/interactions/reviewGroup/completion/count"
+        }
+      ],
+      "diagnostic": "PROFILE_STRUCTURE"
+    },
+    {
+      "id": "single-peer-quorum-impossible",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/audience/kind",
+          "value": "peer"
+        }
+      ],
+      "diagnostic": "IMPOSSIBLE_QUORUM"
+    },
+    {
+      "id": "lease-renewal-needs-margin",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroupDurable/delivery/ownership/renewEveryMs",
+          "value": 1500
+        }
+      ],
+      "diagnostic": "LEASE_RENEWAL"
+    },
+    {
+      "id": "durable-requires-limits-retention",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/streams/requests",
+          "value": {
+            "authority": "contract",
+            "config": {
+              "name": "REVIEW_REQUESTS",
+              "subjects": ["demo.v1.*.peer.*.review.request"],
+              "retention": "workqueue",
+              "storage": "file",
+              "num_replicas": 3,
+              "max_age": 86400000000000,
+              "max_msgs": 100000,
+              "max_bytes": 67108864,
+              "discard": "new",
+              "duplicate_window": 120000000000
+            }
+          }
+        }
+      ],
+      "diagnostic": "DURABLE_RETENTION"
+    },
+    {
+      "id": "adapter-role-mismatch",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/adapters/verifiedResults/kind",
+          "value": "transform"
+        }
+      ],
+      "diagnostic": "ADAPTER_KIND"
+    },
+    {
+      "id": "missing-import-alias",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/receiverOperation",
+          "value": {
+            "contract": "missing",
+            "operation": "receiveReview"
+          }
+        }
+      ],
+      "diagnostic": "REFERENCE_NOT_FOUND"
+    },
+    {
+      "id": "duplicate-branch-is-one-vote",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "count": 2,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "success",
+        "counted": 2,
+        "rejected": 1,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "late-result-cannot-reopen",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "count": 2,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "success",
+        "counted": 2,
+        "rejected": 1,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "wrong-peer-is-not-a-vote",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "count": 2,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "pending",
+        "counted": 0,
+        "rejected": 1,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "stale-fence-is-not-a-vote",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 2,
+          "fence": 2
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "count": 1,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 2,
+          "fence": 2,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "success",
+        "counted": 1,
+        "rejected": 1,
+        "threshold": 1
+      }
+    },
+    {
+      "id": "fraction-is-ceiling-of-admitted-units",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "onTimeout": "partial",
+        "fraction": {
+          "numerator": 2,
+          "denominator": 3
+        }
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "success",
+        "counted": 2,
+        "rejected": 0,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "deadline-precedes-later-result",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "count": 2,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "deadline"
+        },
+        {
+          "kind": "result",
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "partial",
+        "counted": 1,
+        "rejected": 1,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "quorum-impossibility-closes",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "count": 2,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "failure"
+        },
+        {
+          "kind": "result",
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1,
+          "status": "revoked"
+        }
+      ],
+      "expected": {
+        "outcome": "failed",
+        "counted": 1,
+        "rejected": 0,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "peer-votes-do-not-count-branches",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "a1",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "a2",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-peers",
+        "count": 2,
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "a1",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "a2",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "pending",
+        "counted": 1,
+        "rejected": 0,
+        "threshold": 2
+      }
+    },
+    {
+      "id": "all-terminal-waits-for-sibling-settlement",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "a1",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "a2",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "all-terminal",
+        "unit": "distinct-peers",
+        "onTimeout": "partial"
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "a1",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "pending",
+        "counted": 1,
+        "rejected": 0,
+        "threshold": 1
+      }
+    },
+    {
+      "id": "duplicate-yaml-key",
+      "kind": "invalid-yaml",
+      "source": "name: first\nname: second\n",
+      "diagnostic": "DUPLICATE_KEY"
+    },
+    {
+      "id": "result-identity-needs-deployment-binding",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/x-nats-contract/channels/reviewResults/publisherIdentity"
+        }
+      ],
+      "diagnostic": "IDENTITY_BINDING"
+    },
+    {
+      "id": "anycast-counts-logical-branches",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/dispatch/mode",
+          "value": "one-eligible"
+        },
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/completion/unit",
+          "value": "distinct-peers"
+        },
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/dispatch/selector",
+          "value": "pickPeer"
+        },
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/completion/count",
+          "value": 1
+        },
+        {
+          "op": "set",
+          "path": "/components/schemas/SelectionInput",
+          "value": {
+            "$ref": "./adapter-contracts.schema.json#/definitions/SelectionInput"
+          }
+        },
+        {
+          "op": "set",
+          "path": "/components/schemas/SelectionOutput",
+          "value": {
+            "$ref": "./adapter-contracts.schema.json#/definitions/SelectionOutput"
+          }
+        },
+        {
+          "op": "set",
+          "path": "/x-nats-contract/adapters/pickPeer",
+          "value": {
+            "kind": "selection",
+            "version": "0.2.0",
+            "inputSchema": "#/components/schemas/SelectionInput",
+            "outputSchema": "#/components/schemas/SelectionOutput",
+            "description": "Choose the first authorized lexicographic candidate."
+          }
+        }
+      ],
+      "diagnostic": "PROFILE_STRUCTURE"
+    },
+    {
+      "id": "cancel-command-identity",
+      "kind": "schema-value",
+      "definition": "CancelRequest",
+      "valid": true,
+      "value": {
+        "operationId": "opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branchId": "alfa",
+        "peerId": "alfa",
+        "attempt": 1,
+        "fence": 1,
+        "reason": "early-decision",
+        "cancelDeadlineMs": 11000
+      }
+    },
+    {
+      "id": "cancel-command-rejects-extra-context",
+      "kind": "schema-value",
+      "definition": "CancelRequest",
+      "valid": false,
+      "value": {
+        "operationId": "opaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branchId": "alfa",
+        "peerId": "alfa",
+        "attempt": 1,
+        "fence": 1,
+        "reason": "early-decision",
+        "cancelDeadlineMs": 11000,
+        "trustedPeer": "bravo"
+      }
+    },
+    {
+      "id": "deterministic-invocation-id",
+      "kind": "invocation-id",
+      "principalId": "principal-alfa",
+      "contractDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "invocationKey": "review-001",
+      "expected": "op5a143a584fcfbc6dc20d45401a66bbd043bd08baf3496a9ad391da533b9bdfd3"
+    },
+    {
+      "id": "time-guard-includes-lower-bound",
+      "kind": "time-guard",
+      "guard": {
+        "notBeforeMs": 1000,
+        "notAfterMs": 2000
+      },
+      "committedAtMs": 1000,
+      "allowed": true
+    },
+    {
+      "id": "time-guard-excludes-deadline",
+      "kind": "time-guard",
+      "guard": {
+        "notBeforeMs": 1000,
+        "notAfterMs": 2000
+      },
+      "committedAtMs": 2000,
+      "allowed": false
+    },
+    {
+      "id": "time-guard-rejects-early-commit",
+      "kind": "time-guard",
+      "guard": {
+        "notBeforeMs": 1000,
+        "notAfterMs": 2000
+      },
+      "committedAtMs": 999,
+      "allowed": false
+    },
+    {
+      "id": "filter-wildcard-must-be-whole-final-token",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/channels/reviewRequests/filters/byScope",
+          "value": "demo.>.peer.*.review.request"
+        }
+      ],
+      "diagnostic": "FILTER_GRAMMAR"
+    },
+    {
+      "id": "filter-must-intersect-channel-family",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/channels/reviewRequests/filters/byScope",
+          "value": "demo.v1.{scopeId}.peer.*.review.other"
+        }
+      ],
+      "diagnostic": "FILTER_CHANNEL"
+    },
+    {
+      "id": "durable-result-cannot-use-live-core-only",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroupDurable/resultOperation",
+          "value": "receiveReview"
+        }
+      ],
+      "diagnostic": "DURABLE_RESULT_TRANSPORT"
+    }
+  ]
+}

@@ -264,10 +264,10 @@ generator**, **supported by an executor**, and **verified against deployed behav
 only that it accepts the field. Code generation and broker configuration are possible projections; neither automatically
 implements the entire interaction.
 
-Static checking should reject known contradictions and mark unresolved questions as deferred. For example, a fixed
-quorum exceeding a fixed eligible audience is an offline error; a runtime-selected audience requires the same check
-after resolution. If a consumer, policy or resolver is supplied externally, preserve its contract reference and state
-which guarantees depend on it.
+Static checking rejects known contradictions and labels checks requiring actual runtime inputs by their
+admission/runtime stage. For example, a fixed quorum exceeding a fixed eligible audience is an offline error; a
+runtime-selected audience requires the same check after resolution. If a consumer, policy or resolver is supplied
+externally, preserve its contract reference and state which guarantees depend on it.
 
 **Documentation priority:** specify the declarative vocabulary, required inputs, validation limits and runtime
 responsibilities for each pattern. Keep Rust/TypeScript generation as a later consumer of that specification. The
