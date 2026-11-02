@@ -70,14 +70,16 @@ a new language never needs a naming decision.
   a tool that reads the whole repository goes under `.config/<tool>/`.
 - You **MUST** keep everything a workspace owns inside it, including database
   migrations its code embeds, test fixtures and examples.
-- You **MUST** keep the directories reserved by
-  [ADR#9316364013](../9316364013/README.md) at the repository root. A
-  workspace consumes them; it **MUST NOT** carry its own copy.
-- You **MUST** place Rust crates under `rsworkspace/crates/<crate>/`, and
-  **MUST** follow the toolchain's own layout inside every other workspace.
+- You **MUST NOT** carry a copy of a directory reserved by
+  [ADR#9316364013](../9316364013/README.md) inside a workspace. The workspace
+  consumes the one beside it.
+- You **MUST** place the crates of a Cargo workspace under
+  `rsworkspace/crates/<crate>/`, and **MUST** follow the toolchain's own
+  layout inside every other workspace.
 
   ```txt
   .
+  ├── .github/
   ├── .config/<tool>/
   ├── devops/
   ├── docs/
@@ -103,11 +105,11 @@ a new language never needs a naming decision.
 
 - A Go module inside `goworkspace/` carries its directory in its import path,
   `github.com/<org>/<repo>/goworkspace/<module>`, and tags its releases
-  `goworkspace/<module>/vX.Y.Z`. A repository that publishes a Go module for others to
-  import decides that path before the first release, because changing it
-  later breaks every importer.
-- Existing `rustworkspace/`, `go-workspace/` and `elixirworkspace/`
-  directories are renamed. The rename touches the paths in CI, container
+  `goworkspace/<module>/vX.Y.Z`. A repository that publishes a Go module for
+  others to import decides that path before the first release, because
+  changing it later breaks every importer.
+- Existing `rustworkspace/`, `go-workspace/`, `elixirworkspace/` and
+  `kotlinworkspace/` directories are renamed. The rename touches the paths in CI, container
   builds and mise tasks, and nothing else.
 
 ## Links
@@ -115,5 +117,6 @@ a new language never needs a naming decision.
 - [ADR#9316364013](../9316364013/README.md): Reserved repository directories
 - [ADR#4711775939](../4711775939/README.md): Schema source directories
 - [ADR#2078011537](../2078011537/README.md): Operational assets
+- [ADR#0752163629](../0752163629/README.md): Project namespaces
 - [ADR#1631648331](../1631648331/README.md): Rust is the language for new
   services and programs
