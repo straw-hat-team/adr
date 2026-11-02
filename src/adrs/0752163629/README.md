@@ -36,9 +36,12 @@ depending on it.
 - You **SHOULD** express each thing a repository holds as a namespace segment
   inside the root directories: a crate or package name prefix, a protobuf
   package path, an image or chart name, an OpenTelemetry registry domain.
-- You **MAY** move a thing into its own `projects/<project>/` directory when it
-  needs isolation: its own owner, its own release cadence, or deletion as a
-  unit.
+- You **SHOULD NOT** create `projects/` until a thing needs isolation that a
+  namespace segment cannot give it: its own owner, its own release cadence, or
+  deletion as a unit. You **MUST NOT** create it in anticipation of a second
+  thing, and a repository that holds one thing never has it.
+- You **MAY** then move that thing into its own `projects/<project>/`
+  directory.
 - You **MUST** name `<project>` in kebab-case and use the same name as the
   prefix of the crates, packages, images and charts it produces.
 - You **MUST** treat `projects/<project>/` as a repository root. Every ADR that
