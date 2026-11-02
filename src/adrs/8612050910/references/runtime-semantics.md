@@ -9,7 +9,8 @@ provider, not claims about an installed runtime. Field shapes are in the adapter
 The runtime authenticates an invocation and constructs the closed RuntimeContext. Principal and sender identify the
 original invoker; candidate/acting peers are explicit data fields. Account/system/domain come from the operator's
 deployment binding. Time comes from the trusted provider clock, never message payload. AuthorizationInput combines the
-original invocation context, action, peer, branch and attempt. An unavailable, expired or denied decision fails closed.
+original invocation context, action, peer, branch and attempt. Authorization attempts are in 1..16; candidate checks
+before admission use the prospective first attempt, 1. An unavailable, expired or denied decision fails closed.
 Authorization revisions are recorded with admitted obligations, but current revocation is rechecked before subsequent
 protected transitions.
 

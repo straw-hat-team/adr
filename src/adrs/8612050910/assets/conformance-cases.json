@@ -1181,6 +1181,90 @@
         }
       ],
       "diagnostic": "UNBOUND_PAYLOAD"
+    },
+    {
+      "id": "authorization-dispatch-rejects-attempt-zero",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": false,
+      "value": {
+        "action": "dispatch",
+        "peerId": "alfa",
+        "branchId": "alfa",
+        "attempt": 0
+      }
+    },
+    {
+      "id": "authorization-result-rejects-attempt-zero",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": false,
+      "value": {
+        "action": "result",
+        "peerId": "alfa",
+        "branchId": "alfa",
+        "attempt": 0
+      }
+    },
+    {
+      "id": "authorization-cancel-rejects-attempt-zero",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": false,
+      "value": {
+        "action": "cancel",
+        "peerId": "alfa",
+        "branchId": "alfa",
+        "attempt": 0
+      }
+    },
+    {
+      "id": "authorization-claim-rejects-attempt-zero",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": false,
+      "value": {
+        "action": "claim",
+        "peerId": "alfa",
+        "branchId": "alfa",
+        "attempt": 0
+      }
+    },
+    {
+      "id": "authorization-first-attempt-allows-null-branch-id",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": true,
+      "value": {
+        "action": "dispatch",
+        "peerId": "alfa",
+        "branchId": null,
+        "attempt": 1
+      }
+    },
+    {
+      "id": "authorization-allows-maximum-attempt",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": true,
+      "value": {
+        "action": "claim",
+        "peerId": "alfa",
+        "branchId": "alfa",
+        "attempt": 16
+      }
+    },
+    {
+      "id": "authorization-rejects-attempt-above-maximum",
+      "kind": "schema-value",
+      "definition": "AuthorizationInput",
+      "valid": false,
+      "value": {
+        "action": "result",
+        "peerId": "alfa",
+        "branchId": "alfa",
+        "attempt": 17
+      }
     }
   ]
 }
