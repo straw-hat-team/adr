@@ -47,42 +47,58 @@ depending on it.
   directory.
 - You **MUST** name `<project>` in kebab-case and use the same name as the
   prefix of the crates, packages, images and charts it produces.
-- You **MUST** treat `projects/<project>/` as a repository root. Every ADR that
-  governs the repository root, including the reserved directories and the
-  language workspaces, applies inside it unchanged. A project that runs mise
-  tasks **MUST** be a nested mise configuration root per
-  [ADR#6647967335](../6647967335/README.md).
+- You **MUST** keep `.github/`, `.config/`, `devops/`, `otel/` and `proto/`
+  at the repository root only. They are global: GitHub reads `.github/` only
+  at the root, and one buf module, one semantic convention registry and one
+  operational estate must see every project at once.
+- You **MUST** place a project's share of a global directory under its
+  namespace segment: `proto/<org>/<project>/`,
+  `otel/registry/<vendor>/<project>/`, `devops/docker/images/<project>-*/`,
+  `devops/helm/charts/<project>-*/`.
+- You **MUST** place everything else a project owns inside
+  `projects/<project>/`: its language workspaces per
+  [ADR#5842232571](../5842232571/README.md), its `docs/`, and its `README.md`.
+  A project that runs its own mise tasks **MUST** be a nested mise
+  configuration root per [ADR#6647967335](../6647967335/README.md).
 - You **MUST NOT** nest `projects/` inside a project.
-- You **MUST** keep all of a project inside its directory. You **MUST NOT**
-  place any of its source, schemas or operational assets in the root
-  directories.
 - You **MUST** keep dependencies pointing inward from the root. A project
-  **MAY** depend on the root workspaces and schemas. The root **MUST NOT**
-  depend on a project, and a project **MUST NOT** depend on another project.
-  Code two projects need lives in the root.
+  **MAY** depend on the root workspaces. The root **MUST NOT** depend on a
+  project, and a project **MUST NOT** depend on another project. Code two
+  projects need lives in the root.
 - You **MUST NOT** encode maturity or kind in the path. `experiments/`,
   `labs/`, `sandbox/`, `products/` and `apps/` are not containers for
   projects. You **MUST** state the lifecycle on the first line of the
   project's `README.md` as `Status: experimental`, `Status: active` or
   `Status: deprecated`, and change that line instead of moving the directory.
 - You **SHOULD** move a project to its own repository when nothing requires it
-  to share this one. Moving `projects/<project>/` to a new repository root
-  **MUST** be all the extraction takes.
+  to share this one. Extraction takes `projects/<project>/` as the new root
+  plus every global path under its namespace segment.
 
   ```txt
   .
-  ├── .config/  devops/  docs/  proto/  otel/   # the root project
-  ├── rsworkspace/                               # the root project
+  ├── .github/  .config/  devops/  otel/  proto/   # global
+  ├── rsworkspace/  docs/                           # the root project
   └── projects
       └── <project>
-          ├── README.md                          # Status: experimental
+          ├── README.md                             # Status: experimental
           ├── .config/mise/
           ├── rsworkspace/
           ├── goworkspace/
-          ├── proto/
-          ├── devops/
           └── docs/
   ```
+
+### Dependency graph
+
+- You **MUST** derive the project dependency graph from the toolchain
+  manifests, such as `cargo metadata`, `go list -deps` and the pnpm workspace,
+  plus the namespace segments in the global directories. You **MUST NOT**
+  maintain a list of dependencies by hand.
+- You **MUST** expose the graph as a mise task that prints, as JSON, every
+  project with the paths it owns and the root paths it depends on. The root
+  project owns every path outside `projects/`.
+- You **MUST** compute CI path filters, sparse checkouts and affected-project
+  selection from that output, and **MUST NOT** write the paths into a workflow
+  by hand. A change under `.config/` affects every project.
 
 ## Consequences
 
@@ -90,9 +106,13 @@ depending on it.
   versions drift from the root and from other projects. That is the price of
   isolation, and the reason the namespace segment stays the default.
 - A project that depends on code in the root takes it as a path dependency
-  across workspaces instead of as a workspace member.
+  across workspaces instead of as a workspace member, and the graph picks the
+  edge up from the manifest.
+- A project's sparse checkout is its directory, the global directories and the
+  root paths the graph lists. The global directories are taken whole, which
+  keeps git in cone mode.
 - Graduating an experiment is a one-line change to its `README.md`, and
-  deleting one is deleting its directory.
+  deleting one is deleting its directory and its namespace paths.
 
 ## Links
 
