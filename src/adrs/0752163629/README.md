@@ -33,7 +33,10 @@ depending on it.
 
 ## Resolution
 
-- You **SHOULD** express each thing a repository holds as a namespace segment
+- You **MUST** treat the repository root as a project with no name. Everything
+  not moved into `projects/` lives in the root directories, and is not limited
+  to code that projects share.
+- You **SHOULD** tell apart the things the root holds by a namespace segment
   inside the root directories: a crate or package name prefix, a protobuf
   package path, an image or chart name, an OpenTelemetry registry domain.
 - You **SHOULD NOT** create `projects/` until a thing needs isolation that a
@@ -56,7 +59,7 @@ depending on it.
 - You **MUST** keep dependencies pointing inward from the root. A project
   **MAY** depend on the root workspaces and schemas. The root **MUST NOT**
   depend on a project, and a project **MUST NOT** depend on another project.
-  Code two projects need moves to the root.
+  Code two projects need lives in the root.
 - You **MUST NOT** encode maturity or kind in the path. `experiments/`,
   `labs/`, `sandbox/`, `products/` and `apps/` are not containers for
   projects. You **MUST** state the lifecycle on the first line of the
@@ -68,8 +71,8 @@ depending on it.
 
   ```txt
   .
-  ├── .config/  devops/  docs/  proto/  otel/   # shared by every project
-  ├── rsworkspace/                               # shared code only
+  ├── .config/  devops/  docs/  proto/  otel/   # the root project
+  ├── rsworkspace/                               # the root project
   └── projects
       └── <project>
           ├── README.md                          # Status: experimental
@@ -86,8 +89,8 @@ depending on it.
 - Each project carries its own lockfile per language, so its dependency
   versions drift from the root and from other projects. That is the price of
   isolation, and the reason the namespace segment stays the default.
-- Code shared with a project becomes a path dependency across workspaces
-  instead of a workspace member.
+- A project that depends on code in the root takes it as a path dependency
+  across workspaces instead of as a workspace member.
 - Graduating an experiment is a one-line change to its `README.md`, and
   deleting one is deleting its directory.
 
