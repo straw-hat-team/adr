@@ -142,10 +142,10 @@ from absence of data.
 ## Selection, claims and attempts
 
 Selection sorts the eligible authorized peer IDs by unsigned ASCII byte order and chooses the first not excluded by a
-terminal assignment outcome. Initial selection and reassignment are persisted before sending. The first dispatched
-attempt and fence are 1; fence 0 is reserved for unassigned pending state and cannot admit a result. When no eligible
-peer remains, the branch becomes failed, never silently broadcast. A peer may have multiple sessions only when its
-receiver ownership contract makes that sharing intentional.
+terminal assignment outcome. Initial selection and reassignment are persisted before sending. At admission, every branch
+has its initial assignment with attempt and fence 1, including a pending branch that has not been dispatched. Fence 0 is
+invalid in stored records and wire identities. When no eligible peer remains, the branch becomes failed, never silently
+broadcast. A peer may have multiple sessions only when its receiver ownership contract makes that sharing intentional.
 
 Ownership supports acquire, renew and release. A grant identifies peer, application attempt, monotonically increasing
 fence and leaseUntilMs. Conditional state replacement authorizes the grant. Renewal is before expiry, under the declared
@@ -225,13 +225,15 @@ deadline, compare-and-swap guard or required durable write.
 
 ## Workflows and the execution boundary
 
-Sequential pipeline stages bind invocation/context values explicitly. Output-to-input schemas must match, or a named
-transform must bridge them. Operations in a finite stage must be sending operations. No unbounded subscribe is treated
-as a completed stage. The selected waitFor boundary and stop-on-failure rule determine progression. Pipeline syntax
-lowers to Open Workflow 1.0.4 sequence/functions, with deterministic stage invocation keys; execution requires the
-workflow capability. The workflow provider owns durable scheduling/progression state, so a second undocumented
-pipeline-state protocol is unnecessary. Recovery reuses stage invocation keys so a resumed pipeline does not restart an
-already accepted interaction under a new identity.
+Sequential pipeline stages bind current stage-input/context values explicitly. A `stageInput` JSON Pointer selects
+invocation input for the first stage or prior successful output after any declared input transform for later stages.
+Interaction stages pass the validated argument object through; operation stages materialize explicit subject/payload
+bindings. Output-to-input schemas must match, or a named transform must bridge them. Operations in a finite stage must
+be sending operations. No unbounded subscribe is treated as a completed stage. The selected waitFor boundary and
+stop-on-failure rule determine progression. Pipeline syntax lowers to Open Workflow 1.0.4 sequence/functions, with
+deterministic stage invocation keys; execution requires the workflow capability. The workflow provider owns durable
+scheduling/progression state, so a second undocumented pipeline-state protocol is unnecessary. Recovery reuses stage
+invocation keys so a resumed pipeline does not restart an already accepted interaction under a new identity.
 
 General graphs use the pinned Open Workflow 1.0.4 language rather than a second custom graph syntax. Its reusable
 function/task boundary invokes a contract through a typed adapter call: contract ID/version/digest, interaction ID,

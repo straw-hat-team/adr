@@ -32,6 +32,11 @@ Validate standard/profile schemas, adapters, directions, cross-app links, domain
 required payload fields. Check native authority, features and adapter kinds. Reject generated-name collisions and
 unsupported features. No renderer warning, network lookup or validator tolerance may supply missing semantics.
 
+Pipeline operation bindings share subject/payload coverage checks. The helper validates the explicit `stageInput`
+pointer form, payload literal types, transform adjacency and known payload source types. It compares resolved schemas
+exactly and rejects unsupported dataflow instead of inferring a prior result. Interaction stages pass their declared
+argument object through without partial binding overrides or caller-supplied generated identities.
+
 ### Rust and TypeScript subjects
 
 Prove identical value acceptance/rejection, byte rendering and parse round trips. Test enum/prefix/length boundaries,
@@ -110,3 +115,8 @@ mise exec -- uv run --offline --no-project --with jsonschema --with pyyaml \
 This exercises intact and mutated bundles through the public CLI. It proves rejection of nested referenced payload type
 mismatches, symlinked parent paths, unsupported literal alphabets and quorum fractions above one. Fractions equal to or
 below one are accepted for peer, group and scope audiences, alongside acceptance of the unchanged fixture bundle.
+Pipeline cases cover missing/overlapping bindings, undeclared inputs, wrong payload literal types, incompatible
+transform inputs, invalid stage-input pointers, undefined previous output and partial interaction overrides, as well as
+successful field-by-field stage-input bindings. Nested required-field coverage has a CLI regression. A focused inferred
+token-schema check compares value acceptance with the finite domain, including trailing newlines; the CLI does not
+expose the inferred schema as an output artifact.

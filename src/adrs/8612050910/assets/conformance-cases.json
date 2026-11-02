@@ -8,7 +8,7 @@
       "contract": "review-coordinator.asyncapi.yaml",
       "tokenType": "PeerId",
       "valid": ["alfa", "bravo", "peer_1"],
-      "invalid": ["", "*", ">", "alfa.extra", "alfa beta", "ALFA", "\u00f1"]
+      "invalid": ["", "*", ">", "alfa.extra", "alfa beta", "ALFA", "\u00f1", "alfa\n", "alfa\r\n"]
     },
     {
       "id": "operation-domain",
@@ -967,6 +967,220 @@
         }
       ],
       "diagnostic": "DURABLE_RESULT_TRANSPORT"
+    },
+    {
+      "id": "pending-branch-has-positive-initial-fence",
+      "kind": "schema-value",
+      "definition": "BranchRecord",
+      "valid": true,
+      "value": {
+        "branchId": "alfa",
+        "peerId": "alfa",
+        "attempt": 1,
+        "fence": 1,
+        "status": "pending",
+        "retryable": false,
+        "result": null,
+        "input": {},
+        "leaseUntilMs": null,
+        "nextAttemptAtMs": null,
+        "outboxStatus": "pending",
+        "cancellation": {
+          "status": "none",
+          "deadlineMs": null
+        },
+        "seenResultIds": []
+      }
+    },
+    {
+      "id": "pending-branch-rejects-zero-fence",
+      "kind": "schema-value",
+      "definition": "BranchRecord",
+      "valid": false,
+      "value": {
+        "branchId": "alfa",
+        "peerId": "alfa",
+        "attempt": 1,
+        "fence": 0,
+        "status": "pending",
+        "retryable": false,
+        "result": null,
+        "input": {},
+        "leaseUntilMs": null,
+        "nextAttemptAtMs": null,
+        "outboxStatus": "pending",
+        "cancellation": {
+          "status": "none",
+          "deadlineMs": null
+        },
+        "seenResultIds": []
+      }
+    },
+    {
+      "id": "pipeline-requires-subject-bindings",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/subject/scopeId"
+        }
+      ],
+      "diagnostic": "SUBJECT_BINDING"
+    },
+    {
+      "id": "pipeline-requires-payload-bindings",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/payload",
+          "value": {}
+        }
+      ],
+      "diagnostic": "UNBOUND_PAYLOAD"
+    },
+    {
+      "id": "pipeline-rejects-undeclared-input",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/payload/",
+          "value": {
+            "input": "previous"
+          }
+        }
+      ],
+      "diagnostic": "PROFILE_STRUCTURE"
+    },
+    {
+      "id": "pipeline-rejects-overlapping-payload-bindings",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/payload/~1outcome",
+          "value": {
+            "literal": "quorum-met"
+          }
+        }
+      ],
+      "diagnostic": "OVERLAPPING_BINDINGS"
+    },
+    {
+      "id": "pipeline-rejects-invalid-payload-literal",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/payload/",
+          "value": {
+            "literal": 42
+          }
+        }
+      ],
+      "diagnostic": "PAYLOAD_BINDING_TYPE"
+    },
+    {
+      "id": "pipeline-checks-transform-input",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/adapters/completedEvent/inputSchema",
+          "value": "#/components/schemas/DocumentRef"
+        }
+      ],
+      "diagnostic": "PIPELINE_SCHEMA"
+    },
+    {
+      "id": "pipeline-rejects-interaction-overrides",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/0/bindings/subject/scopeId",
+          "value": {
+            "literal": "lab"
+          }
+        }
+      ],
+      "diagnostic": "PROFILE_STRUCTURE"
+    },
+    {
+      "id": "pipeline-rejects-missing-stage-input-field",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/payload/",
+          "value": {
+            "stageInput": "/missing"
+          }
+        }
+      ],
+      "diagnostic": "PAYLOAD_BINDING"
+    },
+    {
+      "id": "pipeline-requires-declared-prior-output",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/x-nats-contract/interactions/reviewGroup/aggregation"
+        }
+      ],
+      "diagnostic": "PIPELINE_OUTPUT_UNSUPPORTED"
+    },
+    {
+      "id": "pipeline-constructed-object-requires-siblings",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/components/schemas/ReviewSummary",
+          "value": {
+            "type": "object",
+            "required": ["nested"],
+            "properties": {
+              "nested": {
+                "type": "object",
+                "required": ["a", "b"],
+                "properties": {
+                  "a": {
+                    "type": "string"
+                  },
+                  "b": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        {
+          "op": "set",
+          "path": "/x-nats-contract/pipelines/reviewAndAnnounce/steps/1/bindings/payload",
+          "value": {
+            "/nested/a": {
+              "literal": "value"
+            }
+          }
+        }
+      ],
+      "diagnostic": "UNBOUND_PAYLOAD"
     }
   ]
 }

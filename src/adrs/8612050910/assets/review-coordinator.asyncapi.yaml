@@ -676,7 +676,7 @@ x-nats-contract:
                 context: scopeId
             payload:
               '':
-                input: previous
+                stageInput: ''
       onFailure: stop
   deployment:
     binding: review-system

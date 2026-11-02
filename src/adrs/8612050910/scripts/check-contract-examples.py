@@ -173,6 +173,15 @@ class Domain:
             return other.equals(self)
         return all(self.positions(length) == other.positions(length) for length in range(1, 129))
 
+    def json_schema(self) -> dict:
+        spec = self.definition
+        if spec["kind"] == "enum":
+            return {"type": "string", "enum": spec["values"]}
+        alphabet = "".join(re.escape(value) for value in sorted(self.alphabet))
+        first = "[" + "".join(sorted(self.alphabet & set(string.ascii_letters))) + "]" if spec["first"] == "letter" else ""
+        return {"type": "string", "minLength": spec["minLength"], "maxLength": spec["maxLength"],
+                "pattern": "^" + re.escape(spec["prefix"]) + first + "[" + alphabet + "]*(?![\\s\\S])"}
+
 
 def literal_domain(value: str) -> Domain:
     return Domain({"kind": "enum", "values": [value]})
@@ -318,7 +327,29 @@ class Bundle:
         require(result["kind"] == kind, "ADAPTER_KIND", name)
         return result
 
-    def validate_bindings(self, filename: str, interaction: dict, request: dict) -> None:
+    def require_payload_fields(self, filename: str, schema: dict, targets: list[str], prefix: str = "") -> None:
+        """A constructed child object must not hide its unbound required siblings."""
+        if prefix in targets:
+            return
+        filename, schema = self.dereference(filename, schema)
+        require(isinstance(schema, dict) and schema.get("type") == "object", "PAYLOAD_BINDING_UNSUPPORTED", prefix)
+        supported = {"type", "properties", "required", "additionalProperties", "title", "description", "default",
+                     "examples", "$comment", "$id", "$schema"}
+        require(set(schema) <= supported, "PAYLOAD_BINDING_UNSUPPORTED", prefix)
+        properties = schema.get("properties", {})
+        required = set(schema.get("required", []))
+        constructed = {target[len(prefix) + 1:].split("/")[0].replace("~1", "/").replace("~0", "~")
+                       for target in targets if target.startswith(prefix + "/")}
+        for name in sorted(required | constructed):
+            child = prefix + "/" + name.replace("~", "~0").replace("/", "~1")
+            require(child in targets or any(target.startswith(child + "/") for target in targets),
+                    "UNBOUND_PAYLOAD", child)
+            require(name in properties, "PAYLOAD_BINDING", child)
+            self.require_payload_fields(filename, properties[name], targets, child)
+
+    def validate_bindings(self, filename: str, interaction: dict, request: dict,
+                          stage_input: tuple[str, dict] | None = None, pipeline: bool = False) -> None:
+        """Keep pipeline publications inside the same coverage boundary as interaction dispatch."""
         app = self.app(filename)
         profile = app["x-nats-contract"]
         channel_id = self.channel_id(request)
@@ -329,9 +360,6 @@ class Bundle:
         targets = list(bindings["payload"])
         require(not any(a == "" or b.startswith(a + "/") for a in targets for b in targets if a != b),
                 "OVERLAPPING_BINDINGS", channel_id)
-        for field in payload.get("required", []):
-            require("" in targets or "/" + field in targets or any(target.startswith("/" + field + "/") for target in targets),
-                    "UNBOUND_PAYLOAD", field)
         for destination, source in [*bindings["subject"].items(), *bindings["payload"].items()]:
             key, value = next(iter(source.items()))
             if key == "input":
@@ -342,12 +370,94 @@ class Bundle:
                 require(value in BRANCH_FIELDS, "BRANCH_REFERENCE", value)
         for target in targets:
             self.schema_at(payload_file, payload, target)
+        self.require_payload_fields(payload_file, payload, targets)
+        if pipeline:
+            for source in [*bindings["subject"].values(), *bindings["payload"].values()]:
+                if "stageInput" in source:
+                    require(stage_input is not None, "PIPELINE_OUTPUT_UNSUPPORTED", channel_id)
+                    self.schema_at(*stage_input, source["stageInput"])
+            for target, source in bindings["payload"].items():
+                target_file, target_schema = self.schema_at(payload_file, payload, target)
+                expected = self.schema_value(target_file, target_schema)
+                if "literal" in source:
+                    require(offline_validator(Draft7Validator, expected).is_valid(source["literal"]),
+                            "PAYLOAD_BINDING_TYPE", target)
+                else:
+                    if "stageInput" in source:
+                        source_file, source_schema = self.schema_at(*stage_input, source["stageInput"])
+                    else:
+                        source_file, source_schema = self.schema_at(
+                            "adapter-contracts.schema.json",
+                            {"$ref": "#/definitions/RuntimeContext"}, "/" + source["context"],
+                        )
+                    require(self.schema_value(source_file, source_schema) == expected, "PAYLOAD_BINDING_TYPE", target)
         for name, source in bindings["subject"].items():
             if "input" in source:
                 domain_name = interaction["inputs"][source["input"]].get("tokenType")
                 require(domain_name is not None, "SUBJECT_BINDING_TYPE", name)
                 require(Domain(profile["tokenTypes"][domain_name]).equals(Domain(profile["tokenTypes"][parameters[name]])),
                         "SUBJECT_BINDING_TYPE", name)
+            elif pipeline:
+                domain = Domain(profile["tokenTypes"][parameters[name]])
+                if "literal" in source:
+                    require(domain.accepts(source["literal"]), "SUBJECT_BINDING_TYPE", name)
+                elif "stageInput" in source:
+                    source_file, source_schema = self.schema_at(*stage_input, source["stageInput"])
+                    value_schema = self.schema_value(source_file, source_schema)
+                    require(value_schema == domain.json_schema()
+                            or (bool(value_schema.get("enum")) and all(domain.accepts(value) for value in value_schema["enum"])),
+                            "SUBJECT_BINDING_TYPE", name)
+                else:
+                    _, context_schema = self.schema_at("adapter-contracts.schema.json",
+                                                       {"$ref": "#/definitions/RuntimeContext"}, "/" + source["context"])
+                    require(context_schema.get("type") == "string", "SUBJECT_BINDING_TYPE", name)
+
+    def interaction_arguments(self, filename: str, interaction: dict) -> tuple[str, dict]:
+        """Generated invocation identities remain executor-owned rather than caller input."""
+        profile = self.app(filename)["x-nats-contract"]
+        properties = {}
+        for name, value in interaction["inputs"].items():
+            if value["source"] != "argument":
+                continue
+            if "tokenType" in value:
+                properties[name] = Domain(profile["tokenTypes"][value["tokenType"]]).json_schema()
+            else:
+                properties[name] = self.schema_value(*self.resolve(filename, value["schema"]))
+        return filename, {"type": "object", "properties": properties, "required": list(properties),
+                          "additionalProperties": False}
+
+    def validate_pipeline(self, filename: str, name: str, pipeline: dict) -> None:
+        """Reject undeclared dataflow instead of treating acknowledgments as application output."""
+        profile = self.app(filename)["x-nats-contract"]
+        previous_output = None
+        for index, step in enumerate(pipeline["steps"]):
+            require(index > 0 or "inputAdapter" not in step, "PIPELINE_ROOT_INPUT", name)
+            if "interaction" in step:
+                require(step["interaction"] in profile.get("interactions", {}), "PIPELINE_REFERENCE", name)
+                interaction = profile["interactions"][step["interaction"]]
+                expected_input = self.interaction_arguments(filename, interaction)
+            else:
+                operation_file, _, operation = self.operation(filename, step["operation"])
+                require(operation["action"] == "send", "PIPELINE_DIRECTION", name)
+                expected_input = self.payload(operation_file, operation)
+            stage_input = expected_input if index == 0 else previous_output
+            if "inputAdapter" in step:
+                adapter = self.adapter(profile, step["inputAdapter"], "transform")
+                require(stage_input is not None, "PIPELINE_OUTPUT_UNSUPPORTED", name)
+                require(self.schema_value(*stage_input) == self.schema_value(*self.resolve(filename, adapter["inputSchema"])),
+                        "PIPELINE_SCHEMA", name)
+                stage_input = self.resolve(filename, adapter["outputSchema"])
+            if "interaction" in step:
+                require(stage_input is not None, "PIPELINE_OUTPUT_UNSUPPORTED", name)
+                require(self.schema_value(*stage_input) == self.schema_value(*expected_input), "PIPELINE_SCHEMA", name)
+                previous_output = None
+                if "aggregation" in interaction:
+                    aggregation = self.adapter(profile, interaction["aggregation"], "aggregation")
+                    previous_output = self.resolve(filename, aggregation["outputSchema"])
+            else:
+                self.validate_bindings(operation_file, {"bindings": step["bindings"], "inputs": {}}, operation,
+                                       stage_input=stage_input, pipeline=True)
+                previous_output = None
 
     def validate_app(self, filename: str, check_hashes: bool = True) -> None:
         app = self.app(filename)
@@ -521,15 +631,7 @@ class Bundle:
                 self.adapter(profile, ownership["adapter"], "ownership")
                 require(ownership["renewEveryMs"] * 2 < ownership["leaseMs"], "LEASE_RENEWAL", name)
         for name, pipeline in profile.get("pipelines", {}).items():
-            for index, step in enumerate(pipeline["steps"]):
-                if "interaction" in step:
-                    require(step["interaction"] in profile.get("interactions", {}), "PIPELINE_REFERENCE", name)
-                else:
-                    _, _, operation = self.operation(filename, step["operation"])
-                    require(operation["action"] == "send", "PIPELINE_DIRECTION", name)
-                if "inputAdapter" in step:
-                    self.adapter(profile, step["inputAdapter"], "transform")
-                require(index > 0 or "inputAdapter" not in step, "PIPELINE_ROOT_INPUT", name)
+            self.validate_pipeline(filename, name, pipeline)
 
     def validate_links(self) -> None:
         linked = set()

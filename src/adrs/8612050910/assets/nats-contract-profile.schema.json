@@ -718,28 +718,7 @@
           "additionalProperties": false
         },
         {
-          "type": "object",
-          "properties": {
-            "context": {
-              "enum": [
-                "contractId",
-                "contractVersion",
-                "contractDigest",
-                "operationId",
-                "principalId",
-                "senderPeerId",
-                "scopeId",
-                "systemId",
-                "accountId",
-                "jetstreamDomain",
-                "nowMs",
-                "deadlineMs",
-                "policyRevision"
-              ]
-            }
-          },
-          "required": ["context"],
-          "additionalProperties": false
+          "$ref": "#/$defs/contextSource"
         },
         {
           "type": "object",
@@ -752,12 +731,7 @@
           "additionalProperties": false
         },
         {
-          "type": "object",
-          "properties": {
-            "literal": {}
-          },
-          "required": ["literal"],
-          "additionalProperties": false
+          "$ref": "#/$defs/literalSource"
         }
       ]
     },
@@ -1459,7 +1433,10 @@
               "$ref": "#/$defs/identifier"
             },
             "bindings": {
-              "$ref": "#/$defs/bindings"
+              "const": {
+                "subject": {},
+                "payload": {}
+              }
             }
           },
           "required": ["interaction", "bindings"],
@@ -1475,7 +1452,7 @@
               "$ref": "#/$defs/identifier"
             },
             "bindings": {
-              "$ref": "#/$defs/bindings"
+              "$ref": "#/$defs/pipelineBindings"
             }
           },
           "required": ["operation", "bindings"],
@@ -1517,6 +1494,91 @@
         }
       },
       "required": ["artifact", "adapter", "inputSchema", "outputSchema"],
+      "additionalProperties": false
+    },
+    "contextSource": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "enum": [
+            "contractId",
+            "contractVersion",
+            "contractDigest",
+            "operationId",
+            "principalId",
+            "senderPeerId",
+            "scopeId",
+            "systemId",
+            "accountId",
+            "jetstreamDomain",
+            "nowMs",
+            "deadlineMs",
+            "policyRevision"
+          ]
+        }
+      },
+      "required": ["context"],
+      "additionalProperties": false
+    },
+    "literalSource": {
+      "type": "object",
+      "properties": {
+        "literal": {}
+      },
+      "required": ["literal"],
+      "additionalProperties": false
+    },
+    "jsonPointer": {
+      "type": "string",
+      "pattern": "^(?:/(?:[^~]|~[01])*)*$"
+    },
+    "pipelineSource": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/contextSource"
+        },
+        {
+          "$ref": "#/$defs/literalSource"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stageInput": {
+              "$ref": "#/$defs/jsonPointer"
+            }
+          },
+          "required": ["stageInput"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "pipelineBindings": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/pipelineSource"
+          }
+        },
+        "payload": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/pipelineSource"
+          }
+        }
+      },
+      "required": ["subject", "payload"],
       "additionalProperties": false
     }
   }

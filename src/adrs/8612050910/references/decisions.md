@@ -37,11 +37,12 @@ names also need language-specific collision checks.
 
 ## Policy operators and value bindings
 
-Choose explicit input/context/branch/literal bindings, typed field equality, named completion modes, fixed or rational
-quorums rounded upward, deterministic peer selection, fixed retry backoff and explicit closure. There is no embedded
-code, arbitrary evaluator, ambient input lookup or implicit same-name copy. Broader transformations use versioned typed
-adapters. This finite vocabulary expresses the required patterns without claiming arbitrary business logic is statically
-provable.
+Choose explicit interaction input/context/branch/literal bindings and pipeline stage-input/context/literal bindings,
+typed field equality, named completion modes, fixed or rational quorums rounded upward, deterministic peer selection,
+fixed retry backoff and explicit closure. Pipeline stage input is invocation input or prior successful output after a
+declared transform; its fields use explicit JSON Pointers. There is no embedded code, arbitrary evaluator, ambient input
+lookup or implicit same-name copy. Broader transformations use versioned typed adapters. This finite vocabulary
+expresses the required patterns without claiming arbitrary business logic is statically provable.
 
 ## Core, JetStream and replies
 

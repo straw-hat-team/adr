@@ -4,7 +4,7 @@
   "files": [
     {
       "path": "review-coordinator.asyncapi.yaml",
-      "sha256": "46abbfcc206d71ede53231f85711a83432ba42305c3b85e0ef47a2ad2a235c4f"
+      "sha256": "b47cfea2f91f0f9c842c6b968855d47e28f82122e1bf499aeca9be78fad5b509"
     },
     {
       "path": "review-worker.asyncapi.yaml",
@@ -12,7 +12,7 @@
     },
     {
       "path": "nats-contract-profile.schema.json",
-      "sha256": "99275a4df4722dc0f2b028a387bfd836ab2decf1a72f6503b733825d53690544"
+      "sha256": "98b16355f68ff97b62cc6ab63b2e90f3585967a352c45d51eb788ef28442c7b5"
     },
     {
       "path": "adapter-contracts.schema.json",

@@ -82,6 +82,113 @@ class CheckerCases(unittest.TestCase):
                     result = self.run_checker()
                     self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_pipeline_operation_bindings_are_checked(self) -> None:
+        original = self.read('review-coordinator.asyncapi.yaml')
+        cases = [
+            ('missing-subject', {'subject': {}, 'payload': {'': {'literal': {
+                'operationId': 'op' + 'a' * 64, 'approvedPeers': [], 'outcome': 'quorum-met'}}}}, 'SUBJECT_BINDING'),
+            ('missing-payload', {'subject': {'scopeId': {'context': 'scopeId'}}, 'payload': {}}, 'UNBOUND_PAYLOAD'),
+            ('undeclared-input', {'subject': {'scopeId': {'context': 'scopeId'}},
+                                  'payload': {'': {'input': 'missing'}}}, 'PROFILE_STRUCTURE'),
+            ('overlapping-payload', {'subject': {'scopeId': {'context': 'scopeId'}},
+                                    'payload': {'': {'literal': {}}, '/outcome': {'literal': 'quorum-met'}}},
+             'OVERLAPPING_BINDINGS'),
+            ('invalid-payload-type', {'subject': {'scopeId': {'context': 'scopeId'}},
+                                     'payload': {'': {'literal': 42}}}, 'PAYLOAD_BINDING_TYPE'),
+        ]
+        for name, bindings, diagnostic in cases:
+            with self.subTest(case=name):
+                app = copy.deepcopy(original)
+                step = app['x-nats-contract']['pipelines']['reviewAndAnnounce']['steps'][1]
+                step['bindings'] = bindings
+                self.write('review-coordinator.asyncapi.yaml', app)
+                self.refresh()
+                self.rejects(diagnostic)
+
+    def test_pipeline_transform_input_must_match_previous_output(self) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        app['x-nats-contract']['adapters']['completedEvent']['inputSchema'] = '#/components/schemas/DocumentRef'
+        self.write('review-coordinator.asyncapi.yaml', app)
+        self.refresh()
+        self.rejects('PIPELINE_SCHEMA')
+
+    def test_pipeline_interaction_has_no_partial_binding_overrides(self) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        step = app['x-nats-contract']['pipelines']['reviewAndAnnounce']['steps'][0]
+        step['bindings']['subject']['scopeId'] = {'literal': 'lab'}
+        self.write('review-coordinator.asyncapi.yaml', app)
+        self.refresh()
+        self.rejects('PROFILE_STRUCTURE')
+
+    def test_pipeline_stage_input_fields_are_bound_explicitly(self) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        step = app['x-nats-contract']['pipelines']['reviewAndAnnounce']['steps'][1]
+        step['bindings']['payload'] = {
+            '/operationId': {'stageInput': '/operationId'},
+            '/approvedPeers': {'stageInput': '/approvedPeers'},
+            '/outcome': {'stageInput': '/outcome'},
+        }
+        self.write('review-coordinator.asyncapi.yaml', app)
+        fixtures = self.read('conformance-cases.json')
+        fixtures['cases'] = []
+        self.write('conformance-cases.json', fixtures)
+        self.refresh()
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_pipeline_stage_input_pointer_must_exist(self) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        step = app['x-nats-contract']['pipelines']['reviewAndAnnounce']['steps'][1]
+        step['bindings']['payload'][''] = {'stageInput': '/missing'}
+        self.write('review-coordinator.asyncapi.yaml', app)
+        self.refresh()
+        self.rejects('PAYLOAD_BINDING')
+
+    def test_pipeline_requires_a_declared_previous_output(self) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        del app['x-nats-contract']['interactions']['reviewGroup']['aggregation']
+        self.write('review-coordinator.asyncapi.yaml', app)
+        self.refresh()
+        self.rejects('PIPELINE_OUTPUT_UNSUPPORTED')
+
+    def test_pipeline_constructed_object_needs_required_siblings(self) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        nested = {'type': 'object', 'required': ['a', 'b'],
+                  'properties': {'a': {'type': 'string'}, 'b': {'type': 'string'}}, 'additionalProperties': False}
+        app['components']['schemas']['ReviewSummary'] = {
+            'type': 'object', 'required': ['nested'], 'properties': {'nested': nested}, 'additionalProperties': False}
+        step = app['x-nats-contract']['pipelines']['reviewAndAnnounce']['steps'][1]
+        step['bindings']['payload'] = {'/nested/a': {'literal': 'value'}}
+        self.write('review-coordinator.asyncapi.yaml', app)
+        fixtures = self.read('conformance-cases.json')
+        fixtures['cases'] = []
+        self.write('conformance-cases.json', fixtures)
+        self.refresh()
+        self.rejects('UNBOUND_PAYLOAD')
+        step['bindings']['payload']['/nested/b'] = {'literal': 'value'}
+        self.write('review-coordinator.asyncapi.yaml', app)
+        self.refresh()
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_inferred_token_schema_agrees_with_domain_at_boundaries(self) -> None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('contract_token_schema', CHECKER)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        self.addCleanup(sys.modules.pop, spec.name, None)
+        spec.loader.exec_module(module)
+        definitions = [
+            {'kind': 'token', 'alphabet': 'lower', 'first': 'letter', 'minLength': 1, 'maxLength': 3, 'prefix': ''},
+            {'kind': 'token', 'alphabet': 'hex', 'first': 'any', 'minLength': 2, 'maxLength': 4, 'prefix': 'op'},
+        ]
+        for definition in definitions:
+            domain = module.Domain(definition)
+            validator = module.offline_validator(module.Draft7Validator, domain.json_schema())
+            for value in ['', 'a', 'ab', 'abcd', 'a\n', 'a\r\n', 'op', 'op0', 'opaf', 'opg', '*', '\u00f1']:
+                with self.subTest(definition=definition, value=value):
+                    self.assertEqual(validator.is_valid(value), domain.accepts(value))
+
     def test_unchanged_bundle_passes(self) -> None:
         result = self.run_checker()
         self.assertEqual(result.returncode, 0, result.stderr)

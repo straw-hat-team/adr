@@ -142,13 +142,13 @@ Membership additions never grow accepted work. Authorization is rechecked at dis
 and cancellation. Revoked open branches become terminal-revoked; previously accepted results remain facts. Membership
 removal alone does not cancel obligations. Offline inclusion requires durable delivery. Empty audiences fail admission.
 
-Dispatch is
-`{mode: direct|independent|one-eligible|branches|none, branchKey: recipient|declared, targetParameter?, branchesInput?, selector?}`.
-Direct requires one peer. Independent expands per recipient. One-eligible selects one peer for one logical branch, with
-reassignment under ownership rules. Its ID derives from the initial assignee and remains stable; result-bearing
-one-eligible completion counts distinct branches. Branches consumes an explicit manifest. None gathers that manifest
-without dispatch. V0.2 selection uses lexicographic peer-ID order and never bypasses authorization. Existing manifests
-require authentication and the same result/closure checks as locally dispatched work.
+Dispatch is `{mode, branchKey, targetParameter?, branchesInput?, selector?}`. Modes are
+`direct|independent|one-eligible|branches|none`, and branchKey is `recipient|declared`. Direct requires one peer.
+Independent expands per recipient. One-eligible selects one peer for one logical branch, with reassignment under
+ownership rules. Its ID derives from the initial assignee and remains stable; result-bearing one-eligible completion
+counts distinct branches. Branches consumes an explicit manifest. None gathers that manifest without dispatch. V0.2
+selection uses lexicographic peer-ID order and never bypasses authorization. Existing manifests require authentication
+and the same result/closure checks as locally dispatched work.
 
 ## Delivery, retries and ownership
 
@@ -195,11 +195,33 @@ progression honors waitFor. No implicit compensation or exactly-once effect clai
 ## Composition and generation
 
 Pipelines are `{steps, onFailure: stop}`. Each ordered step names an interaction or sending operation, optional
-inputAdapter, and explicit `bindings` for subject/context values. First input is invocation input and has no
-inputAdapter; adaptation is permitted only after a prior stage produces output. Later data must match the next input
-schema or use a typed transform. Partial, failed and indeterminate outcomes stop the pipeline. Success advances only at
-waitFor. Publication completes at the declared publish confirmation, not at subscriber processing. Recursion is
-rejected.
+`inputAdapter`, and `bindings`. An interaction step passes its typed input to the named interaction; its bindings must
+be exactly `{subject: {}, payload: {}}`, without partial overrides of that interaction's internal bindings. Its argument
+object contains the declared `source: argument` inputs; generated inputs such as operationId remain executor-owned. For
+a first operation step, invocation input uses the operation's payload schema.
+
+An operation step binds its subject parameters and payload through exactly one of `{stageInput: JSON-Pointer}`,
+`{context: field}`, or `{literal: JSON-value}`. `stageInput` is pipeline-only and selects from the current typed stage
+input; an empty pointer selects the whole value. Named interaction inputs and branch fields are unavailable in this
+namespace. Every subject parameter and required payload field must be bound. Payload destinations cannot overlap.
+Pointers and context fields must exist, literals must satisfy destination constraints, and source/destination types must
+be compatible. Required-field coverage includes required descendants of constructed objects. The helper rejects partial
+construction through conditional/composed schemas it cannot prove. Concrete subject values still undergo their
+token-domain checks before publication, including values from attested context; confirming a context field's string type
+offline does not prove that its runtime value belongs to a subject domain.
+
+First input is invocation input and has no inputAdapter. Later input is the previous successful typed output,
+transformed by inputAdapter when present. A transform's inputSchema must accept the preceding output and its
+outputSchema supplies the current stageInput type. The example checker recognizes interaction aggregation outputSchema
+as typed output; it does not invent an application value from a publication acknowledgment or an interaction without an
+aggregation schema. If a later step needs such an undefined value, it fails with `PIPELINE_OUTPUT_UNSUPPORTED`. A later
+publication using only context and literals can proceed without consuming prior output. The checker conservatively
+requires exact resolved schema equality for stage/transform adjacency and nonliteral payload bindings; unknown schema
+implication fails rather than being accepted. That restriction is a checker limit, not proof of a general compatibility
+algorithm.
+
+Partial, failed and indeterminate outcomes stop the pipeline. Success advances only at waitFor. Publication completes at
+the declared publish confirmation, not at subscriber processing. Recursion is rejected.
 
 General graphs use a locked Open Workflow 1.0.4 document through
 `workflows.<id>: {artifact: {path, sha256}, adapter, inputSchema, outputSchema}`; the adapter kind is workflow.
