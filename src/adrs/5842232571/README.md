@@ -57,6 +57,12 @@ a new language never needs a naming decision.
   manifest and lockfile sit directly in it, such as `Cargo.toml` and
   `Cargo.lock`, `go.mod` or `go.work`, `mix.exs` and `mix.lock`,
   `pnpm-workspace.yaml` and `pnpm-lock.yaml`, `pyproject.toml` and `uv.lock`.
+- You **SHOULD** set the workspace up with the toolchain's own multi-package
+  mechanism, such as a Cargo workspace, a `go.work` file, a pnpm workspace, a
+  Mix umbrella, a uv workspace or a Gradle multi-project build, with each
+  package in its own directory, even while it holds a single package. A
+  second package then joins the workspace instead of reshaping it. You **MAY**
+  place a single package directly at the workspace root.
 - You **MUST** keep configuration read by one toolchain only, such as
   `clippy.toml`, `deny.toml`, `rustfmt.toml`, `rust-toolchain.toml`,
   `.golangci.yaml`, `.formatter.exs` and `tsconfig.base.json`, in that
@@ -84,19 +90,20 @@ a new language never needs a naming decision.
   │   ├── deny.toml
   │   └── crates/<crate>/
   ├── goworkspace
-  │   ├── go.mod
-  │   └── go.sum
+  │   ├── go.work
+  │   └── <module>/go.mod
   ├── exworkspace
-  │   ├── mix.exs
-  │   └── mix.lock
+  │   ├── mix.exs           # umbrella
+  │   ├── mix.lock
+  │   └── apps/<app>/
   └── LICENSE
   ```
 
 ## Consequences
 
-- A Go module inside `goworkspace/` carries the directory in its import path,
-  `github.com/<org>/<repo>/goworkspace`, and tags its releases
-  `goworkspace/vX.Y.Z`. A repository that publishes a Go module for others to
+- A Go module inside `goworkspace/` carries its directory in its import path,
+  `github.com/<org>/<repo>/goworkspace/<module>`, and tags its releases
+  `goworkspace/<module>/vX.Y.Z`. A repository that publishes a Go module for others to
   import decides that path before the first release, because changing it
   later breaks every importer.
 - Existing `rustworkspace/`, `go-workspace/` and `elixirworkspace/`
