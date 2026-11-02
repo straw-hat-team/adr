@@ -37,6 +37,7 @@ decided by the ADR that owns it, linked from the table.
   | `proto/`, `wit/`, `otel/` | schema sources, one directory per language | [ADR#4711775939](../4711775939/README.md) |
   | `openapi/`, `asyncapi/`   | interface documents, one per specification | [ADR#1427717799](../1427717799/README.md) |
   | `<extension>workspace/`   | one language toolchain each                | [ADR#5842232571](../5842232571/README.md) |
+  | `projects/`               | projects that repeat this layout           | [ADR#0752163629](../0752163629/README.md) |
 
 - You **MUST NOT** reuse a reserved directory name for another purpose at the
   repository root, and you **MUST NOT** place these files anywhere else unless
@@ -55,3 +56,4 @@ decided by the ADR that owns it, linked from the table.
 - [ADR#4711775939](../4711775939/README.md): Schema source directories
 - [ADR#1427717799](../1427717799/README.md): OpenAPI and AsyncAPI documents
 - [ADR#5842232571](../5842232571/README.md): Language workspaces
+- [ADR#0752163629](../0752163629/README.md): Project namespaces
