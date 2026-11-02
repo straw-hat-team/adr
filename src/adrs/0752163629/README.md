@@ -66,21 +66,26 @@ depending on it.
 - You **SHOULD** move a project to its own repository when nothing requires it
   to share this one. Extraction takes `projects/<project>/` as the new root,
   plus every path under its namespace segment in the shared root directories.
+  Every root path the dependency graph lists for the project **MUST** first be
+  published as a versioned package the project consumes, or be copied into it,
+  so the extracted repository builds on its own.
 
 ### Shared root directories
 
 - You **MUST** keep `.github/` at the repository root, because GitHub reads it
   nowhere else.
-- You **SHOULD** keep `.config/`, `devops/`, `otel/` and `proto/` at the
-  repository root, shared by the root project and every named project. One buf
-  module, one semantic convention registry and one operational estate that see
-  every project at once catch conflicts that separate copies hide.
+- You **SHOULD** keep `.config/`, `devops/`, `otel/` and the schema source
+  directories `proto/`, `wit/`, `openapi/` and `asyncapi/` at the repository
+  root, shared by the root project and every named project. One buf module,
+  one semantic convention registry and one operational estate that see every
+  project at once catch conflicts that separate copies hide.
 - You **MUST** lay out those root directories to hold several projects side by
   side, each under its namespace segment: `proto/<org>/<project>/`,
+  `wit/<project>/`, `openapi/<project>/`, `asyncapi/<project>/`,
   `otel/registry/<vendor>/<project>/`, `devops/docker/images/<project>-*/`,
   `devops/helm/charts/<project>-*/`.
-- You **MAY** nest `.config/`, `devops/`, `otel/` or `proto/` inside
-  `projects/<project>/` when the project cannot share the root copy, such as a
+- You **MAY** nest any of those directories inside `projects/<project>/` when
+  the project cannot share the root copy, such as a
   separate buf module or an operational estate no other project touches. The
   nested copy follows the same ADR as the root one, and the project's share
   **MUST NOT** then also live in the root copy.
@@ -92,7 +97,8 @@ depending on it.
   └── projects
       └── <project>
           ├── README.md                             # Status: experimental
-          ├── .config/mise/                         # its own tasks only
+          ├── .config/mise/tasks/                   # its own tasks only
+          ├── .config/mise/lib/
           ├── rsworkspace/
           ├── goworkspace/
           └── docs/

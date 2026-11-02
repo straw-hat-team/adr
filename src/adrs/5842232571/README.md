@@ -62,7 +62,8 @@ a new language never needs a naming decision.
   Mix umbrella, a uv workspace or a Gradle multi-project build, with each
   package in its own directory, even while it holds a single package. A
   second package then joins the workspace instead of reshaping it. You **MAY**
-  place a single package directly at the workspace root.
+  place a single package directly at the workspace root, such as a single
+  Cargo package whose `Cargo.toml` declares no `[workspace]` members.
 - You **MUST** keep configuration read by one toolchain only, such as
   `clippy.toml`, `deny.toml`, `rustfmt.toml`, `rust-toolchain.toml`,
   `.golangci.yaml`, `.formatter.exs` and `tsconfig.base.json`, in that
@@ -72,10 +73,13 @@ a new language never needs a naming decision.
   migrations its code embeds, test fixtures and examples.
 - You **MUST NOT** carry a copy of a directory reserved by
   [ADR#9316364013](../9316364013/README.md) inside a workspace. The workspace
-  consumes the one beside it.
-- You **MUST** place the crates of a Cargo workspace under
-  `rsworkspace/crates/<crate>/`, and **MUST** follow the toolchain's own
-  layout inside every other workspace.
+  uses the copy its project nests per [ADR#0752163629](../0752163629/README.md)
+  when there is one, and the repository root copy otherwise.
+- You **MUST** place the members of a Cargo workspace under `crates/<crate>/`
+  relative to the workspace directory, which is `rsworkspace/crates/<crate>/`
+  for the root project and `projects/<project>/rsworkspace/crates/<crate>/`
+  for a named one. You **MUST** follow the toolchain's own layout inside every
+  other workspace.
 
   ```txt
   .
@@ -103,14 +107,15 @@ a new language never needs a naming decision.
 
 ## Consequences
 
-- A Go module inside `goworkspace/` carries its directory in its import path,
-  `github.com/<org>/<repo>/goworkspace/<module>`, and tags its releases
-  `goworkspace/<module>/vX.Y.Z`. A repository that publishes a Go module for
-  others to import decides that path before the first release, because
-  changing it later breaks every importer.
+- The `module` directive in `go.mod` sets a Go module's import path, not its
+  directory. A module at `goworkspace/<module>/` whose path matches its
+  location is imported as `github.com/<org>/<repo>/goworkspace/<module>` and
+  tags its releases `goworkspace/<module>/vX.Y.Z`. A repository that publishes
+  a Go module for others to import decides that path before the first
+  release, because changing it later breaks every importer.
 - Existing `rustworkspace/`, `go-workspace/`, `elixirworkspace/` and
-  `kotlinworkspace/` directories are renamed. The rename touches the paths in CI, container
-  builds and mise tasks, and nothing else.
+  `kotlinworkspace/` directories are renamed. The rename touches the paths in
+  CI, container builds and mise tasks, and nothing else.
 
 ## Links
 
