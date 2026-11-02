@@ -31,8 +31,10 @@ a new language never needs a naming decision.
 
 - You **MUST** place each language toolchain of a repository with source in
   more than one language in its own root directory named
-  `<extension>workspace/`, where `<extension>` is the language's source file
-  extension without the dot:
+  `<extension>workspace/`, where `<extension>` is the language's primary
+  source file extension without the dot. The table fixes that extension for
+  each language, and a language missing from it is added here before its
+  workspace is created:
 
   | Language   | Directory         |
   | ---------- | ----------------- |

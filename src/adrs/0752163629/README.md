@@ -50,7 +50,9 @@ depending on it.
   thing, and a repository that holds one thing never has it.
 - You **MAY** then move that thing into `projects/<project>/`, named in
   kebab-case. You **MUST** use the same name as the prefix of the crates,
-  packages, images and charts it produces.
+  packages, images and charts it produces. You **MUST NOT** pick a name that,
+  followed by `-`, starts the name of another project or of anything the root
+  project produces, so `<project>-*` matches one project only.
 - You **MUST** place what a project owns inside `projects/<project>/`: its
   language workspaces per [ADR#5842232571](../5842232571/README.md), its
   `docs/` and its `README.md`. A project that runs its own mise tasks **MUST**
@@ -115,8 +117,11 @@ depending on it.
   namespace segments in the shared root directories. You **MUST NOT** maintain
   a list of dependencies by hand.
 - You **MUST** expose the graph as a mise task that prints, as JSON, every
-  project with the paths it owns and the root paths it depends on. The root
-  project owns every path outside `projects/`.
+  project with the paths it owns and the root paths it depends on. A named
+  project owns `projects/<project>/` and every path under its namespace
+  segment in the shared root directories. The root project owns every other
+  path outside `projects/`. A root path a project only consumes is listed as
+  a dependency, never as owned.
 - You **MUST** compute CI path filters, sparse checkouts and affected-project
   selection from that output, and **MUST NOT** write the paths into a workflow
   by hand. A change under `.config/` affects every project.
