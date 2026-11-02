@@ -85,7 +85,11 @@ depending on it.
   side, each under its namespace segment: `proto/<org>/<project>/`,
   `wit/<project>/`, `openapi/<project>/`, `asyncapi/<project>/`,
   `otel/registry/<vendor>/<project>/`, `devops/docker/images/<project>-*/`,
-  `devops/helm/charts/<project>-*/`.
+  `devops/helm/charts/<project>-*/`, and for live infrastructure Terragrunt
+  units named `<project>-*` and GitOps directories
+  `devops/infra/gitops/clusters/<cluster>/<kind>/<project>-*/`. Live
+  infrastructure that no single project owns, such as an account or a
+  cluster itself, belongs to the root project.
 - You **MAY** nest any of those directories inside `projects/<project>/` when
   the project cannot share the root copy, such as a
   separate buf module or an operational estate no other project touches. The
@@ -114,8 +118,10 @@ depending on it.
   another project. Code two projects need lives in the root.
 - You **MUST** derive the dependency graph from the toolchain manifests, such
   as `cargo metadata`, `go list -deps` and the pnpm workspace, plus the
-  namespace segments in the shared root directories. You **MUST NOT** maintain
-  a list of dependencies by hand.
+  namespace segments in the shared root directories and every build or
+  generation configuration that names a root path, such as `buf.yaml`,
+  `buf.gen.yaml` and OpenAPI or AsyncAPI generator configurations. You
+  **MUST NOT** maintain a list of dependencies by hand.
 - You **MUST** expose the graph as a mise task that prints, as JSON, every
   project with the paths it owns and the root paths it depends on. A named
   project owns `projects/<project>/` and every path under its namespace
@@ -124,7 +130,7 @@ depending on it.
   a dependency, never as owned.
 - You **MUST** compute CI path filters, sparse checkouts and affected-project
   selection from that output, and **MUST NOT** write the paths into a workflow
-  by hand. A change under `.config/` affects every project.
+  by hand. A change under `.config/` or `.github/` affects every project.
 
 ## Consequences
 

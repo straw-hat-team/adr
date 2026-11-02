@@ -53,12 +53,17 @@ a new language never needs a naming decision.
   role name (`clients/`, `sdks/`, `packages/`, `apps/`) at the repository root
   for source a toolchain builds.
 - You **MAY** keep the toolchain at the repository root while the repository
-  has source in one language only. You **MUST** move it into its workspace
-  when a second language arrives.
+  has source in one language only. This is the exception
+  [ADR#9316364013](../9316364013/README.md) lets the owning ADR make: the
+  `<extension>workspace/` names stay reserved, and you **MUST** move the
+  toolchain into its workspace when a second language arrives.
 - You **MUST** make each workspace the root of exactly one toolchain: its
-  manifest and lockfile sit directly in it, such as `Cargo.toml` and
-  `Cargo.lock`, `go.mod` or `go.work`, `mix.exs` and `mix.lock`,
-  `pnpm-workspace.yaml` and `pnpm-lock.yaml`, `pyproject.toml` and `uv.lock`.
+  workspace-level manifest and lockfile sit directly in it, such as
+  `Cargo.toml` and `Cargo.lock`, `go.work` or a single `go.mod`, `mix.exs`
+  and `mix.lock`, `pnpm-workspace.yaml` and `pnpm-lock.yaml`,
+  `pyproject.toml` and `uv.lock`. Each package's own manifest, such as a Go
+  module's `go.mod` or a crate's `Cargo.toml`, stays in its package
+  directory.
 - You **SHOULD** set the workspace up with the toolchain's own multi-package
   mechanism, such as a Cargo workspace, a `go.work` file, a pnpm workspace, a
   Mix umbrella, a uv workspace or a Gradle multi-project build, with each
@@ -117,7 +122,11 @@ a new language never needs a naming decision.
   release, because changing it later breaks every importer.
 - Existing `rustworkspace/`, `go-workspace/`, `elixirworkspace/` and
   `kotlinworkspace/` directories are renamed. The rename touches the paths in
-  CI, container builds and mise tasks, and nothing else.
+  CI workflows, container builds, mise tasks, `CODEOWNERS` and documentation
+  links. A Go module that others already import is the exception: Go finds
+  it by the directory its path names, so it either keeps its old directory
+  or is released as a new module under the new path, with the old module's
+  `go.mod` marked `// Deprecated:` in its last release.
 
 ## Links
 
