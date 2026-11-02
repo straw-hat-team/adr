@@ -155,6 +155,26 @@
       "diagnostic": "IMPOSSIBLE_QUORUM"
     },
     {
+      "id": "quorum-fraction-cannot-exceed-one",
+      "kind": "invalid-contract",
+      "contract": "review-coordinator.asyncapi.yaml",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/x-nats-contract/interactions/reviewGroup/completion/count"
+        },
+        {
+          "op": "set",
+          "path": "/x-nats-contract/interactions/reviewGroup/completion/fraction",
+          "value": {
+            "numerator": 3,
+            "denominator": 2
+          }
+        }
+      ],
+      "diagnostic": "IMPOSSIBLE_QUORUM"
+    },
+    {
       "id": "lease-renewal-needs-margin",
       "kind": "invalid-contract",
       "contract": "review-coordinator.asyncapi.yaml",
@@ -490,6 +510,71 @@
         "counted": 2,
         "rejected": 0,
         "threshold": 2
+      }
+    },
+    {
+      "id": "whole-fraction-requires-all-admitted-units",
+      "kind": "completion",
+      "manifest": [
+        {
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1
+        },
+        {
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1
+        }
+      ],
+      "policy": {
+        "mode": "quorum",
+        "unit": "distinct-branches",
+        "onTimeout": "partial",
+        "fraction": {
+          "numerator": 3,
+          "denominator": 3
+        }
+      },
+      "events": [
+        {
+          "kind": "result",
+          "branchId": "alfa",
+          "peerId": "alfa",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "bravo",
+          "peerId": "bravo",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        },
+        {
+          "kind": "result",
+          "branchId": "charlie",
+          "peerId": "charlie",
+          "attempt": 1,
+          "fence": 1,
+          "status": "success"
+        }
+      ],
+      "expected": {
+        "outcome": "success",
+        "counted": 3,
+        "rejected": 0,
+        "threshold": 3
       }
     },
     {

@@ -40,12 +40,12 @@ distinct from verified standard or product capabilities. See the [reading guide]
   non-CloudEvents messages.
 - **Maturity and access:** **Emerging.** Released as 1.0-rc4.
 
-### [xRegistry Schema Registry](https://github.com/xregistry/spec/blob/main/schema/spec.md)
+### [xRegistry Schema Registry](https://github.com/xregistry/spec/blob/v1.0-rc4/schema/spec.md)
 
 - **What it describes:** Schema identity, versions, formats and metadata.
 - **NATS fit and important gaps:** Reusable schema catalog independent of NATS transport. Does not establish stream
   retention or consumer behavior.
-- **Maturity and access:** **Emerging.** Domain specification built on the same registry model.
+- **Maturity and access:** **Emerging.** Domain specification released as 1.0-rc4; source checked 2026-11-02.
 
 ### [CloudEvents](https://cloudevents.io/)
 
@@ -370,8 +370,8 @@ rules.
 ### [Confluent Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)
 
 - **Relevant capability:** Schema identity, evolution and compatibility in a large streaming ecosystem.
-- **Maturity and NATS fit:** **Established.** Can be an existing organization-wide schema source. It does not discover
-  NATS topology; serializers, wire conventions and integration require explicit decisions. Licensing differs by
+- **Maturity and NATS fit:** **Established.** This can be an existing organization-wide schema source. It does not
+  discover NATS topology; serializers, wire conventions and integration require explicit decisions. Licensing differs by
   component/offering.
 
 ### [Buf Schema Registry](https://buf.build/docs/bsr/)
@@ -731,7 +731,7 @@ This matrix is an assessment of documented scope. **Native** means that layer is
 
 ### xRegistry domain models
 
-- **Application contract:** Partial, endpoint/message oriented
+- **Application contract:** Partial, oriented around endpoints and messages
 - **Ownership and logical graph:** Integration
 - **JetStream resource detail:** Integration/extensions
 - **Physical/runtime topology:** No

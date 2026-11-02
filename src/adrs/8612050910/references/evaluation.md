@@ -68,8 +68,10 @@ This is a discussion proposal, not a new specification implementation.
 
 ### Operation
 
-- **Identity and relationships to retain:** Send/receive role, request/reply association, queue group if used,
-  error/timeout semantics and relevant service endpoint.
+- **Identity and relationships to retain:** Send/receive role, publication API and confirmation policy, request/reply
+  association, queue group if used, error/timeout semantics and relevant service endpoint. Core publication has no
+  storage confirmation; JetStream publication requires the declared stream acknowledgment. Application replies and
+  consumer acknowledgments remain separate facts.
 
 ### Stream
 
@@ -122,15 +124,21 @@ An eventual evaluation should use a representative system rather than a single h
 
 ### Core event with a parameterized subject and wildcard receiver
 
-- **What it should reveal:** Whether contracts distinguish possible publish addresses from subscription interest.
+- **What it should reveal:** Whether contracts distinguish possible publish addresses from subscription interest and
+  identify Core publication without a storage confirmation. A matching stream may capture the event, but that does not
+  make the Core publish return a JetStream storage acknowledgment.
 
 ### Request/reply API with a dynamic reply inbox and queue group
 
-- **What it should reveal:** Whether request and response semantics survive generation and rendering.
+- **What it should reveal:** Whether request and response semantics survive generation and rendering. The checked
+  application response or timeout must remain distinct from storage confirmation and consumer acknowledgment.
 
 ### JetStream stream with a durable pull consumer
 
 - **What it should reveal:** Whether persistence, consumer ownership, filters and acknowledgment behavior are visible.
+  Assert that the publisher requires the declared stream acknowledgment, the consumer separately acknowledges delivery,
+  and any application result follows its own correlation/completion rule. A storage acknowledgment alone cannot satisfy
+  that result rule.
 
 ### Multiple message types or schema versions on one subject family
 
@@ -155,6 +163,93 @@ An eventual evaluation should use a representative system rather than a single h
 ### Consumer or schema change
 
 - **What it should reveal:** Whether compatibility/drift checks identify the meaningful change without erasing context.
+
+### Interaction pattern coverage
+
+Evaluate these scenarios against the current [profile](./profile-reference.md) and
+[runtime semantics](./runtime-semantics.md). Every scenario must preserve audience selection, membership timing,
+dispatch, ownership, correlation, completion and failure rules in both the contract and its generated projections. Where
+a scenario has no results or ownership protocol, record that explicitly rather than inventing a guarantee.
+
+| Pattern             | Scenario and required checks                                        |
+| ------------------- | ------------------------------------------------------------------- |
+| Unicast             | [Command to one peer](#command-to-one-peer)                         |
+| Multicast           | [Review a selected group](#review-a-selected-group)                 |
+| Scoped broadcast    | [Announce within a scope](#announce-within-a-scope)                 |
+| Independent fan-out | [Include offline recipients](#include-offline-recipients)           |
+| Anycast             | [Reassign an expired claim](#reassign-an-expired-claim)             |
+| Scatter             | [Dispatch distinct branch inputs](#dispatch-distinct-branch-inputs) |
+| Gather / fan-in     | [Collect an existing manifest](#collect-an-existing-manifest)       |
+| Scatter-gather      | [Reach a quorum during failure](#reach-a-quorum-during-failure)     |
+| Pub/sub             | [Observe live and durable views](#observe-live-and-durable-views)   |
+| Pipelines           | [Review and announce](#review-and-announce)                         |
+
+#### Command to one peer
+
+Resolve and authorize exactly the identified peer at admission; reject an unauthorized or empty audience. Create one
+addressed branch. Check result peer, branch, attempt and fence where results are required; exercise the declared
+ownership, timeout and offline policy.
+
+#### Review a selected group
+
+Freeze authorized membership at admission, exclude late joiners and apply the declared revocation rule. Create
+independent branches for the selected peers. Track ownership and correlated terminal results separately; duplicates
+cannot add votes, and timeout follows the declared partial/failure policy.
+
+#### Announce within a scope
+
+Include only authorized scoped peers and honor sender/offline inclusion; late membership changes cannot grow accepted
+work. Expand the declared scope into recipient obligations with the declared ownership policy. Distinguish publication
+confirmation from correlated recipient completion where required; report failures under the declared delivery policy.
+
+#### Include offline recipients
+
+Freeze the authorized recipient set, including offline peers only under a durable binding. Prove independent delivery
+obligations and retained correlated result paths where needed. Preserve branch/attempt identity and ownership through
+redelivery and recovery; apply the declared completion rule and reject capacity overflow without evicting accepted work.
+
+#### Reassign an expired claim
+
+Resolve authorized eligible peers from the admitted audience and use the declared selector. Keep one logical branch
+across reassignment, advance its attempt/fence under ownership rules, reject stale correlated results, and enforce
+retry/deadline limits and the declared completion rule. Result admission fencing alone cannot prove fenced business
+effects.
+
+#### Dispatch distinct branch inputs
+
+Authenticate and authorize the manifest's recipients at admission. Preserve distinct branch IDs and per-branch input;
+reject duplicate IDs. Declare ownership, result correlation and completion units where required, and exercise dispatch
+failure.
+
+#### Collect an existing manifest
+
+Authenticate the expected manifest and its authorized peers without adding new recipients. Dispatch no new work. Admit
+only correlated expected results, preserving the manifest's ownership/attempt/fence constraints. Reject wrong peers and
+stale attempts/fences, ensure duplicates cannot add votes, then apply the declared completion and timeout rule.
+
+#### Reach a quorum during failure
+
+Freeze authorized membership and admitted voting units; reject impossible thresholds. Dispatch the declared branches,
+correlate distinct branch/peer votes and reject stale owners. Exercise success, impossibility and timeout; keep the
+decision immutable while cancellation/settlement handles unfinished branches.
+
+#### Observe live and durable views
+
+Publish an event to live subscriptions and a durable consumption view. Preserve subscription interest and authorization;
+do not infer a complete peer directory from live subscribers. Keep Core publication, stream capture, JetStream
+publication confirmation and consumer acknowledgment distinct. Preserve the declared consumer ownership. With no
+application result, do not invent correlation or processing completion; exercise loss/replay according to the declared
+view.
+
+#### Review and announce
+
+Run a review, transform its output and publish a completion event. Reapply each stage's declared audience, membership
+and authorization boundary. Preserve stage ownership/correlation rules and invocation keys during recovery. Advance at
+the declared decision/settlement boundary, check typed output/input bindings and stop on partial, failed or
+indeterminate outcomes. Publication completes at its declared confirmation.
+
+The [conformance requirements](./conformance.md) distinguish static checks from provider execution evidence. Declaring
+these scenarios is a selection criterion; it does not establish that any candidate has passed them.
 
 For each candidate, inspect the generated artifacts, machine-readable export, ownership workflow and documented
 limitations. No such evaluation was run as part of this report.

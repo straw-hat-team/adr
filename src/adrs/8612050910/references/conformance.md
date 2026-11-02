@@ -108,5 +108,5 @@ mise exec -- uv run --offline --no-project --with jsonschema --with pyyaml \
 ```
 
 This exercises intact and mutated bundles through the public CLI. It proves rejection of nested referenced payload type
-mismatches, symlinked parent paths and unsupported literal alphabets, alongside acceptance of the unchanged fixture
-bundle.
+mismatches, symlinked parent paths, unsupported literal alphabets and quorum fractions above one. Fractions equal to or
+below one are accepted for peer, group and scope audiences, alongside acceptance of the unchanged fixture bundle.

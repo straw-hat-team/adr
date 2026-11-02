@@ -55,6 +55,33 @@ class CheckerCases(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0, result.stdout)
         self.assertIn(diagnostic, result.stderr)
 
+    def set_quorum_fraction(self, audience: str, numerator: int, denominator: int) -> None:
+        app = self.read('review-coordinator.asyncapi.yaml')
+        interaction = app['x-nats-contract']['interactions']['reviewGroup']
+        interaction['audience']['kind'] = audience
+        interaction['completion'].pop('count', None)
+        interaction['completion']['fraction'] = {'numerator': numerator, 'denominator': denominator}
+        self.write('review-coordinator.asyncapi.yaml', app)
+        # The baseline mutation fixtures assume the original fixed-count policy.
+        fixtures = self.read('conformance-cases.json')
+        fixtures['cases'] = []
+        self.write('conformance-cases.json', fixtures)
+        self.refresh()
+
+    def test_quorum_fraction_above_one_is_rejected(self) -> None:
+        for audience in ['peer', 'group', 'scope']:
+            with self.subTest(audience=audience):
+                self.set_quorum_fraction(audience, 3, 2)
+                self.rejects('IMPOSSIBLE_QUORUM')
+
+    def test_quorum_fraction_at_or_below_one_is_accepted(self) -> None:
+        for audience in ['peer', 'group', 'scope']:
+            for numerator, denominator in [(3, 3), (2, 3)]:
+                with self.subTest(audience=audience, numerator=numerator, denominator=denominator):
+                    self.set_quorum_fraction(audience, numerator, denominator)
+                    result = self.run_checker()
+                    self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_unchanged_bundle_passes(self) -> None:
         result = self.run_checker()
         self.assertEqual(result.returncode, 0, result.stderr)

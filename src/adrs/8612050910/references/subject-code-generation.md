@@ -42,14 +42,21 @@ The following are proposed acceptance requirements, not capabilities already pro
 
 #### Subject parsing
 
-- **Required contract meaning:** How a concrete address maps back to the named family and its parameters.
+- **Required contract meaning:** How a concrete address maps back to the named family and its parameters. Under the
+  [v0.2 profile](./profile-reference.md), concrete channel languages are disjoint within an application/deployment
+  binding. Intentional equal-language overlap across independently owned applications requires compatible explicit
+  links; partial overlap is rejected. There is no precedence rule. A global parser requires contract/channel identity to
+  distinguish application views.
 - **Proposed output or validation:** Optional parsers and matchers, checked against the same examples as the builders.
-  No accidental cross-token capture.
+  Reject local collisions before generation and prevent accidental cross-token capture. Both language backends must
+  consume the shared `overlapping-channel-families` fixture and reject it with `CHANNEL_OVERLAP`. The offline checker
+  exercises this fixture; Rust/TypeScript backend conformance remains to be demonstrated.
 
 #### Interaction pattern
 
-- **Required contract meaning:** Event broadcast, queue-distributed processing, or request/reply, with explicit
-  application roles.
+- **Required contract meaning:** The complete composable contract in [interaction patterns](./interaction-patterns.md),
+  including audience, membership timing, dispatch/distribution, delivery/ownership, correlation, completion, failure and
+  closure semantics, with explicit application roles.
 - **Proposed output or validation:** Operation metadata and, optionally, appropriately scoped helpers. A subject name
   alone must not imply the delivery pattern.
 

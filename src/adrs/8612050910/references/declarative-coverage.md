@@ -176,9 +176,9 @@ configuration.
 
 The proposed declarations draw on existing foundations:
 [AsyncAPI operations/messages](https://www.asyncapi.com/docs/reference/specification/v3.1.0),
-[native JetStream configuration](https://github.com/nats-io/nats.docs/blob/master/nats-concepts/jetstream/streams.md),
+[native JetStream configuration](https://github.com/nats-io/nats.docs/blob/1c48f4651f3487609ded7ae7e3b947433b5b54f9/nats-concepts/jetstream/streams.md),
 and
-[Open Workflow's declarative tasks, timeouts and composition](https://github.com/open-workflow-specification/specification/blob/main/dsl-reference.md).
+[Open Workflow's declarative tasks, timeouts and composition](https://github.com/open-workflow-specification/specification/blob/3aa1687ce4ab38f1d2dbede500b3077c4f801b66/dsl-reference.md).
 The coverage above is proposed scope, not a support matrix for those standards.
 
 ### Declarative coverage of the required patterns

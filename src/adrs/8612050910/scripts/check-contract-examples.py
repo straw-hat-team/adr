@@ -474,8 +474,12 @@ class Bundle:
                     self.schema_at(*self.payload(filename, result), path)
                     if "requestOperation" in interaction:
                         self.schema_at(*self.payload(filename, request), path)
-                if completion["mode"] == "quorum" and audience["kind"] == "peer":
-                    require(completion.get("count", 1) <= 1, "IMPOSSIBLE_QUORUM", name)
+                if completion["mode"] == "quorum":
+                    if "fraction" in completion:
+                        fraction = completion["fraction"]
+                        require(fraction["numerator"] <= fraction["denominator"], "IMPOSSIBLE_QUORUM", name)
+                    if audience["kind"] == "peer":
+                        require(completion.get("count", 1) <= 1, "IMPOSSIBLE_QUORUM", name)
                 if completion.get("remaining") == "cooperative":
                     for key, direction in [("cancelOperation", "send"), ("cancelResultOperation", "receive")]:
                         _, _, cancel = self.operation(filename, completion[key])
