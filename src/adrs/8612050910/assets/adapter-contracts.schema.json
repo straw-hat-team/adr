@@ -1,0 +1,1504 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NATS contract adapter data protocols v0.2",
+  "description": "Closed control/trust protocols for the proposed profile. AdapterCall.data and application input/result/body slots are parameterized by separately validated application schemas. This schema does not assert deployment evidence or execute atomic transitions.",
+  "$ref": "#/definitions/AdapterCall",
+  "definitions": {
+    "JsonValue": {
+      "description": "Application business data, constrained by the declared application schema at the call boundary."
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "SafeInteger": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "RuntimeContext": {
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractVersion": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractDigest": {
+          "$ref": "#/definitions/Digest"
+        },
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "principalId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "senderPeerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "scopeId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "systemId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "accountId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "jetstreamDomain": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "nowMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "deadlineMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Null only before atomic admission; protected post-admission calls use the recorded absolute deadline."
+        },
+        "policyRevision": {
+          "$ref": "#/definitions/Identifier"
+        }
+      },
+      "required": [
+        "contractId",
+        "contractVersion",
+        "contractDigest",
+        "operationId",
+        "principalId",
+        "senderPeerId",
+        "scopeId",
+        "systemId",
+        "accountId",
+        "jetstreamDomain",
+        "nowMs",
+        "deadlineMs",
+        "policyRevision"
+      ],
+      "additionalProperties": false
+    },
+    "AdapterCall": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "#/definitions/RuntimeContext"
+        },
+        "data": {
+          "$ref": "#/definitions/JsonValue"
+        }
+      },
+      "required": ["context", "data"],
+      "additionalProperties": false
+    },
+    "Peer": {
+      "type": "object",
+      "properties": {
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "online": {
+          "type": "boolean"
+        }
+      },
+      "required": ["peerId", "online"],
+      "additionalProperties": false
+    },
+    "AudienceQuery": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": ["peer", "group", "scope"]
+        },
+        "value": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "includeSender": {
+          "type": "boolean"
+        },
+        "offline": {
+          "enum": ["include", "exclude"]
+        }
+      },
+      "required": ["kind", "value", "includeSender", "offline"],
+      "additionalProperties": false
+    },
+    "AudienceSnapshot": {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "observedAtMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "peers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Peer"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": ["revision", "observedAtMs", "peers"],
+      "additionalProperties": false
+    },
+    "AuthorizationInput": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "enum": ["dispatch", "result", "cancel", "claim"]
+        },
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "branchId": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        }
+      },
+      "required": ["action", "peerId", "branchId", "attempt"],
+      "additionalProperties": false
+    },
+    "AuthorizationDecision": {
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "type": "boolean"
+        },
+        "revision": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "validUntilMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "reason": {
+          "enum": ["allowed", "denied", "revoked", "expired", "unavailable"]
+        }
+      },
+      "required": ["allowed", "revision", "validUntilMs", "reason"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "allowed": {
+                "const": true
+              }
+            },
+            "required": ["allowed"]
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "const": "allowed"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reason": {
+                "enum": ["denied", "revoked", "expired", "unavailable"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BranchIdentity": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "branchId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": ["operationId", "branchId", "peerId", "attempt", "fence"],
+      "additionalProperties": false
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "$ref": "#/definitions/JsonValue"
+        }
+      },
+      "required": ["headers", "payload"],
+      "additionalProperties": false
+    },
+    "ResultVerificationInput": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "expected": {
+          "$ref": "#/definitions/BranchIdentity"
+        },
+        "message": {
+          "$ref": "#/definitions/Message"
+        }
+      },
+      "required": ["subject", "expected", "message"],
+      "additionalProperties": false
+    },
+    "ResultVerificationOutput": {
+      "type": "object",
+      "properties": {
+        "accepted": {
+          "type": "boolean"
+        },
+        "peerId": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "enum": ["accepted", "wrong-peer", "stale-attempt", "invalid-proof", "revoked", "closed"]
+        }
+      },
+      "required": ["accepted", "peerId", "reason"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accepted": {
+                "const": true
+              }
+            },
+            "required": ["accepted"]
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "const": "accepted"
+              },
+              "peerId": {
+                "$ref": "#/definitions/Identifier"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reason": {
+                "enum": ["wrong-peer", "stale-attempt", "invalid-proof", "revoked", "closed"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BranchOutcome": {
+      "type": "object",
+      "properties": {
+        "branchId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "status": {
+          "enum": ["pending", "success", "failure", "revoked", "cancelled", "indeterminate"]
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/JsonValue"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["branchId", "peerId", "attempt", "fence", "status", "retryable", "result"],
+      "additionalProperties": false
+    },
+    "AggregationInput": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchOutcome"
+          },
+          "minItems": 0
+        },
+        "outcome": {
+          "enum": ["success", "partial", "failed", "indeterminate"]
+        }
+      },
+      "required": ["operationId", "branches", "outcome"],
+      "additionalProperties": false
+    },
+    "SelectionInput": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "previousPeerId": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "strategy": {
+          "const": "lexicographic"
+        }
+      },
+      "required": ["candidates", "previousPeerId", "strategy"],
+      "additionalProperties": false
+    },
+    "SelectionOutput": {
+      "type": "object",
+      "properties": {
+        "peerId": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "enum": ["selected", "empty"]
+        }
+      },
+      "required": ["peerId", "reason"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "reason": {
+                "const": "selected"
+              }
+            },
+            "required": ["reason"]
+          },
+          "then": {
+            "properties": {
+              "peerId": {
+                "$ref": "#/definitions/Identifier"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "peerId": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "DeliveryRequest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "publish"
+            },
+            "messageId": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "subject": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "headers": {
+              "type": "object",
+              "minProperties": 0,
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "payload": {
+              "$ref": "#/definitions/JsonValue"
+            },
+            "stream": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "consumer": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "peerId": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "expiresAtMs": {
+              "$ref": "#/definitions/SafeInteger"
+            }
+          },
+          "required": [
+            "method",
+            "messageId",
+            "subject",
+            "headers",
+            "payload",
+            "stream",
+            "consumer",
+            "peerId",
+            "expiresAtMs"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "reconcile"
+            },
+            "messageId": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "stream": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "consumer": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "peerId": {
+              "$ref": "#/definitions/Identifier"
+            }
+          },
+          "required": ["method", "messageId", "stream", "consumer", "peerId"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "DeliveryReceipt": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": ["stored", "already-stored", "rejected", "unknown", "exhausted"]
+        },
+        "messageId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "stream": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sequence": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "$ref": "#/definitions/Identifier"
+        }
+      },
+      "required": ["status", "messageId", "stream", "sequence", "reason"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["stored", "already-stored"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "stream": {
+                "$ref": "#/definitions/Identifier"
+              },
+              "sequence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          }
+        }
+      ]
+    },
+    "OwnershipRequest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "acquire"
+            },
+            "branch": {
+              "$ref": "#/definitions/BranchIdentity"
+            },
+            "leaseMs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["method", "branch", "leaseMs"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "renew"
+            },
+            "branch": {
+              "$ref": "#/definitions/BranchIdentity"
+            },
+            "leaseMs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["method", "branch", "leaseMs"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "release"
+            },
+            "branch": {
+              "$ref": "#/definitions/BranchIdentity"
+            }
+          },
+          "required": ["method", "branch"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OwnershipResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": ["acquired", "renewed", "released", "conflict", "expired", "unavailable"]
+        },
+        "branch": {
+          "$ref": "#/definitions/BranchIdentity"
+        },
+        "leaseUntilMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "committedAtMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["status", "branch", "leaseUntilMs", "committedAtMs"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["acquired", "renewed", "released"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "committedAtMs": {
+                "$ref": "#/definitions/SafeInteger"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["acquired", "renewed"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "leaseUntilMs": {
+                "$ref": "#/definitions/SafeInteger"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CancellationState": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": ["none", "requested", "stopped", "already-completed", "unknown"]
+        },
+        "deadlineMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["status", "deadlineMs"],
+      "additionalProperties": false
+    },
+    "OutboxEntry": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "branchId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "kind": {
+          "enum": ["request", "cancel", "completion"]
+        },
+        "subject": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "headers": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "$ref": "#/definitions/JsonValue"
+        },
+        "status": {
+          "enum": ["pending", "stored", "unknown", "rejected"]
+        },
+        "nextSendAtMs": {
+          "$ref": "#/definitions/SafeInteger"
+        }
+      },
+      "required": [
+        "messageId",
+        "branchId",
+        "attempt",
+        "fence",
+        "kind",
+        "subject",
+        "headers",
+        "payload",
+        "status",
+        "nextSendAtMs"
+      ],
+      "additionalProperties": false
+    },
+    "BranchRecord": {
+      "type": "object",
+      "properties": {
+        "branchId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "status": {
+          "enum": ["pending", "success", "failure", "revoked", "cancelled", "indeterminate"]
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/JsonValue"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "input": {
+          "$ref": "#/definitions/JsonValue"
+        },
+        "leaseUntilMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nextAttemptAtMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outboxStatus": {
+          "enum": ["pending", "stored", "unknown", "rejected", "none"]
+        },
+        "cancellation": {
+          "$ref": "#/definitions/CancellationState"
+        },
+        "seenResultIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "branchId",
+        "peerId",
+        "attempt",
+        "fence",
+        "status",
+        "retryable",
+        "result",
+        "input",
+        "leaseUntilMs",
+        "nextAttemptAtMs",
+        "outboxStatus",
+        "cancellation",
+        "seenResultIds"
+      ],
+      "additionalProperties": false
+    },
+    "OperationDecision": {
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "enum": ["success", "partial", "failed", "indeterminate"]
+        },
+        "decidedAtMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "reason": {
+          "$ref": "#/definitions/Identifier"
+        }
+      },
+      "required": ["outcome", "decidedAtMs", "reason"],
+      "additionalProperties": false
+    },
+    "OperationRecord": {
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractVersion": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractDigest": {
+          "$ref": "#/definitions/Digest"
+        },
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "principalId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "invocationKey": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "inputDigest": {
+          "$ref": "#/definitions/Digest"
+        },
+        "input": {
+          "$ref": "#/definitions/JsonValue"
+        },
+        "phase": {
+          "enum": ["admitted", "active", "closed", "settled"]
+        },
+        "admittedAtMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "deadlineMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/AudienceSnapshot"
+        },
+        "policyRevision": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchRecord"
+          },
+          "minItems": 0
+        },
+        "decision": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OperationDecision"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "settlement": {
+          "enum": ["pending", "complete", "indeterminate"]
+        },
+        "outbox": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OutboxEntry"
+          },
+          "minItems": 0
+        },
+        "senderPeerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "scopeId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "systemId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "accountId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "jetstreamDomain": {
+          "$ref": "#/definitions/Identifier"
+        }
+      },
+      "required": [
+        "contractId",
+        "contractVersion",
+        "contractDigest",
+        "operationId",
+        "principalId",
+        "invocationKey",
+        "inputDigest",
+        "input",
+        "phase",
+        "admittedAtMs",
+        "deadlineMs",
+        "snapshot",
+        "policyRevision",
+        "branches",
+        "decision",
+        "settlement",
+        "outbox",
+        "senderPeerId",
+        "scopeId",
+        "systemId",
+        "accountId",
+        "jetstreamDomain"
+      ],
+      "additionalProperties": false
+    },
+    "StateStoreRequest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "get"
+            },
+            "key": {
+              "$ref": "#/definitions/Identifier"
+            }
+          },
+          "required": ["method", "key"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "create"
+            },
+            "key": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "record": {
+              "$ref": "#/definitions/AdmissionRecord"
+            },
+            "timeGuard": {
+              "$ref": "#/definitions/TimeGuard"
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["method", "key", "record", "timeGuard", "timeoutMs"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "replace"
+            },
+            "key": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "expectedRevision": {
+              "$ref": "#/definitions/Identifier"
+            },
+            "record": {
+              "$ref": "#/definitions/OperationRecord"
+            },
+            "timeGuard": {
+              "$ref": "#/definitions/TimeGuard"
+            }
+          },
+          "required": ["method", "key", "expectedRevision", "record", "timeGuard"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "StateStoreResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": ["found", "created", "replaced", "missing", "conflict", "unavailable", "expired"]
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "record": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OperationRecord"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "committedAtMs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SafeInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["status", "revision", "record", "committedAtMs"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["found", "created", "replaced"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "revision": {
+                "$ref": "#/definitions/Identifier"
+              },
+              "record": {
+                "$ref": "#/definitions/OperationRecord"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["created", "replaced"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "committedAtMs": {
+                "$ref": "#/definitions/SafeInteger"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "missing"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "revision": {
+                "type": "null"
+              },
+              "record": {
+                "type": "null"
+              },
+              "committedAtMs": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "expired"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "committedAtMs": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CancelRequest": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "branchId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "reason": {
+          "enum": ["early-decision", "revoked", "deadline", "caller-cancelled"]
+        },
+        "cancelDeadlineMs": {
+          "$ref": "#/definitions/SafeInteger"
+        }
+      },
+      "required": ["operationId", "branchId", "peerId", "attempt", "fence", "reason", "cancelDeadlineMs"],
+      "additionalProperties": false
+    },
+    "CancelResult": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "branchId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "peerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "status": {
+          "enum": ["stopped", "already-completed", "unknown"]
+        }
+      },
+      "required": ["operationId", "branchId", "peerId", "attempt", "fence", "status"],
+      "additionalProperties": false
+    },
+    "WorkflowInput": {
+      "type": "object",
+      "properties": {
+        "workflowId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "input": {
+          "$ref": "#/definitions/JsonValue"
+        }
+      },
+      "required": ["workflowId", "input"],
+      "additionalProperties": false
+    },
+    "WorkflowOutput": {
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "enum": ["success", "partial", "failed", "indeterminate"]
+        },
+        "output": {
+          "$ref": "#/definitions/JsonValue"
+        }
+      },
+      "required": ["outcome", "output"],
+      "additionalProperties": false
+    },
+    "TimeGuard": {
+      "type": "object",
+      "properties": {
+        "notBeforeMs": {
+          "$ref": "#/definitions/SafeInteger"
+        },
+        "notAfterMs": {
+          "$ref": "#/definitions/SafeInteger"
+        }
+      },
+      "required": ["notBeforeMs", "notAfterMs"],
+      "additionalProperties": false,
+      "description": "Provider-side interval notBeforeMs <= serialized decision time < notAfterMs. The same decision time is returned as committedAtMs on mutation. Empty/reversed intervals are semantic errors."
+    },
+    "AdapterError": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": ["invalid-input", "denied", "unavailable", "conflict", "expired", "unsupported", "protocol-conflict"]
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["kind"],
+      "additionalProperties": false
+    },
+    "InvocationRequest": {
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractVersion": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractDigest": {
+          "$ref": "#/definitions/Digest"
+        },
+        "interactionId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "invocationKey": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "input": {
+          "$ref": "#/definitions/JsonValue"
+        },
+        "waitFor": {
+          "enum": ["decision", "settled"]
+        }
+      },
+      "required": [
+        "contractId",
+        "contractVersion",
+        "contractDigest",
+        "interactionId",
+        "invocationKey",
+        "input",
+        "waitFor"
+      ],
+      "additionalProperties": false
+    },
+    "InvocationResult": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "decision": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OperationDecision"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "settlement": {
+          "enum": ["pending", "complete", "indeterminate"]
+        },
+        "output": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/JsonValue"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["operationId", "decision", "settlement", "output"],
+      "additionalProperties": false
+    },
+    "OperationId": {
+      "type": "string",
+      "pattern": "^op[0-9a-f]{64}$"
+    },
+    "AdmissionRecord": {
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractVersion": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "contractDigest": {
+          "$ref": "#/definitions/Digest"
+        },
+        "operationId": {
+          "$ref": "#/definitions/OperationId"
+        },
+        "principalId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "invocationKey": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "inputDigest": {
+          "$ref": "#/definitions/Digest"
+        },
+        "input": {
+          "$ref": "#/definitions/JsonValue"
+        },
+        "phase": {
+          "const": "admitted"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/AudienceSnapshot"
+        },
+        "policyRevision": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchRecord"
+          },
+          "minItems": 0
+        },
+        "decision": {
+          "type": "null"
+        },
+        "settlement": {
+          "const": "pending"
+        },
+        "outbox": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OutboxEntry"
+          },
+          "minItems": 0
+        },
+        "senderPeerId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "scopeId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "systemId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "accountId": {
+          "$ref": "#/definitions/Identifier"
+        },
+        "jetstreamDomain": {
+          "$ref": "#/definitions/Identifier"
+        }
+      },
+      "required": [
+        "contractId",
+        "contractVersion",
+        "contractDigest",
+        "operationId",
+        "principalId",
+        "invocationKey",
+        "inputDigest",
+        "input",
+        "phase",
+        "snapshot",
+        "policyRevision",
+        "branches",
+        "decision",
+        "settlement",
+        "outbox",
+        "senderPeerId",
+        "scopeId",
+        "systemId",
+        "accountId",
+        "jetstreamDomain"
+      ],
+      "additionalProperties": false,
+      "description": "Creation input before admission timestamps exist. Provider stamps admittedAtMs and deadlineMs at the guarded serialization point and returns the complete authoritative OperationRecord."
+    }
+  }
+}

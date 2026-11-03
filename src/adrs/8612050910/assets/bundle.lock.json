@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "entrypoints": ["review-coordinator.asyncapi.yaml", "review-worker.asyncapi.yaml"],
+  "files": [
+    {
+      "path": "review-coordinator.asyncapi.yaml",
+      "sha256": "b47cfea2f91f0f9c842c6b968855d47e28f82122e1bf499aeca9be78fad5b509"
+    },
+    {
+      "path": "review-worker.asyncapi.yaml",
+      "sha256": "4267046bfe11503d1ef958beceec6fbf529f5425a928f3b028e54b36a389b217"
+    },
+    {
+      "path": "nats-contract-profile.schema.json",
+      "sha256": "98b16355f68ff97b62cc6ab63b2e90f3585967a352c45d51eb788ef28442c7b5"
+    },
+    {
+      "path": "adapter-contracts.schema.json",
+      "sha256": "9f5e997d3688e3e9a62e886e6a29e7154ee50907a8f679f575ecbd6a20994021"
+    },
+    {
+      "path": "review-native.json",
+      "sha256": "03617c423558b5b52956d21e61f91e606db371217bd855759cfeadba559f18a8"
+    }
+  ]
+}

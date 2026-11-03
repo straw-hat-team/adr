@@ -1,0 +1,271 @@
+asyncapi: 3.1.0
+defaultContentType: application/json
+servers:
+  example:
+    host: nats.example.test:4222
+    protocol: nats
+    description: Illustrative dedicated account; connection settings are deployment inputs.
+id: urn:example:review-worker
+info:
+  title: Review worker
+  version: 0.2.0
+  description: Receive peer-addressed review and cancellation requests and publish results under a verified peer
+    namespace.
+channels:
+  reviewRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.review.request
+    parameters:
+      scopeId:
+        description: Scope containing the recipient.
+      peerId:
+        description: Intended logical peer, whose receiving instances must share one identity contract.
+    messages:
+      request:
+        $ref: ./review-coordinator.asyncapi.yaml#/components/messages/ReviewRequest
+  reviewResults:
+    address: demo.v1.{scopeId}.review.{operationId}.result.{peerId}
+    parameters:
+      scopeId:
+        description: Scope of the operation.
+      operationId:
+        description: Correlated review operation.
+      peerId:
+        description: Logical publishing peer, constrained by the deployment publish permission boundary.
+    messages:
+      result:
+        $ref: ./review-coordinator.asyncapi.yaml#/components/messages/ReviewResult
+  pingRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.ping
+    parameters:
+      scopeId:
+        description: Scope containing the recipient.
+      peerId:
+        description: Intended peer.
+    messages:
+      ping:
+        payload:
+          type: object
+          additionalProperties: false
+  pingReplies:
+    address: null
+    description: A fresh native NATS reply inbox chosen for each request.
+    messages:
+      pong:
+        payload:
+          type: object
+          required:
+            - ready
+          properties:
+            ready:
+              type: boolean
+          additionalProperties: false
+  cancelRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.review.cancel
+    parameters:
+      scopeId:
+        description: scopeId domain value.
+      peerId:
+        description: peerId domain value.
+    messages:
+      control:
+        payload:
+          $ref: ./review-coordinator.asyncapi.yaml#/components/schemas/CancelRequest
+  cancelResults:
+    address: demo.v1.{scopeId}.review.{operationId}.cancelled.{peerId}
+    parameters:
+      scopeId:
+        description: scopeId domain value.
+      operationId:
+        description: operationId domain value.
+      peerId:
+        description: peerId domain value.
+    messages:
+      control:
+        payload:
+          $ref: ./review-coordinator.asyncapi.yaml#/components/schemas/CancelResult
+operations:
+  receiveReview:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewRequests'
+  sendReviewResult:
+    action: send
+    channel:
+      $ref: '#/channels/reviewResults'
+  receiveCancel:
+    action: receive
+    channel:
+      $ref: '#/channels/cancelRequests'
+  sendCancelResult:
+    action: send
+    channel:
+      $ref: '#/channels/cancelResults'
+  receivePing:
+    action: receive
+    channel:
+      $ref: '#/channels/pingRequests'
+    reply:
+      channel:
+        $ref: '#/channels/pingReplies'
+  receiveReviewAlfa:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewRequests'
+  receiveReviewBravo:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewRequests'
+  receiveReviewCharlie:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewRequests'
+x-nats-contract:
+  version: 0.2.0-draft
+  deployment:
+    binding: review-system
+    minimumServerVersion: 2.11.0
+  tokenTypes:
+    ScopeId:
+      kind: token
+      alphabet: lower
+      first: letter
+      minLength: 1
+      maxLength: 32
+      prefix: ''
+    PeerId:
+      kind: token
+      alphabet: lower
+      first: letter
+      minLength: 1
+      maxLength: 32
+      prefix: ''
+    GroupId:
+      kind: token
+      alphabet: lower
+      first: letter
+      minLength: 1
+      maxLength: 32
+      prefix: ''
+    OperationId:
+      kind: token
+      alphabet: hex
+      first: any
+      minLength: 66
+      maxLength: 66
+      prefix: op
+  channels:
+    reviewRequests:
+      parameters:
+        scopeId: ScopeId
+        peerId: PeerId
+      filters:
+        byScope: demo.v1.{scopeId}.peer.*.review.request
+    reviewResults:
+      parameters:
+        scopeId: ScopeId
+        operationId: OperationId
+        peerId: PeerId
+      publisherIdentity:
+        kind: subject-permission
+        peerParameter: peerId
+      filters:
+        forOperation: demo.v1.{scopeId}.review.{operationId}.result.*
+    pingRequests:
+      parameters:
+        scopeId: ScopeId
+        peerId: PeerId
+    cancelRequests:
+      parameters:
+        scopeId: ScopeId
+        peerId: PeerId
+    cancelResults:
+      parameters:
+        scopeId: ScopeId
+        operationId: OperationId
+        peerId: PeerId
+      publisherIdentity:
+        kind: subject-permission
+        peerParameter: peerId
+      filters:
+        forOperation: demo.v1.{scopeId}.review.{operationId}.cancelled.*
+  operations:
+    receiveReview:
+      subscribe:
+        api: core
+    sendReviewResult:
+      publish:
+        api: jetstream
+        confirmation: stream-ack
+        stream: results
+    receiveCancel:
+      subscribe:
+        api: core
+    sendCancelResult:
+      publish:
+        api: core
+        confirmation: none
+    receivePing:
+      subscribe:
+        api: core
+    receiveReviewAlfa:
+      subscribe:
+        api: jetstream
+        consumer: reviewAlfa
+    receiveReviewBravo:
+      subscribe:
+        api: jetstream
+        consumer: reviewBravo
+    receiveReviewCharlie:
+      subscribe:
+        api: jetstream
+        consumer: reviewCharlie
+  streams:
+    requests:
+      authority: external
+      artifact:
+        path: review-native.json
+        sha256: 03617c423558b5b52956d21e61f91e606db371217bd855759cfeadba559f18a8
+      pointer: '#/streams/requests'
+    results:
+      authority: external
+      artifact:
+        path: review-native.json
+        sha256: 03617c423558b5b52956d21e61f91e606db371217bd855759cfeadba559f18a8
+      pointer: '#/streams/results'
+  consumers:
+    reviewAlfa:
+      stream: requests
+      authority: contract
+      config:
+        durable_name: review_alfa
+        filter_subject: demo.v1.*.peer.alfa.review.request
+        ack_policy: explicit
+        deliver_policy: all
+        ack_wait: 30000000000
+        max_deliver: 20
+        max_ack_pending: 256
+        replay_policy: instant
+    reviewBravo:
+      stream: requests
+      authority: contract
+      config:
+        durable_name: review_bravo
+        filter_subject: demo.v1.*.peer.bravo.review.request
+        ack_policy: explicit
+        deliver_policy: all
+        ack_wait: 30000000000
+        max_deliver: 20
+        max_ack_pending: 256
+        replay_policy: instant
+    reviewCharlie:
+      stream: requests
+      authority: contract
+      config:
+        durable_name: review_charlie
+        filter_subject: demo.v1.*.peer.charlie.review.request
+        ack_policy: explicit
+        deliver_policy: all
+        ack_wait: 30000000000
+        max_deliver: 20
+        max_ack_pending: 256
+        replay_policy: instant

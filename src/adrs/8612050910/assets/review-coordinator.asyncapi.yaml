@@ -1,0 +1,726 @@
+asyncapi: 3.1.0
+id: urn:example:review-coordinator
+info:
+  title: Review coordinator
+  version: 0.2.0
+  description: Proposed application contract for reviewing a document with a selected group.
+defaultContentType: application/json
+servers:
+  example:
+    host: nats.example.test:4222
+    protocol: nats
+    description: Illustrative dedicated account; connection settings are deployment inputs.
+channels:
+  reviewRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.review.request
+    parameters:
+      scopeId:
+        description: Scope containing the recipient.
+      peerId:
+        description: Intended logical peer, whose receiving instances must share one identity contract.
+    messages:
+      request:
+        $ref: '#/components/messages/ReviewRequest'
+  reviewResults:
+    address: demo.v1.{scopeId}.review.{operationId}.result.{peerId}
+    parameters:
+      scopeId:
+        description: Scope of the operation.
+      operationId:
+        description: Correlated review operation.
+      peerId:
+        description: Logical publishing peer, constrained by the deployment publish permission boundary.
+    messages:
+      result:
+        $ref: '#/components/messages/ReviewResult'
+  completions:
+    address: demo.v1.{scopeId}.review.completed
+    parameters:
+      scopeId:
+        description: Scope of the completed operation.
+    messages:
+      completed:
+        $ref: '#/components/messages/ReviewCompleted'
+  pingRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.ping
+    parameters:
+      scopeId:
+        description: Scope containing the recipient.
+      peerId:
+        description: Intended peer.
+    messages:
+      ping:
+        payload:
+          type: object
+          additionalProperties: false
+  pingReplies:
+    address: null
+    description: A fresh native NATS reply inbox chosen for each request.
+    messages:
+      pong:
+        payload:
+          type: object
+          required:
+            - ready
+          properties:
+            ready:
+              type: boolean
+          additionalProperties: false
+  cancelRequests:
+    address: demo.v1.{scopeId}.peer.{peerId}.review.cancel
+    parameters:
+      scopeId:
+        description: scopeId domain value.
+      peerId:
+        description: peerId domain value.
+    messages:
+      control:
+        payload:
+          $ref: '#/components/schemas/CancelRequest'
+  cancelResults:
+    address: demo.v1.{scopeId}.review.{operationId}.cancelled.{peerId}
+    parameters:
+      scopeId:
+        description: scopeId domain value.
+      operationId:
+        description: operationId domain value.
+      peerId:
+        description: peerId domain value.
+    messages:
+      control:
+        payload:
+          $ref: '#/components/schemas/CancelResult'
+operations:
+  sendReview:
+    action: send
+    channel:
+      $ref: '#/channels/reviewRequests'
+  receiveReview:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewResults'
+  publishCompleted:
+    action: send
+    channel:
+      $ref: '#/channels/completions'
+  observeCompleted:
+    action: receive
+    channel:
+      $ref: '#/channels/completions'
+    summary: Observe live traffic without replay or consumer acknowledgments.
+  auditCompleted:
+    action: receive
+    channel:
+      $ref: '#/channels/completions'
+    summary: Read completion events through a durable JetStream consumer.
+  ping:
+    action: send
+    channel:
+      $ref: '#/channels/pingRequests'
+    reply:
+      channel:
+        $ref: '#/channels/pingReplies'
+  sendReviewDurable:
+    action: send
+    channel:
+      $ref: '#/channels/reviewRequests'
+  receiveReviewDurable:
+    action: receive
+    channel:
+      $ref: '#/channels/reviewResults'
+  sendCancel:
+    action: send
+    channel:
+      $ref: '#/channels/cancelRequests'
+  receiveCancel:
+    action: receive
+    channel:
+      $ref: '#/channels/cancelResults'
+components:
+  messages:
+    ReviewRequest:
+      payload:
+        $ref: '#/components/schemas/ReviewRequest'
+      correlationId:
+        location: $message.payload#/operationId
+    ReviewResult:
+      payload:
+        $ref: '#/components/schemas/ReviewResult'
+      correlationId:
+        location: $message.payload#/operationId
+    ReviewCompleted:
+      payload:
+        $ref: '#/components/schemas/ReviewSummary'
+      correlationId:
+        location: $message.payload#/operationId
+  schemas:
+    DocumentRef:
+      type: string
+      minLength: 1
+    ReviewRequest:
+      type: object
+      required:
+        - operationId
+        - branchId
+        - attempt
+        - peerId
+        - documentRef
+        - fence
+      properties:
+        operationId:
+          $ref: '#/components/schemas/OperationId'
+        branchId:
+          type: string
+        attempt:
+          type: integer
+          minimum: 1
+          maximum: 16
+        peerId:
+          type: string
+        documentRef:
+          $ref: '#/components/schemas/DocumentRef'
+        fence:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+      additionalProperties: false
+    ReviewResult:
+      type: object
+      required:
+        - operationId
+        - branchId
+        - attempt
+        - peerId
+        - verdict
+        - fence
+      properties:
+        operationId:
+          $ref: '#/components/schemas/OperationId'
+        branchId:
+          type: string
+        attempt:
+          type: integer
+          minimum: 1
+          maximum: 16
+        peerId:
+          type: string
+        verdict:
+          type: string
+          enum:
+            - approved
+            - rejected
+        fence:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+      additionalProperties: false
+    ReviewSummary:
+      type: object
+      required:
+        - operationId
+        - approvedPeers
+        - outcome
+      properties:
+        operationId:
+          $ref: '#/components/schemas/OperationId'
+        approvedPeers:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        outcome:
+          type: string
+          enum:
+            - quorum-met
+            - partial
+            - failed
+      additionalProperties: false
+    AudienceQuery:
+      $ref: ./adapter-contracts.schema.json#/definitions/AudienceQuery
+    AudienceSnapshot:
+      $ref: ./adapter-contracts.schema.json#/definitions/AudienceSnapshot
+    AuthorizationInput:
+      $ref: ./adapter-contracts.schema.json#/definitions/AuthorizationInput
+    AuthorizationDecision:
+      $ref: ./adapter-contracts.schema.json#/definitions/AuthorizationDecision
+    ResultVerificationInput:
+      $ref: ./adapter-contracts.schema.json#/definitions/ResultVerificationInput
+    ResultVerificationOutput:
+      $ref: ./adapter-contracts.schema.json#/definitions/ResultVerificationOutput
+    AggregationInput:
+      $ref: ./adapter-contracts.schema.json#/definitions/AggregationInput
+    DeliveryRequest:
+      $ref: ./adapter-contracts.schema.json#/definitions/DeliveryRequest
+    DeliveryReceipt:
+      $ref: ./adapter-contracts.schema.json#/definitions/DeliveryReceipt
+    OwnershipRequest:
+      $ref: ./adapter-contracts.schema.json#/definitions/OwnershipRequest
+    OwnershipResult:
+      $ref: ./adapter-contracts.schema.json#/definitions/OwnershipResult
+    StateStoreRequest:
+      $ref: ./adapter-contracts.schema.json#/definitions/StateStoreRequest
+    StateStoreResult:
+      $ref: ./adapter-contracts.schema.json#/definitions/StateStoreResult
+    CancelRequest:
+      $ref: ./adapter-contracts.schema.json#/definitions/CancelRequest
+    CancelResult:
+      $ref: ./adapter-contracts.schema.json#/definitions/CancelResult
+    OperationId:
+      $ref: ./adapter-contracts.schema.json#/definitions/OperationId
+x-nats-contract:
+  version: 0.2.0-draft
+  tokenTypes:
+    ScopeId:
+      kind: token
+      alphabet: lower
+      first: letter
+      minLength: 1
+      maxLength: 32
+      prefix: ''
+    PeerId:
+      kind: token
+      alphabet: lower
+      first: letter
+      minLength: 1
+      maxLength: 32
+      prefix: ''
+    GroupId:
+      kind: token
+      alphabet: lower
+      first: letter
+      minLength: 1
+      maxLength: 32
+      prefix: ''
+    OperationId:
+      kind: token
+      alphabet: hex
+      first: any
+      minLength: 66
+      maxLength: 66
+      prefix: op
+  channels:
+    reviewRequests:
+      parameters:
+        scopeId: ScopeId
+        peerId: PeerId
+      filters:
+        byScope: demo.v1.{scopeId}.peer.*.review.request
+    reviewResults:
+      parameters:
+        scopeId: ScopeId
+        operationId: OperationId
+        peerId: PeerId
+      publisherIdentity:
+        kind: subject-permission
+        peerParameter: peerId
+      filters:
+        forOperation: demo.v1.{scopeId}.review.{operationId}.result.*
+    completions:
+      parameters:
+        scopeId: ScopeId
+    pingRequests:
+      parameters:
+        scopeId: ScopeId
+        peerId: PeerId
+    cancelRequests:
+      parameters:
+        scopeId: ScopeId
+        peerId: PeerId
+    cancelResults:
+      parameters:
+        scopeId: ScopeId
+        operationId: OperationId
+        peerId: PeerId
+      publisherIdentity:
+        kind: subject-permission
+        peerParameter: peerId
+      filters:
+        forOperation: demo.v1.{scopeId}.review.{operationId}.cancelled.*
+  operations:
+    sendReview:
+      publish:
+        api: core
+        confirmation: none
+    receiveReview:
+      subscribe:
+        api: core
+    publishCompleted:
+      publish:
+        api: jetstream
+        confirmation: stream-ack
+        stream: completed
+    observeCompleted:
+      subscribe:
+        api: core
+    auditCompleted:
+      subscribe:
+        api: jetstream
+        consumer: completedAudit
+    ping:
+      publish:
+        api: core
+        confirmation: none
+      requestReply:
+        routing: native-inbox
+        completion: first-response
+        timeoutMs: 1000
+    sendReviewDurable:
+      publish:
+        api: jetstream
+        confirmation: stream-ack
+        stream: requests
+    receiveReviewDurable:
+      subscribe:
+        api: jetstream
+        consumer: reviewResults
+    sendCancel:
+      publish:
+        api: core
+        confirmation: none
+    receiveCancel:
+      subscribe:
+        api: core
+  streams:
+    completed:
+      authority: contract
+      config:
+        name: REVIEW_COMPLETED
+        subjects:
+          - demo.v1.*.review.completed
+        retention: limits
+        storage: file
+        num_replicas: 3
+        max_age: 86400000000000
+        max_msgs: 100000
+        max_bytes: 67108864
+        discard: new
+        duplicate_window: 120000000000
+    requests:
+      authority: external
+      artifact:
+        path: review-native.json
+        sha256: 03617c423558b5b52956d21e61f91e606db371217bd855759cfeadba559f18a8
+      pointer: '#/streams/requests'
+    results:
+      authority: external
+      artifact:
+        path: review-native.json
+        sha256: 03617c423558b5b52956d21e61f91e606db371217bd855759cfeadba559f18a8
+      pointer: '#/streams/results'
+  consumers:
+    completedAudit:
+      stream: completed
+      authority: contract
+      config:
+        durable_name: review_audit
+        filter_subject: demo.v1.*.review.completed
+        ack_policy: explicit
+        deliver_policy: all
+        ack_wait: 30000000000
+        max_deliver: 20
+        max_ack_pending: 256
+        replay_policy: instant
+    reviewResults:
+      stream: results
+      authority: contract
+      config:
+        durable_name: review_results
+        filter_subject: demo.v1.*.review.*.result.*
+        ack_policy: explicit
+        deliver_policy: all
+        ack_wait: 30000000000
+        max_deliver: 16
+        max_ack_pending: 256
+        replay_policy: instant
+  adapters:
+    groupDirectory:
+      kind: audience
+      version: 0.2.0
+      inputSchema: '#/components/schemas/AudienceQuery'
+      outputSchema: '#/components/schemas/AudienceSnapshot'
+      description: Proposed interface resolving a group inside a scope into distinct peers and current online status.
+    reviewPolicy:
+      kind: authorization
+      version: 0.2.0
+      inputSchema: '#/components/schemas/AuthorizationInput'
+      outputSchema: '#/components/schemas/AuthorizationDecision'
+      description: Proposed policy interface authorizing dispatch and result admission, including current revocation.
+    verifiedResults:
+      kind: result-verifier
+      version: 0.2.0
+      inputSchema: '#/components/schemas/ResultVerificationInput'
+      outputSchema: '#/components/schemas/ResultVerificationOutput'
+      description: Bind a result to its authenticated logical peer and frozen branch; a payload peerId alone is
+        insufficient.
+    summarize:
+      kind: aggregation
+      version: 0.2.0
+      inputSchema: '#/components/schemas/AggregationInput'
+      outputSchema: '#/components/schemas/ReviewSummary'
+      description: Convert typed accepted branch outcomes and operation decision into the application review summary.
+    completedEvent:
+      kind: transform
+      version: 0.2.0
+      inputSchema: '#/components/schemas/ReviewSummary'
+      outputSchema: '#/components/schemas/ReviewSummary'
+      description: Identity mapping from a successful review summary to the completion event payload.
+    peerDelivery:
+      kind: delivery
+      version: 0.2.0
+      inputSchema: '#/components/schemas/DeliveryRequest'
+      outputSchema: '#/components/schemas/DeliveryReceipt'
+      description: Resolve a peer to its independent durable request consumer and publish/reconcile its branch outbox
+        entry.
+    branchClaims:
+      kind: ownership
+      version: 0.2.0
+      inputSchema: '#/components/schemas/OwnershipRequest'
+      outputSchema: '#/components/schemas/OwnershipResult'
+      description: Acquire, renew and release revision-guarded branch claims with monotonically increasing fences.
+    operationState:
+      kind: state-store
+      version: 0.2.0
+      inputSchema: '#/components/schemas/StateStoreRequest'
+      outputSchema: '#/components/schemas/StateStoreResult'
+      description: Read, create and atomically replace one complete operation record using its expected revision.
+  interactions:
+    reviewGroup:
+      requestOperation: sendReview
+      resultOperation: receiveReview
+      inputs:
+        scopeId:
+          tokenType: ScopeId
+          source: argument
+        groupId:
+          tokenType: GroupId
+          source: argument
+        operationId:
+          tokenType: OperationId
+          source: generated
+        documentRef:
+          schema: '#/components/schemas/DocumentRef'
+          source: argument
+      audience:
+        kind: group
+        input: groupId
+        scopeInput: scopeId
+        resolver: groupDirectory
+        authorization: reviewPolicy
+        membership: snapshot-at-admission
+        includeSender: false
+        offline: exclude
+        lateJoiners: exclude
+        onRevocation: cancel-open-branches
+      dispatch:
+        mode: independent
+        branchKey: recipient
+        targetParameter: peerId
+      delivery:
+        mode: online-best-effort
+        state: memory
+        restart: fail-unknown
+        maxAttempts: 1
+        retryBackoffMs: 0
+        recoveryGraceMs: 2000
+        settlementGraceMs: 1000
+      correlation:
+        operation: $message.payload#/operationId
+        branch: $message.payload#/branchId
+        attempt: $message.payload#/attempt
+        peer: $message.payload#/peerId
+        verifier: verifiedResults
+        fence: $message.payload#/fence
+      completion:
+        mode: quorum
+        count: 2
+        unit: distinct-branches
+        success:
+          field: $message.payload#/verdict
+          equals: approved
+        deadlineMs: 10000
+        onTimeout: partial
+        onImpossible: fail
+        lateResults: discard
+        remaining: detach
+        waitFor: decision
+      aggregation: summarize
+      receiverOperation:
+        contract: workers
+        operation: receiveReview
+      senderOperation:
+        contract: workers
+        operation: sendReviewResult
+      bindings:
+        subject:
+          scopeId:
+            input: scopeId
+          peerId:
+            branch: peerId
+        payload:
+          /operationId:
+            input: operationId
+          /branchId:
+            branch: id
+          /attempt:
+            branch: attempt
+          /fence:
+            branch: fence
+          /peerId:
+            branch: peerId
+          /documentRef:
+            input: documentRef
+    reviewGroupDurable:
+      requestOperation: sendReviewDurable
+      resultOperation: receiveReviewDurable
+      inputs:
+        scopeId:
+          tokenType: ScopeId
+          source: argument
+        groupId:
+          tokenType: GroupId
+          source: argument
+        operationId:
+          tokenType: OperationId
+          source: generated
+        documentRef:
+          schema: '#/components/schemas/DocumentRef'
+          source: argument
+      audience:
+        kind: group
+        input: groupId
+        scopeInput: scopeId
+        resolver: groupDirectory
+        authorization: reviewPolicy
+        membership: snapshot-at-admission
+        includeSender: false
+        offline: include
+        lateJoiners: exclude
+        onRevocation: cancel-open-branches
+      dispatch:
+        mode: independent
+        branchKey: recipient
+        targetParameter: peerId
+      delivery:
+        mode: durable-per-recipient
+        state: durable
+        restart: resume
+        maxAttempts: 3
+        retryBackoffMs: 250
+        recoveryGraceMs: 2000
+        settlementGraceMs: 1000
+        adapter: peerDelivery
+        stateStore: operationState
+        ownership:
+          adapter: branchClaims
+          leaseMs: 3000
+          renewEveryMs: 1000
+          onLoss: retry
+      correlation:
+        operation: $message.payload#/operationId
+        branch: $message.payload#/branchId
+        attempt: $message.payload#/attempt
+        peer: $message.payload#/peerId
+        verifier: verifiedResults
+        fence: $message.payload#/fence
+      completion:
+        mode: quorum
+        count: 2
+        unit: distinct-branches
+        success:
+          field: $message.payload#/verdict
+          equals: approved
+        deadlineMs: 10000
+        onTimeout: partial
+        onImpossible: fail
+        lateResults: discard
+        remaining: cooperative
+        waitFor: settled
+        cancelOperation: sendCancel
+        cancelResultOperation: receiveCancel
+        cancelTimeoutMs: 1000
+      aggregation: summarize
+      senderOperation:
+        contract: workers
+        operation: sendReviewResult
+      bindings:
+        subject:
+          scopeId:
+            input: scopeId
+          peerId:
+            branch: peerId
+        payload:
+          /operationId:
+            input: operationId
+          /branchId:
+            branch: id
+          /attempt:
+            branch: attempt
+          /fence:
+            branch: fence
+          /peerId:
+            branch: peerId
+          /documentRef:
+            input: documentRef
+  pipelines:
+    reviewAndAnnounce:
+      steps:
+        - interaction: reviewGroup
+          bindings:
+            subject: {}
+            payload: {}
+        - operation: publishCompleted
+          inputAdapter: completedEvent
+          bindings:
+            subject:
+              scopeId:
+                context: scopeId
+            payload:
+              '':
+                stageInput: ''
+      onFailure: stop
+  deployment:
+    binding: review-system
+    minimumServerVersion: 2.11.0
+  imports:
+    workers:
+      contract: urn:example:review-worker
+      version: 0.2.0
+      path: review-worker.asyncapi.yaml
+      sha256: 4267046bfe11503d1ef958beceec6fbf529f5425a928f3b028e54b36a389b217
+  links:
+    - send: sendReview
+      receive:
+        contract: workers
+        operation: receiveReview
+    - send:
+        contract: workers
+        operation: sendReviewResult
+      receive: receiveReview
+    - send:
+        contract: workers
+        operation: sendReviewResult
+      receive: receiveReviewDurable
+    - send: sendCancel
+      receive:
+        contract: workers
+        operation: receiveCancel
+    - send:
+        contract: workers
+        operation: sendCancelResult
+      receive: receiveCancel
+    - send: ping
+      receive:
+        contract: workers
+        operation: receivePing
+    - send: sendReviewDurable
+      receive:
+        contract: workers
+        operation: receiveReviewAlfa
+    - send: sendReviewDurable
+      receive:
+        contract: workers
+        operation: receiveReviewBravo
+    - send: sendReviewDurable
+      receive:
+        contract: workers
+        operation: receiveReviewCharlie

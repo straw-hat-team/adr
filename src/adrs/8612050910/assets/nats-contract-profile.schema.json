@@ -1,0 +1,1585 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Draft NATS contract profile v0.2",
+  "description": "Structural v0.2 profile validation. Reference resolution, domain intersections, binding types, timing relationships, native/deployment conformance and runtime safety are separate checks.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "0.2.0-draft"
+    },
+    "deployment": {
+      "$ref": "#/$defs/deployment"
+    },
+    "imports": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/import"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      },
+      "minItems": 0
+    },
+    "tokenTypes": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/tokenType"
+      }
+    },
+    "channels": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/channel"
+      }
+    },
+    "operations": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/operation"
+      }
+    },
+    "streams": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/stream"
+      }
+    },
+    "consumers": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/consumer"
+      }
+    },
+    "adapters": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/adapter"
+      }
+    },
+    "interactions": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/interaction"
+      }
+    },
+    "pipelines": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/pipeline"
+      }
+    },
+    "workflows": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/workflow"
+      }
+    }
+  },
+  "required": ["version", "deployment", "tokenTypes", "channels", "operations"],
+  "additionalProperties": false,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+    },
+    "pointer": {
+      "type": "string",
+      "pattern": "^#(?:/(?:[^~]|~[01])*)?$"
+    },
+    "schemaPointer": {
+      "type": "string",
+      "pattern": "^#/components/schemas/[^/]+$"
+    },
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      },
+      "required": ["path", "sha256"],
+      "additionalProperties": false
+    },
+    "operationRef": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/identifier"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "contract": {
+              "$ref": "#/$defs/identifier"
+            },
+            "operation": {
+              "$ref": "#/$defs/identifier"
+            }
+          },
+          "required": ["contract", "operation"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "import": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/identifier"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      },
+      "required": ["contract", "version", "path", "sha256"],
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "properties": {
+        "send": {
+          "$ref": "#/$defs/operationRef"
+        },
+        "receive": {
+          "$ref": "#/$defs/operationRef"
+        }
+      },
+      "required": ["send", "receive"],
+      "additionalProperties": false
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "binding": {
+          "$ref": "#/$defs/identifier"
+        },
+        "minimumServerVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      },
+      "required": ["binding", "minimumServerVersion"],
+      "additionalProperties": false
+    },
+    "tokenDomain": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "token"
+        },
+        "alphabet": {
+          "enum": ["lower", "ascii", "hex"],
+          "description": "Alphabet of the suffix after the literal prefix. Hex is lowercase 0-9 and a-f."
+        },
+        "first": {
+          "enum": ["letter", "any"],
+          "description": "Constraint on the first suffix character. An empty suffix is allowed only for any and when total length bounds permit it."
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128,
+          "description": "Inclusive byte length of the entire token, including its prefix."
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128,
+          "description": "Inclusive byte length of the entire token, including its prefix."
+        },
+        "prefix": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]*$",
+          "description": "Literal base-ASCII token prefix; its characters need not belong to the suffix alphabet."
+        }
+      },
+      "required": ["kind", "alphabet", "first", "minLength", "maxLength", "prefix"],
+      "additionalProperties": false
+    },
+    "enumDomain": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "enum"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "maxLength": 128
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": ["kind", "values"],
+      "additionalProperties": false
+    },
+    "tokenType": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/tokenDomain"
+        },
+        {
+          "$ref": "#/$defs/enumDomain"
+        }
+      ]
+    },
+    "stringMap": {
+      "type": "object",
+      "minProperties": 0,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "publisherIdentity": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "subject-permission"
+        },
+        "peerParameter": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["kind", "peerParameter"],
+      "additionalProperties": false
+    },
+    "channel": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "$ref": "#/$defs/stringMap"
+        },
+        "filters": {
+          "$ref": "#/$defs/stringMap"
+        },
+        "publisherIdentity": {
+          "$ref": "#/$defs/publisherIdentity"
+        }
+      },
+      "required": ["parameters"],
+      "additionalProperties": false
+    },
+    "corePublish": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "const": "core"
+        },
+        "confirmation": {
+          "const": "none"
+        }
+      },
+      "required": ["api", "confirmation"],
+      "additionalProperties": false
+    },
+    "jetstreamPublish": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "const": "jetstream"
+        },
+        "confirmation": {
+          "const": "stream-ack"
+        },
+        "stream": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["api", "confirmation", "stream"],
+      "additionalProperties": false
+    },
+    "coreSubscribe": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "const": "core"
+        }
+      },
+      "required": ["api"],
+      "additionalProperties": false
+    },
+    "jetstreamSubscribe": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "const": "jetstream"
+        },
+        "consumer": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["api", "consumer"],
+      "additionalProperties": false
+    },
+    "requestReply": {
+      "type": "object",
+      "properties": {
+        "routing": {
+          "const": "native-inbox"
+        },
+        "completion": {
+          "const": "first-response"
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": ["routing", "completion", "timeoutMs"],
+      "additionalProperties": false
+    },
+    "operation": {
+      "type": "object",
+      "properties": {
+        "publish": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/corePublish"
+            },
+            {
+              "$ref": "#/$defs/jetstreamPublish"
+            }
+          ]
+        },
+        "subscribe": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/coreSubscribe"
+            },
+            {
+              "$ref": "#/$defs/jetstreamSubscribe"
+            }
+          ]
+        },
+        "requestReply": {
+          "$ref": "#/$defs/requestReply"
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["publish"]
+        },
+        {
+          "required": ["subscribe"]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {},
+            "required": ["requestReply"]
+          },
+          "then": {
+            "required": ["publish"],
+            "properties": {
+              "publish": {
+                "$ref": "#/$defs/corePublish"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "streamConfig": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/identifier"
+        },
+        "subjects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "retention": {
+          "enum": ["limits", "interest", "workqueue"]
+        },
+        "storage": {
+          "enum": ["file", "memory"]
+        },
+        "num_replicas": {
+          "enum": [1, 3, 5]
+        },
+        "max_age": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_msgs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "discard": {
+          "enum": ["old", "new"]
+        },
+        "duplicate_window": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "name",
+        "subjects",
+        "retention",
+        "storage",
+        "num_replicas",
+        "max_age",
+        "max_msgs",
+        "max_bytes",
+        "discard",
+        "duplicate_window"
+      ],
+      "additionalProperties": false
+    },
+    "consumerConfig": {
+      "type": "object",
+      "properties": {
+        "durable_name": {
+          "$ref": "#/$defs/identifier"
+        },
+        "filter_subject": {
+          "$ref": "#/$defs/identifier"
+        },
+        "ack_policy": {
+          "const": "explicit"
+        },
+        "deliver_policy": {
+          "enum": ["all", "new"]
+        },
+        "ack_wait": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_deliver": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_ack_pending": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "replay_policy": {
+          "const": "instant"
+        }
+      },
+      "required": [
+        "durable_name",
+        "filter_subject",
+        "ack_policy",
+        "deliver_policy",
+        "ack_wait",
+        "max_deliver",
+        "max_ack_pending",
+        "replay_policy"
+      ],
+      "additionalProperties": false
+    },
+    "stream": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "authority": {
+              "const": "contract"
+            },
+            "config": {
+              "$ref": "#/$defs/streamConfig"
+            }
+          },
+          "required": ["authority", "config"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "authority": {
+              "const": "external"
+            },
+            "artifact": {
+              "$ref": "#/$defs/artifact"
+            },
+            "pointer": {
+              "$ref": "#/$defs/pointer"
+            }
+          },
+          "required": ["authority", "artifact", "pointer"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "consumer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "stream": {
+              "$ref": "#/$defs/identifier"
+            },
+            "authority": {
+              "const": "contract"
+            },
+            "config": {
+              "$ref": "#/$defs/consumerConfig"
+            }
+          },
+          "required": ["stream", "authority", "config"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stream": {
+              "$ref": "#/$defs/identifier"
+            },
+            "authority": {
+              "const": "external"
+            },
+            "artifact": {
+              "$ref": "#/$defs/artifact"
+            },
+            "pointer": {
+              "$ref": "#/$defs/pointer"
+            }
+          },
+          "required": ["stream", "authority", "artifact", "pointer"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "adapter": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "audience",
+            "authorization",
+            "result-verifier",
+            "aggregation",
+            "transform",
+            "selection",
+            "delivery",
+            "ownership",
+            "state-store",
+            "workflow"
+          ]
+        },
+        "version": {
+          "$ref": "#/$defs/identifier"
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/schemaPointer"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/schemaPointer"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["kind", "version", "inputSchema", "outputSchema", "description"],
+      "additionalProperties": false
+    },
+    "input": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "source": {
+              "enum": ["argument", "generated"]
+            },
+            "tokenType": {
+              "$ref": "#/$defs/identifier"
+            }
+          },
+          "required": ["source", "tokenType"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "source": {
+              "enum": ["argument", "generated"]
+            },
+            "schema": {
+              "$ref": "#/$defs/schemaPointer"
+            }
+          },
+          "required": ["source", "schema"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "input": {
+              "$ref": "#/$defs/identifier"
+            }
+          },
+          "required": ["input"],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/contextSource"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "branch": {
+              "enum": ["id", "peerId", "attempt", "fence", "input"]
+            }
+          },
+          "required": ["branch"],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/literalSource"
+        }
+      ]
+    },
+    "bindings": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "payload": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/source"
+          }
+        }
+      },
+      "required": ["subject", "payload"],
+      "additionalProperties": false
+    },
+    "audience": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": ["peer", "group", "scope"]
+        },
+        "input": {
+          "$ref": "#/$defs/identifier"
+        },
+        "scopeInput": {
+          "$ref": "#/$defs/identifier"
+        },
+        "resolver": {
+          "$ref": "#/$defs/identifier"
+        },
+        "authorization": {
+          "$ref": "#/$defs/identifier"
+        },
+        "membership": {
+          "const": "snapshot-at-admission"
+        },
+        "includeSender": {
+          "type": "boolean"
+        },
+        "offline": {
+          "enum": ["include", "exclude"]
+        },
+        "lateJoiners": {
+          "const": "exclude"
+        },
+        "onRevocation": {
+          "const": "cancel-open-branches"
+        }
+      },
+      "required": [
+        "kind",
+        "input",
+        "scopeInput",
+        "resolver",
+        "authorization",
+        "membership",
+        "includeSender",
+        "offline",
+        "lateJoiners",
+        "onRevocation"
+      ],
+      "additionalProperties": false
+    },
+    "dispatch": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": ["direct", "independent", "one-eligible", "branches", "none"]
+        },
+        "branchKey": {
+          "enum": ["recipient", "declared"]
+        },
+        "targetParameter": {
+          "$ref": "#/$defs/identifier"
+        },
+        "branchesInput": {
+          "$ref": "#/$defs/identifier"
+        },
+        "selector": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["mode", "branchKey"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "enum": ["direct", "independent"]
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["targetParameter"],
+            "properties": {
+              "branchKey": {
+                "const": "recipient"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "one-eligible"
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["selector", "targetParameter"],
+            "properties": {
+              "branchKey": {
+                "const": "recipient"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "enum": ["branches", "none"]
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["branchesInput"],
+            "properties": {
+              "branchKey": {
+                "const": "declared"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "branches"
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["targetParameter"]
+          }
+        }
+      ]
+    },
+    "ownership": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "$ref": "#/$defs/identifier"
+        },
+        "leaseMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "renewEveryMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "onLoss": {
+          "const": "retry"
+        }
+      },
+      "required": ["adapter", "leaseMs", "renewEveryMs", "onLoss"],
+      "additionalProperties": false
+    },
+    "delivery": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": ["online-best-effort", "durable-per-recipient"]
+        },
+        "state": {
+          "enum": ["memory", "durable"]
+        },
+        "restart": {
+          "enum": ["fail-unknown", "resume"]
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "retryBackoffMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "recoveryGraceMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "settlementGraceMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "adapter": {
+          "$ref": "#/$defs/identifier"
+        },
+        "ownership": {
+          "$ref": "#/$defs/ownership"
+        },
+        "stateStore": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["mode", "state", "restart", "maxAttempts", "retryBackoffMs", "recoveryGraceMs", "settlementGraceMs"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "memory"
+              }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "restart": {
+                "const": "fail-unknown"
+              },
+              "maxAttempts": {
+                "const": 1
+              },
+              "retryBackoffMs": {
+                "const": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "durable"
+              }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "required": ["adapter", "stateStore"],
+            "properties": {
+              "restart": {
+                "const": "resume"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "durable-per-recipient"
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["adapter", "stateStore"],
+            "properties": {
+              "state": {
+                "const": "durable"
+              },
+              "restart": {
+                "const": "resume"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "maxAttempts": {
+                "minimum": 2
+              }
+            },
+            "required": ["maxAttempts"]
+          },
+          "then": {
+            "required": ["ownership"],
+            "properties": {
+              "state": {
+                "const": "durable"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "runtimeExpression": {
+      "type": "string",
+      "pattern": "^\\$message\\.payload#/"
+    },
+    "correlation": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/runtimeExpression"
+        },
+        "branch": {
+          "$ref": "#/$defs/runtimeExpression"
+        },
+        "attempt": {
+          "$ref": "#/$defs/runtimeExpression"
+        },
+        "peer": {
+          "$ref": "#/$defs/runtimeExpression"
+        },
+        "fence": {
+          "$ref": "#/$defs/runtimeExpression"
+        },
+        "verifier": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["operation", "branch", "attempt", "peer", "fence"],
+      "additionalProperties": false
+    },
+    "success": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/runtimeExpression"
+        },
+        "equals": {
+          "type": ["string", "number", "boolean", "null"]
+        }
+      },
+      "required": ["field", "equals"],
+      "additionalProperties": false
+    },
+    "fraction": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": ["numerator", "denominator"],
+      "additionalProperties": false
+    },
+    "noCompletion": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "none"
+        }
+      },
+      "required": ["mode"],
+      "additionalProperties": false
+    },
+    "resultCompletion": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": ["first-success", "all-terminal", "all-successful", "quorum"]
+        },
+        "unit": {
+          "enum": ["distinct-branches", "distinct-peers"]
+        },
+        "success": {
+          "$ref": "#/$defs/success"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "fraction": {
+          "$ref": "#/$defs/fraction"
+        },
+        "deadlineMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "onTimeout": {
+          "enum": ["fail", "partial"]
+        },
+        "onImpossible": {
+          "const": "fail"
+        },
+        "lateResults": {
+          "const": "discard"
+        },
+        "remaining": {
+          "enum": ["detach", "cooperative"]
+        },
+        "waitFor": {
+          "enum": ["decision", "settled"]
+        },
+        "cancelOperation": {
+          "$ref": "#/$defs/identifier"
+        },
+        "cancelResultOperation": {
+          "$ref": "#/$defs/identifier"
+        },
+        "cancelTimeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "mode",
+        "unit",
+        "success",
+        "deadlineMs",
+        "onTimeout",
+        "onImpossible",
+        "lateResults",
+        "remaining",
+        "waitFor"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "quorum"
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "oneOf": [
+              {
+                "required": ["count"],
+                "not": {
+                  "required": ["fraction"]
+                }
+              },
+              {
+                "required": ["fraction"],
+                "not": {
+                  "required": ["count"]
+                }
+              }
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": ["count"]
+                },
+                {
+                  "required": ["fraction"]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "remaining": {
+                "const": "cooperative"
+              }
+            },
+            "required": ["remaining"]
+          },
+          "then": {
+            "required": ["cancelOperation", "cancelResultOperation", "cancelTimeoutMs"]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": ["cancelOperation"]
+                },
+                {
+                  "required": ["cancelResultOperation"]
+                },
+                {
+                  "required": ["cancelTimeoutMs"]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "completion": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/noCompletion"
+        },
+        {
+          "$ref": "#/$defs/resultCompletion"
+        }
+      ]
+    },
+    "interaction": {
+      "type": "object",
+      "properties": {
+        "requestOperation": {
+          "$ref": "#/$defs/identifier"
+        },
+        "resultOperation": {
+          "$ref": "#/$defs/identifier"
+        },
+        "receiverOperation": {
+          "$ref": "#/$defs/operationRef"
+        },
+        "senderOperation": {
+          "$ref": "#/$defs/operationRef"
+        },
+        "inputs": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/input"
+          }
+        },
+        "bindings": {
+          "$ref": "#/$defs/bindings"
+        },
+        "audience": {
+          "$ref": "#/$defs/audience"
+        },
+        "dispatch": {
+          "$ref": "#/$defs/dispatch"
+        },
+        "delivery": {
+          "$ref": "#/$defs/delivery"
+        },
+        "correlation": {
+          "$ref": "#/$defs/correlation"
+        },
+        "completion": {
+          "$ref": "#/$defs/completion"
+        },
+        "aggregation": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": ["inputs", "bindings", "audience", "dispatch", "delivery", "correlation", "completion"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "dispatch": {
+                "properties": {
+                  "mode": {
+                    "const": "none"
+                  }
+                },
+                "required": ["mode"]
+              }
+            },
+            "required": ["dispatch"]
+          },
+          "then": {
+            "not": {
+              "required": ["requestOperation"]
+            }
+          },
+          "else": {
+            "required": ["requestOperation"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "completion": {
+                "properties": {
+                  "mode": {
+                    "not": {
+                      "const": "none"
+                    }
+                  }
+                },
+                "required": ["mode"]
+              }
+            },
+            "required": ["completion"]
+          },
+          "then": {
+            "required": ["resultOperation"],
+            "properties": {
+              "correlation": {
+                "required": ["verifier"]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "audience": {
+                "properties": {
+                  "offline": {
+                    "const": "include"
+                  }
+                },
+                "required": ["offline"]
+              }
+            },
+            "required": ["audience"]
+          },
+          "then": {
+            "properties": {
+              "delivery": {
+                "properties": {
+                  "mode": {
+                    "const": "durable-per-recipient"
+                  },
+                  "state": {
+                    "const": "durable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "dispatch": {
+                "properties": {
+                  "mode": {
+                    "const": "one-eligible"
+                  }
+                },
+                "required": ["mode"]
+              }
+            },
+            "required": ["dispatch"]
+          },
+          "then": {
+            "properties": {
+              "completion": {
+                "properties": {
+                  "unit": {
+                    "const": "distinct-branches"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "pipelineStep": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "interaction": {
+              "$ref": "#/$defs/identifier"
+            },
+            "inputAdapter": {
+              "$ref": "#/$defs/identifier"
+            },
+            "bindings": {
+              "const": {
+                "subject": {},
+                "payload": {}
+              }
+            }
+          },
+          "required": ["interaction", "bindings"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "$ref": "#/$defs/identifier"
+            },
+            "inputAdapter": {
+              "$ref": "#/$defs/identifier"
+            },
+            "bindings": {
+              "$ref": "#/$defs/pipelineBindings"
+            }
+          },
+          "required": ["operation", "bindings"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "pipeline": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pipelineStep"
+          },
+          "minItems": 1
+        },
+        "onFailure": {
+          "const": "stop"
+        }
+      },
+      "required": ["steps", "onFailure"],
+      "additionalProperties": false
+    },
+    "workflow": {
+      "type": "object",
+      "properties": {
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "adapter": {
+          "$ref": "#/$defs/identifier"
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/schemaPointer"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/schemaPointer"
+        }
+      },
+      "required": ["artifact", "adapter", "inputSchema", "outputSchema"],
+      "additionalProperties": false
+    },
+    "contextSource": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "enum": [
+            "contractId",
+            "contractVersion",
+            "contractDigest",
+            "operationId",
+            "principalId",
+            "senderPeerId",
+            "scopeId",
+            "systemId",
+            "accountId",
+            "jetstreamDomain",
+            "nowMs",
+            "deadlineMs",
+            "policyRevision"
+          ]
+        }
+      },
+      "required": ["context"],
+      "additionalProperties": false
+    },
+    "literalSource": {
+      "type": "object",
+      "properties": {
+        "literal": {}
+      },
+      "required": ["literal"],
+      "additionalProperties": false
+    },
+    "jsonPointer": {
+      "type": "string",
+      "pattern": "^(?:/(?:[^~]|~[01])*)*$"
+    },
+    "pipelineSource": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/contextSource"
+        },
+        {
+          "$ref": "#/$defs/literalSource"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stageInput": {
+              "$ref": "#/$defs/jsonPointer"
+            }
+          },
+          "required": ["stageInput"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "pipelineBindings": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/pipelineSource"
+          }
+        },
+        "payload": {
+          "type": "object",
+          "minProperties": 0,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/pipelineSource"
+          }
+        }
+      },
+      "required": ["subject", "payload"],
+      "additionalProperties": false
+    }
+  }
+}
