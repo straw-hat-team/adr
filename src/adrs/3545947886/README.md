@@ -132,7 +132,9 @@ new decision.
   `<brand>-<product>-<tool>`, such as `acme-order-book-operator`, and **MUST
   NOT** add an extension, since a tool is run and not imported. The
   command-line tool lives in the home repository unless it needs its own
-  release cadence, and then it takes `<brand>-<product>-cli`.
+  release cadence, and then it takes `<brand>-<product>-cli`. Any other tool
+  **MUST NOT** be named `server`, `cli`, `docs` or `website`, which this ADR
+  keeps for the server, the command-line tool and the product's sites.
 - You **MAY** keep libraries in the home repository, each in its language
   workspace per [ADR#5842232571](../5842232571/README.md), and publish them
   from there under the package names below. You **SHOULD** move the Go library
