@@ -91,6 +91,22 @@ new decision.
   imported as a library. You **MUST NOT** put the implementation language in
   its name: a server is run, not imported, and rewriting it in another
   language must not rename it.
+- You **MUST NOT** create a separate repository for the server, such as
+  `<brand>-<product>-server`. The server lives in the home repository, and
+  only what it builds carries the `-server` suffix: its package, executable,
+  image and chart, per [Executables](#executables). A home repository then
+  looks like this:
+
+  ```text
+  acme-order-book/                          home repository, plain name
+  ├── rsworkspace/
+  │   └── crates/acme-order-book-server/    builds `acme-order-book-server`
+  ├── proto/acme/order_book/v1/
+  └── docs/
+  acme-order-book.go/                       Go library, its own repository
+  acme-order-book.ts/                       TypeScript library
+  ```
+
 - You **MUST** name a repository that holds a library for one language
   `<brand>-<product>.<ext>`, where `<ext>` is the extension
   [ADR#5842232571](../5842232571/README.md) fixes for that language, such as
