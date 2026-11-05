@@ -65,9 +65,10 @@ new decision.
 - You **MUST NOT** pick a product whose words, joined, are a keyword in a
   language this ADR names, such as `map` or `package`, or start with a digit,
   such as `3d`, because the Go and JVM package forms below would not compile.
-- You **MUST** confirm the name is free in every registry and on every host
-  the product will publish to before adopting it, and **MUST** pick another
-  full name when one of them is taken, rather than spell it differently there.
+- You **MUST** confirm the name is free, or already held by the organization
+  for that product, in every registry and on every host the product will
+  publish to before adopting it, and **MUST** pick another full name when one
+  of them is taken, rather than spell it differently there.
 - You **MUST** derive every other name in this ADR from the full name by
   changing only case and separators, and by adding the suffixes, extensions
   and versions a rule below names, such as `-server`, `.go` or `.v1`. You
@@ -203,6 +204,11 @@ signing in once works everywhere, and keep the server's settings apart.
   [ADR#9316364013](../9316364013/README.md), the user's `config.toml`, the
   built-in default. A library resolves the same way minus the flag, with its
   caller's arguments on top.
+- You **MUST NOT** let the repository's `config.toml` set an endpoint, a
+  profile's credentials or anything else that decides where credentials are
+  sent, since anyone who writes to a repository can then collect the
+  credentials of whoever runs the tool in it. Those settings come only from a
+  flag, an environment variable or the user's `config.toml`.
 - You **MUST NOT** let a library read a file or the credential store just
   because it was constructed. It **MUST** read them only through an explicit
   call, such as `Config::from_profile(...)`, so an application in a container
