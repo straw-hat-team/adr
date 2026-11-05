@@ -81,7 +81,8 @@ new decision.
   name of another product, so `acme-order-book-*` matches one product only. A
   product named `acme-order` next to `acme-order-book` is wrong.
 - You **MUST NOT** end a product name with a word this ADR reserves for a
-  suffix, `server` or `cli`.
+  suffix, `server`, `cli`, `docs` or `website`, and **MUST NOT** name a
+  product `docs` or `website`, which belong to the brand's own sites.
 
 ### Repositories
 
@@ -91,11 +92,11 @@ new decision.
   imported as a library. You **MUST NOT** put the implementation language in
   its name: a server is run, not imported, and rewriting it in another
   language must not rename it.
-- You **MUST NOT** create a separate repository for the server, such as
-  `<brand>-<product>-server`. The server lives in the home repository, and
-  only what it builds carries the `-server` suffix: its package, executable,
-  image and chart, per [Executables](#executables). A home repository then
-  looks like this:
+- You **SHOULD** keep the server in the home repository, and **MAY** move it to
+  `<brand>-<product>-server` only when it needs an owner or a release cadence
+  apart from the rest of the product. Either way, what it builds carries the
+  `-server` suffix: its package, executable, image and chart, per
+  [Executables](#executables). A home repository then looks like this:
 
   ```text
   acme-order-book/                          home repository, plain name
@@ -143,6 +144,17 @@ new decision.
   such as `terraform-provider-<name>` or `homebrew-<tap>`, and **MUST** fill
   its name slot with the full name, or with the closest form the host
   accepts.
+- You **SHOULD** keep a product's documentation in the home repository's
+  `docs/`, so it changes in the same pull request as the behavior it
+  describes, and publish the documentation site from there. You **MAY** move
+  the site to `<brand>-<product>-docs` only when it needs its own toolchain
+  or owner, and **MUST** still keep the reference pages generated from the
+  schemas in the home repository.
+- You **MUST** name a site that spans the brand's products after the brand
+  alone: `<brand>-docs` for documentation that gathers every product, and
+  `<brand>-website` for the marketing site. A product's marketing pages live
+  in `<brand>-website`, and **MUST** get their own `<brand>-<product>-website`
+  repository only when the product is marketed on a domain of its own.
 
 ### Executables
 
