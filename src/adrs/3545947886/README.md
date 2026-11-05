@@ -57,8 +57,20 @@ new decision.
   lowercase kebab-case, such as `acme-order-book`. `<brand>` is the prefix the
   organization uses for all of its products, and `<product>` is one or more
   words.
+- You **MUST** keep the full name to 32 characters or fewer. Kubernetes label
+  values, DNS labels and PostgreSQL identifiers all stop at 63, and the
+  derived forms append suffixes such as `-server` or `_orders` that need the
+  rest.
+- You **MUST NOT** pick a product whose words, joined, are a keyword in a
+  language this ADR names, such as `map` or `package`, or start with a digit,
+  such as `3d`, because the Go and JVM package forms below would not compile.
+- You **MUST** confirm the name is free in every registry and on every host
+  the product will publish to before adopting it, and **MUST** pick another
+  full name when one of them is taken, rather than spell it differently there.
 - You **MUST** derive every other name in this ADR from the full name by
-  changing only case and separators. You **MUST NOT** drop, abbreviate,
+  changing only case and separators, and by adding the suffixes, extensions
+  and versions a rule below names, such as `-server`, `.go` or `.v1`. You
+  **MUST NOT** drop, abbreviate,
   reorder or translate a word: `acme-orderbook`, `acme-ob`, `acme-book` and
   `order-book-acme` are wrong. The only exceptions are the Go, npm and JVM
   packages, where the module path, the scope or the domain already carries
@@ -237,7 +249,11 @@ table is added here before its first package is published.
   the product words, because those package names are single lowercase words
   and the module path or the reverse domain already holds the brand.
 - The npm package drops the brand into the scope, `@<brand>/`, which the
-  organization owns on npm.
+  organization owns on npm. The scope and the name together count as the
+  package prefix [ADR#0752163629](../0752163629/README.md) asks of a project,
+  so `@acme/order-book-*` belongs to the `acme-order-book` project.
+- The Go module path ends with `/v<N>` from major version 2 on, as Go
+  requires, such as `github.com/<org>/acme-order-book.go/v2`.
 - `<reverse-domain>` is the organization's domain reversed, such as
   `com.acme`.
 
@@ -256,7 +272,8 @@ table is added here before its first package is published.
   change in place.
 - A name already published to a global registry cannot be taken back. A
   product that published under a name this ADR forbids keeps that package, and
-  marks it deprecated in favor of the new one at its next release.
+  marks it deprecated in favor of the new one only once the new one is
+  published under the organization's account.
 
 ## Links
 
@@ -264,6 +281,7 @@ table is added here before its first package is published.
 - [ADR#0752163629](../0752163629/README.md): Project namespaces
 - [ADR#4711775939](../4711775939/README.md): Schema source directories
 - [ADR#6497710059](../6497710059/README.md): OCI artifact paths and tags
+- [ADR#9316364013](../9316364013/README.md): Reserved repository directories
 - [Go: module paths](https://go.dev/ref/mod#module-path)
 - [Go: package names](https://go.dev/blog/package-names)
 - [Cargo: the `name` field](https://doc.rust-lang.org/cargo/reference/manifest.html#the-name-field)
@@ -271,7 +289,7 @@ table is added here before its first package is published.
 - [Python: name normalization](https://packaging.python.org/en/latest/specifications/name-normalization/)
 - [Protobuf: package naming](https://protobuf.dev/programming-guides/style/#packages)
 - [Kubernetes: recommended labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
-- [ADR#9316364013](../9316364013/README.md): Reserved repository directories
+- [PostgreSQL: identifiers](https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
 - [Command Line Interface Guidelines: configuration](https://clig.dev/#configuration)
 - [Windows known folders](https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid)
 - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/)
