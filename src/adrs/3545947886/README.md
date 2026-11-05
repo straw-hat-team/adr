@@ -152,9 +152,11 @@ new decision.
   schemas in the home repository.
 - You **MUST** name a site that spans the brand's products after the brand
   alone: `<brand>-docs` for documentation that gathers every product, and
-  `<brand>-website` for the marketing site. A product's marketing pages live
-  in `<brand>-website`, and **MUST** get their own `<brand>-<product>-website`
-  repository only when the product is marketed on a domain of its own.
+  `<brand>-website` for the marketing site. You **SHOULD** keep a product's
+  marketing pages in `<brand>-website`, so the brand reads as one site. You
+  **MAY** give a product its own `<brand>-<product>-website` repository, such
+  as for a product marketed on a domain of its own, and **MUST** use that name
+  when you do.
 
 ### Executables
 
