@@ -138,34 +138,100 @@ new decision.
   `<brand>-<product>-<framework>` in the registry's form, unless the framework
   documents a naming convention for its integrations, which then wins.
 
+### Configuration and local files
+
+A product's command-line tool, its libraries and its server can all end up on
+one machine. They share a user's settings and credentials on purpose, so that
+signing in once works everywhere, and keep the server's settings apart.
+
+- You **MUST** name every environment variable after the executable or
+  library that reads it, in SCREAMING_SNAKE_CASE. The command-line tool and
+  the libraries read `<BRAND>_<PRODUCT>_<KEY>`, such as
+  `ACME_ORDER_BOOK_ENDPOINT`. The server reads
+  `<BRAND>_<PRODUCT>_SERVER_<KEY>`, and every other process its own role,
+  such as `ACME_ORDER_BOOK_WORKER_<KEY>`. A key of the command-line tool or a
+  library **MUST NOT** start with a role word, `SERVER_` or `WORKER_`, so the
+  prefixes never overlap.
+- You **MUST** read the user's files from one directory per product, and
+  **MUST NOT** spread them over the home directory as dotfiles:
+
+  | Kind        | Linux and macOS                                      | Windows                                 |
+  | ----------- | ---------------------------------------------------- | --------------------------------------- |
+  | Config      | `${XDG_CONFIG_HOME:-~/.config}/acme-order-book/`     | `%APPDATA%\acme-order-book\`            |
+  | Data        | `${XDG_DATA_HOME:-~/.local/share}/acme-order-book/`  | `%APPDATA%\acme-order-book\data\`       |
+  | State, logs | `${XDG_STATE_HOME:-~/.local/state}/acme-order-book/` | `%LOCALAPPDATA%\acme-order-book\state\` |
+  | Cache       | `${XDG_CACHE_HOME:-~/.cache}/acme-order-book/`       | `%LOCALAPPDATA%\acme-order-book\cache\` |
+
+  macOS follows the Linux paths, not `~/Library/Application Support`, so a
+  user's dotfiles carry the same settings between both.
+
+- You **MUST** let `<BRAND>_<PRODUCT>_CONFIG_DIR` replace the config
+  directory, for tests and for users who keep it elsewhere.
+- You **MUST** name the files in the config directory by who reads them:
+
+  | File               | Read by                                  | Holds                                            |
+  | ------------------ | ---------------------------------------- | ------------------------------------------------ |
+  | `config.toml`      | The command-line tool and every library  | Profiles: endpoints, output, defaults            |
+  | `credentials.toml` | The command-line tool and every library  | Secrets per profile, when no keychain holds them |
+  | `server.toml`      | The server, run from a user account only | The server's settings for local development      |
+
+- You **MUST** keep settings in `config.toml` under `[profiles.<name>]`, with
+  `default` used when none is chosen, and select a profile with `--profile` or
+  `<BRAND>_<PRODUCT>_PROFILE`.
+- You **SHOULD** store secrets in the operating system's credential store,
+  under the service name `<brand>-<product>` and the profile name as the
+  account. You **MUST** fall back to `credentials.toml` only where no store is
+  available, create it readable by its owner only, and refuse to read it when
+  anyone else can. You **MUST NOT** put a secret in `config.toml`, so it can
+  be shared and kept in dotfiles.
+- You **MUST** resolve every setting of the command-line tool from, highest
+  first: a flag, an environment variable, the repository's
+  `.config/<brand>-<product>/config.toml` per
+  [ADR#9316364013](../9316364013/README.md), the user's `config.toml`, the
+  built-in default. A library resolves the same way minus the flag, with its
+  caller's arguments on top.
+- You **MUST NOT** let a library read a file or the credential store just
+  because it was constructed. It **MUST** read them only through an explicit
+  call, such as `Config::from_profile(...)`, so an application in a container
+  never picks up a developer's settings by accident. Environment variables
+  are read the same way, only when the caller asks.
+- You **MUST NOT** make a deployed server read the user's directories. It
+  takes its settings from `<BRAND>_<PRODUCT>_SERVER_*` variables and from a
+  file passed with `--config`. A system package **MUST** install that file as
+  `/etc/<brand>-<product>/server.toml` and keep the server's data in
+  `/var/lib/<brand>-<product>/`, and pass the path in its service unit.
+
 ### Name forms
 
 You **MUST** spell each form as the table does for `acme-order-book`, made
 from a brand `acme` and a product `order-book`. A language missing from the
 table is added here before its first package is published.
 
-| Where                                        | Form                                          |
-| -------------------------------------------- | --------------------------------------------- |
-| Home repository                              | `acme-order-book`                             |
-| Library repository                           | `acme-order-book.<ext>`                       |
-| Framework integration repository             | `acme-order-book-<framework>.<ext>`           |
-| Command-line tool                            | `acme-order-book`                             |
-| Server executable, image and chart           | `acme-order-book-server`                      |
-| Rust crate                                   | `acme-order-book`, imported `acme_order_book` |
-| Go module                                    | `github.com/<org>/acme-order-book.go`         |
-| Go package                                   | `orderbook`                                   |
-| npm package                                  | `@acme/order-book`                            |
-| Hex package and OTP application              | `acme_order_book`                             |
-| Elixir module                                | `Acme.OrderBook`                              |
-| PyPI distribution                            | `acme-order-book`, imported `acme_order_book` |
-| Maven coordinates                            | `<reverse-domain>:acme-order-book`            |
-| Kotlin and Java package                      | `<reverse-domain>.orderbook`                  |
-| Swift package and module                     | `acme-order-book`, module `AcmeOrderBook`     |
-| Protobuf package                             | `acme.order_book.v1`                          |
-| Environment variable prefix                  | `ACME_ORDER_BOOK_`                            |
-| SQL schema and identifier prefix             | `acme_order_book`                             |
-| Configuration directory                      | `$XDG_CONFIG_HOME/acme-order-book/`           |
-| Kubernetes `app.kubernetes.io/part-of` label | `acme-order-book`                             |
+| Where                                        | Form                                                 |
+| -------------------------------------------- | ---------------------------------------------------- |
+| Home repository                              | `acme-order-book`                                    |
+| Library repository                           | `acme-order-book.<ext>`                              |
+| Framework integration repository             | `acme-order-book-<framework>.<ext>`                  |
+| Command-line tool                            | `acme-order-book`                                    |
+| Server executable, image and chart           | `acme-order-book-server`                             |
+| Rust crate                                   | `acme-order-book`, imported `acme_order_book`        |
+| Go module                                    | `github.com/<org>/acme-order-book.go`                |
+| Go package                                   | `orderbook`                                          |
+| npm package                                  | `@acme/order-book`                                   |
+| Hex package and OTP application              | `acme_order_book`                                    |
+| Elixir module                                | `Acme.OrderBook`                                     |
+| PyPI distribution                            | `acme-order-book`, imported `acme_order_book`        |
+| Maven coordinates                            | `<reverse-domain>:acme-order-book`                   |
+| Kotlin and Java package                      | `<reverse-domain>.orderbook`                         |
+| Swift package and module                     | `acme-order-book`, module `AcmeOrderBook`            |
+| Protobuf package                             | `acme.order_book.v1`                                 |
+| Environment variables, tool and libraries    | `ACME_ORDER_BOOK_<KEY>`                              |
+| Environment variables, server                | `ACME_ORDER_BOOK_SERVER_<KEY>`                       |
+| SQL schema and identifier prefix             | `acme_order_book`                                    |
+| User config directory                        | `~/.config/acme-order-book/`                         |
+| Credential store service                     | `acme-order-book`                                    |
+| System config and data                       | `/etc/acme-order-book/`, `/var/lib/acme-order-book/` |
+| Kubernetes `app.kubernetes.io/part-of` label | `acme-order-book`                                    |
 
 - The Go package and the Kotlin and Java package drop the brand and join
   the product words, because those package names are single lowercase words
@@ -205,4 +271,7 @@ table is added here before its first package is published.
 - [Python: name normalization](https://packaging.python.org/en/latest/specifications/name-normalization/)
 - [Protobuf: package naming](https://protobuf.dev/programming-guides/style/#packages)
 - [Kubernetes: recommended labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
+- [ADR#9316364013](../9316364013/README.md): Reserved repository directories
+- [Command Line Interface Guidelines: configuration](https://clig.dev/#configuration)
+- [Windows known folders](https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid)
 - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/)
