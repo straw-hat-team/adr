@@ -57,10 +57,11 @@ new decision.
   lowercase kebab-case, such as `acme-order-book`. `<brand>` is the prefix the
   organization uses for all of its products, and `<product>` is one or more
   words.
-- You **MUST** keep the full name to 32 characters or fewer. Kubernetes label
-  values, DNS labels and PostgreSQL identifiers all stop at 63, and the
+- You **SHOULD** keep the full name to 32 characters or fewer. Kubernetes
+  label values, DNS labels and PostgreSQL identifiers all stop at 63, and the
   derived forms append suffixes such as `-server` or `_orders` that need the
-  rest.
+  rest. You **MUST** keep every derived form within the limit of the place it
+  is used.
 - You **MUST NOT** pick a product whose words, joined, are a keyword in a
   language this ADR names, such as `map` or `package`, or start with a digit,
   such as `3d`, because the Go and JVM package forms below would not compile.
