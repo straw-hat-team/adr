@@ -151,8 +151,9 @@ new decision.
   one application per platform. An application that already shipped under
   the plain name **MAY** keep it, since renaming breaks every reference to
   it, and only the applications added later take the audience word. An
-  application is a client of the product, not an executable of it, so the role words under [Executables](#executables) do not apply to it.
-  You **MAY** keep it in the home repository, in its language workspace per
+  application is a client of the product, not an executable of it, so the
+  role words under [Executables](#executables) do not apply to it. You
+  **MAY** keep it in the home repository, in its language workspace per
   [ADR#5842232571](../5842232571/README.md).
 - You **MAY** keep libraries in the home repository, each in its language
   workspace per [ADR#5842232571](../5842232571/README.md), and publish them
