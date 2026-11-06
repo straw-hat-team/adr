@@ -81,7 +81,8 @@ new decision.
   name of another product, so `acme-order-book-*` matches one product only. A
   product named `acme-order` next to `acme-order-book` is wrong.
 - You **MUST NOT** end a product name with a word this ADR reserves for a
-  suffix, `server`, `cli`, `docs` or `website`, and **MUST NOT** name a
+  suffix, `server`, `worker`, `operator`, `app`, `cli`, `docs` or `website`,
+  and **MUST NOT** name a
   product `docs` or `website`, which belong to the brand's own sites.
 
 ### Repositories
@@ -132,9 +133,28 @@ new decision.
   `<brand>-<product>-<tool>`, such as `acme-order-book-operator`, and **MUST
   NOT** add an extension, since a tool is run and not imported. The
   command-line tool lives in the home repository unless it needs its own
-  release cadence, and then it takes `<brand>-<product>-cli`. Any other tool
-  **MUST NOT** be named `server`, `cli`, `docs` or `website`, which this ADR
-  keeps for the server, the command-line tool and the product's sites.
+  release cadence, and then it takes `<brand>-<product>-cli`. A repository
+  that holds only a separately released worker takes `<brand>-<product>-worker`
+  and one that holds only the server takes `<brand>-<product>-server`. Any
+  other tool **MUST NOT** be named `server`, `worker`, `cli`, `docs` or
+  `website`, which this ADR keeps for the server, the worker, the command-line
+  tool and the product's sites.
+- You **MUST** name an application that end users run, in a browser, on a
+  phone or on a desktop, `<brand>-<product>-<platform>-app`, where `<platform>`
+  is `web`, `mobile` or `desktop`, such as `acme-order-book-web-app`. You
+  **MUST NOT** use a bare `<brand>-<product>-app`, since it does not say what
+  the application runs on and the platforms differ in packaging and release
+  channel. A product that ships more than one application on a platform
+  **MUST** add one word naming the audience before the platform in each of
+  them, such as `acme-order-book-admin-web-app` next to
+  `acme-order-book-customer-web-app`, and **MUST NOT** add it when it ships
+  one application per platform. An application that already shipped under
+  the plain name **MAY** keep it, since renaming breaks every reference to
+  it, and only the applications added later take the audience word. An
+  application is a client of the product, not an executable of it, so the
+  role words under [Executables](#executables) do not apply to it. You
+  **MAY** keep it in the home repository, in its language workspace per
+  [ADR#5842232571](../5842232571/README.md).
 - You **MAY** keep libraries in the home repository, each in its language
   workspace per [ADR#5842232571](../5842232571/README.md), and publish them
   from there under the package names below. You **SHOULD** move the Go library
@@ -164,9 +184,43 @@ new decision.
 
 - You **MUST** name the command-line tool `<brand>-<product>`. It is what
   people type most, so it takes the plain name.
-- You **MUST** name the server executable `<brand>-<product>-server`, and
-  every other long-running process `<brand>-<product>-<role>`, such as
-  `acme-order-book-worker`.
+- You **MUST** name the product's main executable
+  `<brand>-<product>-server`. "Server" means the executable you deploy, as in
+  `nats-server` and `temporal-server`: it runs every role of the product by
+  default and can be told to run a subset, so it does not have to accept
+  connections itself. A product whose only role is background work, with no
+  clients to connect, **MUST** name its executable after that role instead,
+  such as `acme-order-book-worker`.
+- You **MUST** select a role of the main executable with a subcommand or a
+  flag, such as `acme-order-book-server start --role worker`, and **MUST NOT**
+  ship a second executable for it, except as the next rule allows. You **MAY**
+  run the same image as several deployments with different arguments, so each
+  role scales on its own.
+- You **MAY** ship a separate executable for a role only when it needs its own
+  image or release cadence, and **MUST** name it `<brand>-<product>-<role>`.
+  Once the executable runs, the server **MUST NOT** run that role, and a
+  deployment **MUST** deploy the executable before it turns the role off in
+  the server, so no work stops during the upgrade and the work **MUST** be
+  safe to run twice for that short overlap. The release that ships the
+  executable **MUST** say so, and the server **MAY** change its default only
+  in a later major version. The role is one of these, and a
+  role names a responsibility, not how the process runs:
+  - `worker`: nothing calls it. It pulls from a queue or stream, runs on a
+    schedule, builds projections or watches for changes, such as
+    `acme-order-book-worker`.
+  - `operator`: it reconciles the product's resources in Kubernetes, such as
+    `acme-order-book-operator`. It is the one named exception, because the
+    Kubernetes ecosystem already uses the word and readers search for it.
+- You **MUST NOT** name an executable, image or chart with another role word.
+  `service` and `daemon` describe how a process runs, and every executable in
+  this section is a long-running service and a daemon, so neither tells a
+  reader what the process does. `consumer`, `processor`, `projector`,
+  `dispatcher` and `scheduler` are `worker`, and `api`, `gateway` and `proxy`
+  are `server`: what a process does goes in its documentation, and what a
+  reader needs from its name is whether something calls it. A second server
+  that is released independently, such as a gateway in front of several
+  products, is a separate product with its own full name and its own
+  `-server`, not another role of the first.
 - You **MUST** name each container image and Helm chart after the executable
   it runs, such as `acme-order-book-server`, and **MUST** use the full name as
   its `<namespace>` per [ADR#6497710059](../6497710059/README.md).
@@ -194,8 +248,10 @@ signing in once works everywhere, and keep the server's settings apart.
   library that reads it, in SCREAMING_SNAKE_CASE. The command-line tool and
   the libraries read `<BRAND>_<PRODUCT>_<KEY>`, such as
   `ACME_ORDER_BOOK_ENDPOINT`. The server reads
-  `<BRAND>_<PRODUCT>_SERVER_<KEY>`, and every other process its own role,
-  such as `ACME_ORDER_BOOK_WORKER_<KEY>`. A key of the command-line tool or a
+  `<BRAND>_<PRODUCT>_SERVER_<KEY>`, and every separate executable its own
+  role, such as `ACME_ORDER_BOOK_WORKER_<KEY>`. A role selected inside the
+  server reads the server's prefix with the role in the key, such as
+  `ACME_ORDER_BOOK_SERVER_WORKER_<KEY>`. A key of the command-line tool or a
   library **MUST NOT** start with a role word, `SERVER_` or `WORKER_`, so the
   prefixes never overlap.
 - You **MUST** read the user's files from one directory per product, and
@@ -314,6 +370,9 @@ table is added here before its first package is published.
   chart keeps its old path until its consumers move, since
   [ADR#6497710059](../6497710059/README.md) does not let a published path
   change in place.
+- An executable named with a role word this ADR does not allow, such as
+  `-service`, `-daemon` or `-consumer`, is renamed to `-server`, `-worker` or
+  `-operator` when it adopts this ADR, under the same published-path rule.
 - A name already published to a global registry cannot be taken back. A
   product that published under a name this ADR forbids keeps that package, and
   marks it deprecated in favor of the new one only once the new one is
