@@ -9,8 +9,9 @@ tags: [dependencies, automation]
 
 # Renovate
 
-Renovate opens pull requests that update dependencies. It is in Trial as the long-term replacement for
-Dependabot version updates, for two reasons. Dependabot cannot bump a version that sits in a plain string, such
+Renovate opens pull requests that update dependencies, and it is the one dependency tool we are converging on,
+with [Dependabot](./dependabot.md) on Hold. It is in Trial as the long-term replacement for Dependabot version
+updates, for two reasons. Dependabot cannot bump a version that sits in a plain string, such
 as the version input of an action step or the default of a composite action, and Renovate can through a regex
 manager and a native mise manager. And Renovate is not tied to GitHub, which keeps dependency updates from being
 one more thing that only works on one provider.
