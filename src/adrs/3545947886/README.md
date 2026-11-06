@@ -278,7 +278,7 @@ table is added here before its first package is published.
 | Protobuf package                             | `acme.order_book.v1`                                 |
 | Environment variables, tool and libraries    | `ACME_ORDER_BOOK_<KEY>`                              |
 | Environment variables, server                | `ACME_ORDER_BOOK_SERVER_<KEY>`                       |
-| SQL schema and identifier prefix             | `acme_order_book`                                    |
+| SQL schema                                   | `acme_order_book`                                    |
 | User config directory                        | `~/.config/acme-order-book/`                         |
 | Credential store service                     | `acme-order-book`                                    |
 | System config and data                       | `/etc/acme-order-book/`, `/var/lib/acme-order-book/` |
@@ -295,6 +295,11 @@ table is added here before its first package is published.
   requires, such as `github.com/<org>/acme-order-book.go/v2`.
 - `<reverse-domain>` is the organization's domain reversed, such as
   `com.acme`.
+- A product **MUST** keep its database objects in its own SQL schema, with
+  plain names inside it, such as `acme_order_book.orders`, and **MUST NOT**
+  prefix them with the full name, which pushes long object names past the
+  63-byte limit. A product that cannot own a schema prefixes its objects with
+  `acme_order_book_` instead.
 
 ## Consequences
 
