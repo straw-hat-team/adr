@@ -210,7 +210,10 @@ new decision.
   reader what the process does. `consumer`, `processor`, `projector`,
   `dispatcher` and `scheduler` are `worker`, and `api`, `gateway` and `proxy`
   are `server`: what a process does goes in its documentation, and what a
-  reader needs from its name is whether something calls it.
+  reader needs from its name is whether something calls it. A second server
+  that is released independently, such as a gateway in front of several
+  products, is a separate product with its own full name and its own
+  `-server`, not another role of the first.
 - You **MUST** name each container image and Helm chart after the executable
   it runs, such as `acme-order-book-server`, and **MUST** use the full name as
   its `<namespace>` per [ADR#6497710059](../6497710059/README.md).
