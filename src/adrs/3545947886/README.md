@@ -133,16 +133,22 @@ new decision.
   `<brand>-<product>-<tool>`, such as `acme-order-book-operator`, and **MUST
   NOT** add an extension, since a tool is run and not imported. The
   command-line tool lives in the home repository unless it needs its own
-  release cadence, and then it takes `<brand>-<product>-cli`. Any other tool
-  **MUST NOT** be named `server`, `worker`, `cli`, `docs` or `website`, which
-  this ADR keeps for the server, the worker, the command-line tool and the
-  product's sites.
+  release cadence, and then it takes `<brand>-<product>-cli`. A repository
+  that holds only a separately released worker takes `<brand>-<product>-worker`
+  and one that holds only the server takes `<brand>-<product>-server`. Any
+  other tool **MUST NOT** be named `server`, `worker`, `cli`, `docs` or
+  `website`, which this ADR keeps for the server, the worker, the command-line
+  tool and the product's sites.
 - You **MUST** name an application that end users run, in a browser, on a
   phone or on a desktop, `<brand>-<product>-<platform>-app`, where `<platform>`
   is `web`, `mobile` or `desktop`, such as `acme-order-book-web-app`. You
   **MUST NOT** use a bare `<brand>-<product>-app`, since it does not say what
   the application runs on and the platforms differ in packaging and release
-  channel. An application is a client of the product, not an executable of
+  channel. A product that ships more than one application on a platform
+  **MUST** add one word naming the audience before the platform in each of
+  them, such as `acme-order-book-admin-web-app` next to
+  `acme-order-book-customer-web-app`, and **MUST NOT** add it when it ships
+  one application per platform. An application is a client of the product, not an executable of
   it, so the role words under [Executables](#executables) do not apply to it.
   You **MAY** keep it in the home repository, in its language workspace per
   [ADR#5842232571](../5842232571/README.md).
@@ -184,12 +190,14 @@ new decision.
   such as `acme-order-book-worker`.
 - You **MUST** select a role of the main executable with a subcommand or a
   flag, such as `acme-order-book-server start --role worker`, and **MUST NOT**
-  ship a second executable for it. You **MAY** run the same image as several
-  deployments with different arguments, so each role scales on its own.
+  ship a second executable for it, except as the next rule allows. You **MAY**
+  run the same image as several deployments with different arguments, so each
+  role scales on its own.
 - You **MAY** ship a separate executable for a role only when it needs its own
-  image, scaling or release cadence, and **MUST** name it
-  `<brand>-<product>-<role>`. The role is one of these, and a role names a
-  responsibility, not how the process runs:
+  image or release cadence, and **MUST** name it `<brand>-<product>-<role>`.
+  The server **MUST NOT** run that role by default once it ships separately,
+  so the two never run the same work twice. The role is one of these, and a
+  role names a responsibility, not how the process runs:
   - `worker`: nothing calls it. It pulls from a queue or stream, runs on a
     schedule, builds projections or watches for changes, such as
     `acme-order-book-worker`.
