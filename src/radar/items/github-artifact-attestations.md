@@ -14,9 +14,13 @@ keyless through Sigstore with the workflow's own OIDC identity. The checksum fil
 download can be checked either directly or through `sha256sums.txt`.
 
 It sits in Adopt because there is no signing key to store, rotate, or leak, and because the check can be strict.
-`gh attestation verify` takes the repository and the signing workflow, so an artifact built by any other
+`gh attestation verify` takes the repository and the signing workflow, so an artifact attested by any other
 workflow fails verification, even one in the same repository. A verifier that only asks "is there a valid
-signature" proves much less than one that asks "was this built by the release workflow".
+signature" proves much less than one that asks "was this attested by the release workflow".
+
+The signer is the workflow that created the attestation, which is the builder only while that workflow attests
+what it built. A release workflow that also accepts artifacts from elsewhere needs its own check of where they
+came from, because a valid signature from it says nothing about that.
 
 An attestation says where a build came from. It does not say the source was trustworthy, so it complements
 review and branch protection instead of replacing them.

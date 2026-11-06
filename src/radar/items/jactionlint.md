@@ -19,5 +19,6 @@ plan is to run it on a real release workflow next to zizmor and compare findings
 jactionlint misses, it moves to Adopt and is the only workflow linter we run. If it does miss things, those
 findings are a report for the maintainer, not a reason to run three tools.
 
-Use the shared action in `TrogonStack/github-actions` rather than installing it per repository, so every
-repository lints with the same version and the same rules.
+Use the shared action in `TrogonStack/github-actions` rather than installing it per repository. The action
+takes a version, a configuration file, and extra arguments, and a repository can carry its own configuration, so
+keeping every repository on the same version and rules means aligning those too, not just using the action.
