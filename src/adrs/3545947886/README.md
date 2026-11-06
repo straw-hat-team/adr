@@ -148,8 +148,10 @@ new decision.
   **MUST** add one word naming the audience before the platform in each of
   them, such as `acme-order-book-admin-web-app` next to
   `acme-order-book-customer-web-app`, and **MUST NOT** add it when it ships
-  one application per platform. An application is a client of the product, not an executable of
-  it, so the role words under [Executables](#executables) do not apply to it.
+  one application per platform. An application that already shipped under
+  the plain name **MAY** keep it, since renaming breaks every reference to
+  it, and only the applications added later take the audience word. An
+  application is a client of the product, not an executable of it, so the role words under [Executables](#executables) do not apply to it.
   You **MAY** keep it in the home repository, in its language workspace per
   [ADR#5842232571](../5842232571/README.md).
 - You **MAY** keep libraries in the home repository, each in its language
@@ -195,8 +197,12 @@ new decision.
   role scales on its own.
 - You **MAY** ship a separate executable for a role only when it needs its own
   image or release cadence, and **MUST** name it `<brand>-<product>-<role>`.
-  The server **MUST NOT** run that role by default once it ships separately,
-  so the two never run the same work twice. The role is one of these, and a
+  Once the executable runs, the server **MUST NOT** run that role, and a
+  deployment **MUST** deploy the executable before it turns the role off in
+  the server, so no work stops during the upgrade and the work **MUST** be
+  safe to run twice for that short overlap. The release that ships the
+  executable **MUST** say so, and the server **MAY** change its default only
+  in a later major version. The role is one of these, and a
   role names a responsibility, not how the process runs:
   - `worker`: nothing calls it. It pulls from a queue or stream, runs on a
     schedule, builds projections or watches for changes, such as
