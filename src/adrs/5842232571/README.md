@@ -82,11 +82,13 @@ a new language never needs a naming decision.
   [ADR#9316364013](../9316364013/README.md) inside a workspace. The workspace
   uses the copy its project nests per [ADR#0752163629](../0752163629/README.md)
   when there is one, and the repository root copy otherwise.
-- You **MUST** place the members of a Cargo workspace under `crates/<crate>/`
-  relative to the workspace directory, which is `rsworkspace/crates/<crate>/`
-  for the root project and `projects/<project>/rsworkspace/crates/<crate>/`
-  for a named one. You **MUST** follow the toolchain's own layout inside every
-  other workspace.
+- You **MUST** place the members of a Cargo workspace under
+  `crates/<exact_package_name>/`, relative to the workspace directory. The
+  basename **MUST** exactly equal Cargo `[package].name`, using the canonical
+  underscore spelling from [ADR#3522444690](../3522444690/README.md). This is
+  `rsworkspace/crates/<exact_package_name>/` for the root project and
+  `projects/<project>/rsworkspace/crates/<exact_package_name>/` for a named one.
+  You **MUST** follow the toolchain's own layout inside every other workspace.
 
   ```txt
   .
@@ -101,7 +103,7 @@ a new language never needs a naming decision.
   │   ├── Cargo.lock
   │   ├── clippy.toml
   │   ├── deny.toml
-  │   └── crates/<crate>/
+  │   └── crates/<exact_package_name>/
   ├── goworkspace
   │   ├── go.work
   │   └── <module>/go.mod
