@@ -128,6 +128,7 @@ reserved name documented as canonical.
 
 ## Links
 
+- [ADR#2228057065](../2228057065/README.md): Rust package and companion crate naming.
 - [Cargo features: optional dependencies, defaults and unification](https://doc.rust-lang.org/cargo/reference/features.html)
 - [Cargo workspace dependencies](https://doc.rust-lang.org/cargo/reference/workspaces.html#the-dependencies-table)
 - [Rust procedural macros](https://doc.rust-lang.org/reference/procedural-macros.html)
