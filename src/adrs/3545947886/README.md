@@ -231,8 +231,9 @@ new decision.
 
 - Owned Rust Cargo packages **MUST** represent the product and role word parts
   in `lower_snake_case`, per [ADR#3522444690](../3522444690/README.md). Their
-  package directory and, when present, library target use the same spelling. This Rust-specific
-  representation does not change repository, product or executable names.
+  Cargo workspace member directory and, when present, library target use the
+  same spelling. This Rust-specific representation does not change repository,
+  product or executable names.
 - You **MUST** give the plain package name in each registry to the library,
   since a registry is already specific to one language. You **MUST** suffix
   anything else published there, such as a server crate published for
@@ -331,7 +332,7 @@ table is added here before its first package is published.
 | Framework integration repository             | `acme-order-book-<framework>.<ext>`                  |
 | Command-line tool                            | `acme-order-book`                                    |
 | Server executable, image and chart           | `acme-order-book-server`                             |
-| Rust Cargo package, directory and library    | `acme_order_book`                                    |
+| Rust package, library and member directory   | `acme_order_book`                                    |
 | Go module                                    | `github.com/<org>/acme-order-book.go`                |
 | Go package                                   | `orderbook`                                          |
 | npm package                                  | `@acme/order-book`                                   |
