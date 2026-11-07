@@ -49,10 +49,18 @@ depending on it.
   deletion as a unit. You **MUST NOT** create it in anticipation of a second
   thing, and a repository that holds one thing never has it.
 - You **MAY** then move that thing into `projects/<project>/`, named in
-  kebab-case. You **MUST** use the same name as the prefix of the crates,
-  packages, images and charts it produces. You **MUST NOT** pick a name that,
-  followed by `-`, starts the name of another project or of anything the root
-  project produces, so `<project>-*` matches one project only.
+  kebab-case. Except for the Rust representation below, you **MUST** use that
+  exact name as the prefix of the packages, images and charts it produces.
+  Owned Rust Cargo packages preserve its word parts using
+  the underscore representation from
+  [ADR#3522444690](../3522444690/README.md): `order-book` uses `order_book`
+  as its package prefix, matching that exact name and `_`-delimited parts.
+  Other kebab-case forms keep `<project>-`.
+  You **MUST NOT** choose overlapping project prefixes, including anything the
+  root project produces, in either representation. `<project>-*` and the
+  canonical Rust package prefix **MUST** each select one project only. Tools
+  **MUST** use exact Cargo package names or metadata for package-directory
+  lookup, without converting between hyphens and underscores.
 - You **MUST** place what a project owns inside `projects/<project>/`: its
   language workspaces per [ADR#5842232571](../5842232571/README.md), its
   `docs/` and its `README.md`. A project that runs its own mise tasks **MUST**

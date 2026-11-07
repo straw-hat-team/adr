@@ -25,6 +25,10 @@ preserving the names and compatibility contracts consumers already use.
 
 ### Package, library and feature identities
 
+Canonical spelling and exact directory lookup follow
+[ADR#3522444690](../3522444690/README.md). The companion names below use that
+package, directory and library identity.
+
 Our owned Cargo packages **MUST** use product-first `lower_snake_case`, with no
 hyphens. Keep the product word parts from
 [ADR#3545947886](../3545947886/README.md), using this Rust-specific representation

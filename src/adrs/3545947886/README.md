@@ -96,13 +96,15 @@ new decision.
 - You **SHOULD** keep the server in the home repository, and **MAY** move it to
   `<brand>-<product>-server` only when it needs an owner or a release cadence
   apart from the rest of the product. Either way, what it builds carries the
-  `-server` suffix: its package, executable, image and chart, per
-  [Executables](#executables). A home repository then looks like this:
+  server role. Its executable, image and chart use `-server`, per
+  [Executables](#executables); an owned Rust Cargo package uses `_server`
+  under [ADR#3522444690](../3522444690/README.md). A home repository then looks
+  like this:
 
   ```text
   acme-order-book/                          home repository, plain name
   ├── rsworkspace/
-  │   └── crates/acme-order-book-server/    builds `acme-order-book-server`
+  │   └── crates/acme_order_book_server/    builds `acme-order-book-server`
   ├── proto/acme/order_book/v1/
   └── docs/
   acme-order-book.go/                       Go library, its own repository
@@ -227,16 +229,24 @@ new decision.
 
 ### Packages
 
+- Owned Rust Cargo packages **MUST** represent the product and role word parts
+  in `lower_snake_case`, per [ADR#3522444690](../3522444690/README.md). Their
+  package directory and, when present, library target use the same spelling. This Rust-specific
+  representation does not change repository, product or executable names.
 - You **MUST** give the plain package name in each registry to the library,
   since a registry is already specific to one language. You **MUST** suffix
   anything else published there, such as a server crate published for
-  `cargo install`, with its role: `acme-order-book-server`.
-- You **MUST** name a package that is internal to a workspace, such as a
-  crate the server is split into, `<brand>-<product>-<part>`, such as
-  `acme-order-book-storage`, so it never takes a name a library needs later.
+  `cargo install`, with its role: `acme_order_book_server`. That package can
+  install the executable `acme-order-book-server`.
+- You **MUST** name an internal workspace package after its product and part,
+  in the registry's form: `<brand>-<product>-<part>` for kebab-case forms, or
+  `<brand>_<product>_<part>` for Rust, such as `acme_order_book_storage`, so it
+  never takes a name a library needs later.
 - You **MUST** name framework integration packages
   `<brand>-<product>-<framework>` in the registry's form, unless the framework
-  documents a naming convention for its integrations, which then wins.
+  documents a naming convention for its integrations, which then wins. For
+  Rust, that convention **MUST** still preserve the canonical underscore
+  Cargo package form above.
 
 ### Configuration and local files
 
@@ -321,7 +331,7 @@ table is added here before its first package is published.
 | Framework integration repository             | `acme-order-book-<framework>.<ext>`                  |
 | Command-line tool                            | `acme-order-book`                                    |
 | Server executable, image and chart           | `acme-order-book-server`                             |
-| Rust crate                                   | `acme-order-book`, imported `acme_order_book`        |
+| Rust Cargo package, directory and library    | `acme_order_book`                                    |
 | Go module                                    | `github.com/<org>/acme-order-book.go`                |
 | Go package                                   | `orderbook`                                          |
 | npm package                                  | `@acme/order-book`                                   |
@@ -380,6 +390,7 @@ table is added here before its first package is published.
 
 ## Links
 
+- [ADR#3522444690](../3522444690/README.md): Rust package names match package directories
 - [ADR#5842232571](../5842232571/README.md): Language workspaces
 - [ADR#0752163629](../0752163629/README.md): Project namespaces
 - [ADR#4711775939](../4711775939/README.md): Schema source directories
