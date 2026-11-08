@@ -14,7 +14,9 @@ category: Platform
 Consumers should recognize optional capabilities without learning a different
 feature vocabulary for every library. Macro helpers and reusable testing helpers
 are useful additions to a runtime API, but need not add dependencies or public
-API to every consumer.
+API to every consumer. Libraries supporting embedded or WebAssembly targets also
+need to distinguish core functionality, owned storage and standard-library
+integration.
 
 Cargo features are additive and can be unified across dependency requests.
 Defaults and convenience aggregates can therefore enable a capability that a
@@ -23,9 +25,10 @@ its activation and the guarantees that remain when it is enabled.
 
 ## Resolution
 
-Reserve feature names for shared capabilities in our Rust libraries. This policy
-applies to optional helpers around a runtime API; macro-only crates do not need a
-redundant feature to enable their core API.
+Reserve feature names for shared capabilities in our Rust libraries. A library
+only declares capabilities it offers as optional features. This policy does not
+require every library to support `no_std` or environments without an allocator;
+macro-only crates do not need a redundant feature to enable their core API.
 
 ### Reserved names
 
@@ -33,13 +36,19 @@ redundant feature to enable their core API.
 | -------------- | ------------------------------------------------------------------------------------------------- |
 | `macros`       | Optional public macro helpers, including procedural derives, attributes and literal constructors. |
 | `test-support` | Reusable fixtures, fakes, builders or other helpers intended for tests in another crate.          |
+| `alloc`        | APIs using Rust's allocation library, available without requiring the standard library.           |
+| `std`          | APIs or dependency integrations requiring Rust's standard library.                                |
 
 - A crate providing one of these optional capabilities **MUST** use its reserved
   name and **MUST NOT** reuse that name for another purpose. A crate without the
   capability **MUST NOT** declare an empty placeholder feature.
-- Reserved features **MUST** be opt-in. The `default` feature and its transitive
-  feature closure **MUST NOT** enable them. This is our convention, not a Rust
-  limitation or a universal ecosystem default.
+- `macros` and `test-support` **MUST** be opt-in. The `default` feature and its
+  transitive feature closure **MUST NOT** enable them. This is our convention,
+  not a Rust limitation or a universal ecosystem default.
+- `std` and `alloc` **MAY** be enabled by default when appropriate for the
+  library's usual callers. Their names describe capabilities, not default
+  membership. Libraries **MUST** document their defaults and supported
+  configurations.
 - A production convenience aggregate such as `full` **MUST NOT** activate
   `test-support`, directly or transitively. It **MAY** include `macros` if that
   does not make `macros` part of the default feature closure.
@@ -50,6 +59,61 @@ redundant feature to enable their core API.
   Tokio's `test-util`, for example, is not renamed to `test-support`. Other
   capability names remain crate-specific; adding a reserved name requires an
   amendment to this ADR.
+
+### Allocation and standard-library support
+
+`alloc` **MUST** expose the library's allocation-dependent APIs that can work
+without `std`. Examples include owned strings, collections and constructors
+consuming those values. APIs that also need standard-library facilities, such as
+reading a file into a `Vec<u8>`, remain gated by `std`.
+The final application or its runtime supplies the global allocator;
+enabling this feature does not select an allocator, provide a per-operation
+allocator parameter or guarantee that every operation allocates. An API accepting
+an existing owned buffer may reuse it without another allocation.
+
+`std` **MUST** enable actual standard-library support, such as I/O adapters or
+standard-library integration in dependencies. When a library provides both
+`std` and `alloc`, `std` **MUST** enable `alloc`. Libraries **MUST NOT** declare
+empty placeholder features solely to match this vocabulary.
+
+Features **MUST** add capabilities rather than disable them. A portable library
+**MUST NOT** use a `no_std` feature to turn off standard-library support; it uses
+the absence of `std` instead. `alloc` **MUST NOT** silently enable randomness,
+clocks or platform bindings unrelated to owned storage. A WebAssembly target
+does not by itself imply either `no_std` or the absence of an allocator.
+
+For a library offering owned values, standard I/O adapters and optional Serde
+integration, defaulting to `std` is valid:
+
+```toml
+[features]
+default = ["std"]
+alloc = ["serde?/alloc"]
+std = ["alloc", "serde?/std"]
+serde = ["dep:serde"]
+
+[dependencies]
+serde = { version = "1", default-features = false, optional = true }
+```
+
+The `alloc` and `std` features also gate the library's corresponding APIs. The
+weak dependency forwarding syntax `serde?/alloc` only configures Serde if
+another feature enables that optional dependency. It does not activate Serde
+merely because a caller wants owned storage.
+
+Callers can request the supported portable configuration with
+`default-features = false` and `features = ["alloc"]`, or omit `alloc` when the
+library supports a core-only configuration. Library documentation **MUST**
+distinguish operations that borrow input, copy into owned storage or write into
+caller-provided buffers. A `Result` returning constructor **MUST NOT** be described
+as reporting allocation failure unless its implementation actually does so.
+
+These are shared feature-naming conventions, not special Cargo keywords.
+Dependency defaults and features **MUST** be configured to preserve each
+advertised capability boundary. Audit the resolved target dependency graph:
+changing a library's imports does not remove a dependency's `std` requirement.
+Host-side procedural macros and build tools may use `std` while producing code
+that supports a core-only target.
 
 ### Macro support
 
@@ -115,10 +179,20 @@ alongside the production API, without mutually exclusive feature modes.
 ### Verification and compatibility
 
 CI **MUST** check default and no-default configurations, each reserved feature
-provided by the crate, their combination when both exist, and the all-features
-suite. Consumer compile tests **MUST** verify that the optional API is available
-only when enabled. Include an isolated consumer configuration: a workspace build
-can otherwise hide missing gates through feature unification.
+provided by the crate, supported combinations and the all-features suite.
+Portable libraries **MUST** verify their advertised core-only, `alloc` without
+`std`, and `std` configurations against appropriate targets. An advertised
+core-only configuration **MUST** build a final consumer that excludes `std` and
+links without a global allocator. Merely omitting a custom allocator declaration
+is insufficient because `std` can supply one. If WebAssembly support is
+advertised, checks **MUST** cover the
+supported target and any required platform backend explicitly.
+
+Consumer compile tests **MUST** verify that optional APIs are available only when
+their enabling feature closure is active. Include an isolated consumer
+configuration: a workspace build can otherwise hide missing gates through feature
+unification. Disabling defaults in one dependency declaration does not prevent
+another dependency from enabling `std` or `alloc` for the same library.
 
 For existing published crates, feature names and default membership are part of
 the compatibility contract. Migration **MUST** follow the crate's SemVer policy;
@@ -130,7 +204,10 @@ reserved name documented as canonical.
 
 - [ADR#2228057065](../2228057065/README.md): Rust package and companion crate naming.
 - [Cargo features: optional dependencies, defaults and unification](https://doc.rust-lang.org/cargo/reference/features.html)
+- [Cargo features: additive features and optional standard-library support](https://doc.rust-lang.org/cargo/reference/features.html#feature-unification)
 - [Cargo workspace dependencies](https://doc.rust-lang.org/cargo/reference/workspaces.html#the-dependencies-table)
+- [Rust allocation library](https://doc.rust-lang.org/alloc/)
+- [Serde feature flags](https://serde.rs/feature-flags.html)
 - [Rust procedural macros](https://doc.rust-lang.org/reference/procedural-macros.html)
 - [time 0.3.55 optional macro feature](https://docs.rs/crate/time/0.3.55/features)
 - [Tokio 1.54.1 feature definitions](https://docs.rs/crate/tokio/1.54.1/source/Cargo.toml)
