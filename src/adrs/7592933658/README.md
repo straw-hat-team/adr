@@ -62,9 +62,11 @@ macro-only crates do not need a redundant feature to enable their core API.
 
 ### Allocation and standard-library support
 
-`alloc` **MUST** expose the library's allocation-dependent APIs without requiring
-`std`. Examples include owned strings, collections and constructors consuming
-those values. The final application or its runtime supplies the global allocator;
+`alloc` **MUST** expose the library's allocation-dependent APIs that can work
+without `std`. Examples include owned strings, collections and constructors
+consuming those values. APIs that also need standard-library facilities, such as
+reading a file into a `Vec<u8>`, remain gated by `std`.
+The final application or its runtime supplies the global allocator;
 enabling this feature does not select an allocator, provide a per-operation
 allocator parameter or guarantee that every operation allocates. An API accepting
 an existing owned buffer may reuse it without another allocation.
@@ -180,8 +182,10 @@ CI **MUST** check default and no-default configurations, each reserved feature
 provided by the crate, supported combinations and the all-features suite.
 Portable libraries **MUST** verify their advertised core-only, `alloc` without
 `std`, and `std` configurations against appropriate targets. An advertised
-core-only configuration **MUST** compile in a consumer that does not supply a
-global allocator. If WebAssembly support is advertised, checks **MUST** cover the
+core-only configuration **MUST** build a final consumer that excludes `std` and
+links without a global allocator. Merely omitting a custom allocator declaration
+is insufficient because `std` can supply one. If WebAssembly support is
+advertised, checks **MUST** cover the
 supported target and any required platform backend explicitly.
 
 Consumer compile tests **MUST** verify that optional APIs are available only when
