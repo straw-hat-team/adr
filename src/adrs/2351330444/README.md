@@ -103,9 +103,11 @@ unrestricted settings map.
   typed `spec`, and fields not allowed by the envelope or selected variant.
 - Readers **MUST NOT** infer a different kind from the fields in `spec` or
   silently fall back to another variant when validation fails.
-- Configuration schemas **MUST** express the relationship between each kind
-  and its allowed `spec`, for example through JSON Schema's `oneOf` and
-  `const`, or equivalent validation in the configuration reader.
+- When an application publishes a configuration schema, that schema **MUST**
+  enforce the relationship between each kind and its allowed `spec`, for
+  example through JSON Schema's `oneOf` and `const`. Schema-only validation
+  **MUST** reject invalid kind/spec combinations. Reader-only checks
+  **MUST NOT** replace these schema constraints.
 - Readers **MUST** validate the final resolved pair after applying documented
   defaults or overlays. Stale fields from another variant **MUST NOT** be
   silently discarded to make the result valid.
