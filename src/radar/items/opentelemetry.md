@@ -12,3 +12,7 @@ tags: [observability, tracing]
 Instrumentation is written against the OpenTelemetry APIs and shipped through the collector, so the choice of
 backend stays a deployment decision instead of a rewrite. Reaching for a vendor agent or a proprietary SDK
 instead needs a justification.
+
+In Rust, application code writes logs and internal spans with `tracing`, and one telemetry crate owns the
+OpenTelemetry API for edge spans, metrics, and the data `tracing` cannot express. See
+[ADR#5736580914](../../adrs/5736580914/README.md).
