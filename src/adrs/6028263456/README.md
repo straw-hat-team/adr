@@ -71,12 +71,13 @@ or a volume disappears with a careless commit.
               └── ...                    # the payload
   ```
 
-- You **MUST** name the Flux `Kustomization` of the `app/` stage `<name>` in
-  `applications`, and `<name>-crds`, `<name>-controllers` or `<name>-configs`
-  in the other kinds, because Flux object names are unique per namespace and
-  a controller and its configuration share `<name>`. A stage other than
-  `app/` takes `<name>-<stage>`. You **MUST** keep Flux objects in
-  `flux-system`.
+- You **MUST** name the Flux `Kustomization` of the `app/` stage
+  `<kind>-<name>`, such as `crds-cert-manager` or `applications-memorizer`,
+  and a stage other than `app/` `<kind>-<name>-<stage>`. Flux object names
+  are unique per namespace, and a controller and its configuration share
+  `<name>`; leading with the kind keeps a unit named `cert-manager-crds` in
+  one kind from colliding with `cert-manager` in another. You **MUST** keep
+  Flux objects in `flux-system`.
 
 ### Ordering
 
@@ -97,14 +98,20 @@ or a volume disappears with a careless commit.
   cluster, so that removing it from Git, or its unit with `prune: true`,
   never deletes it. A unit made only of those, such as every `crds` unit,
   **MAY** keep `prune: false` for good.
-- Removing such an object is a deliberate act: remove the annotation in one
+- The annotation stops Flux pruning only. Removing a `HelmRelease` runs a
+  Helm uninstall, which deletes what the chart created whatever Flux says.
+  You **MUST** also set `helm.sh/resource-policy: keep` on every such object
+  a chart creates, through the chart values or a post-renderer, and **MUST
+  NOT** remove a `HelmRelease` that holds data in the same change that
+  changes anything else about it.
+- Removing such an object is a deliberate act: remove the annotations in one
   change, and the object in the next.
 
 ### Bootstrap and sources
 
 - You **MUST** have the Flux Operator and its `FluxInstance` installed by
   Terraform ([ADR#6561361204](../6561361204/README.md)), with `sync.path` set to
-  `clusters/<cluster>` on the default branch, `provider: github` and a GitHub
+  `devops/infra/gitops/clusters/<cluster>` on the default branch, `provider: github` and a GitHub
   App credential in the `pullSecret`. You **MUST NOT** use a personal token.
   Flux then reconciles itself from the tree, and the tree **MUST NOT**
   hold the operator or the `FluxInstance` again.
@@ -125,9 +132,15 @@ or a volume disappears with a careless commit.
   outside this layout while units move into it one at a time. You **MUST NOT**
   require a single change that moves everything.
 - A unit **MUST** live in exactly one place, and exactly one controller
-  **MUST** reconcile it at any time. Hand it over by removing it from the old
-  tree in the same change that adds it to the new one, with deletion disabled
-  in the old controller so the handover never deletes live objects.
+  **MUST** reconcile it at any time. Disabling deletion stops pruning but not
+  reconciliation, and two controllers do not see one commit at the same
+  moment, so a single change that moves a unit is not a handover. Hand it
+  over in order:
+  1. Stop the old controller for the unit: turn off its sync and deletion,
+     then release the unit without deleting its objects.
+  2. Verify the old controller no longer reconciles or owns the unit.
+  3. Add the unit to the new tree with `prune: false`, after a render shows
+     no change to the live objects.
 
 ## Links
 

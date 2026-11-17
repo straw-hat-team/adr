@@ -74,6 +74,12 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   `mirrors/<upstream>/<path>` in the same way, with its upstream version tag
   unchanged, and a cluster **MUST** pull it from the mirror and never from the
   upstream. You **MUST** pin it to an exact version, never a range.
+- A chart published only to an HTTP Helm repository cannot be served by a
+  pull-through mirror. You **MUST** pull it at an exact version, push it
+  unchanged with `helm push` to `mirrors/<upstream>/<chart>` with the upstream
+  version as its tag, and deploy it from there. In Artifact Registry, which
+  cannot push into a remote repository, that is a standard repository named
+  `mirrors-<upstream>-charts`.
 - A mirror is exempt from the [Tags](#tags) rules. It has no build commit of
   ours, and its tags follow the upstream, so a refresh can move a mirrored
   tag when the upstream moves it
