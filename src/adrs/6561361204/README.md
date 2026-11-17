@@ -56,10 +56,15 @@ reusable modules outside the gate because they reach nothing on their own.
 ### GitOps
 
 - You **MUST** place what a controller reconciles onto a cluster under
-  `devops/infra/gitops/clusters/<cluster>/<kind>/<name>/`, one Kustomization
-  per directory.
-- Nothing under `terraform/` **MUST** read it, and no CI job **MUST** apply
-  it.
+  `devops/infra/gitops/clusters/<cluster>/<kind>/<name>/`. The `<kind>` values
+  and what a unit holds are in [ADR#6028263456](../6028263456/README.md).
+- Terraform **MAY** install the GitOps controller, the object that points it at
+  `devops/infra/gitops/clusters/<cluster>/`, and the credential it needs to
+  read the repository, because that path is an opaque string to Terraform.
+  Nothing else under `terraform/` **MUST** read, render or apply the
+  directory, and from then on the controller manages itself.
+- No CI job **MUST** apply it. A CI job **MAY** render and validate it with a
+  read-only tool, such as `flux build` or `kustomize build`.
 
   ```txt
   devops
@@ -85,5 +90,6 @@ reusable modules outside the gate because they reach nothing on their own.
 
 - [ADR#9316364013](../9316364013/README.md): Reserved repository directories
 - [ADR#2078011537](../2078011537/README.md): Operational assets
+- [ADR#6028263456](../6028263456/README.md): GitOps cluster layout
 - [Terragrunt units](https://terragrunt.gruntwork.io/docs/features/units/)
 - [Flux repository structure](https://fluxcd.io/flux/guides/repository-structure/)
