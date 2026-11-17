@@ -51,12 +51,12 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   their own path, below.
 - You **MUST** use one of these kinds as the first segment after the prefix:
 
-  | Kind              | Artifact                            |
-  | ----------------- | ----------------------------------- |
-  | `images`          | Container images                    |
-  | `charts`          | Helm charts                         |
-  | `wasm-components` | Wasm components                     |
-  | `mirrors`         | Third-party images we copy or cache |
+  | Kind              | Artifact                                       |
+  | ----------------- | ---------------------------------------------- |
+  | `images`          | Container images                               |
+  | `charts`          | Helm charts                                    |
+  | `wasm-components` | Wasm components                                |
+  | `mirrors`         | Third-party images and charts we copy or cache |
 
   In Artifact Registry each kind is a Docker-format repository of that name,
   except `mirrors`, which is a remote repository per upstream named
@@ -70,6 +70,10 @@ existing tag, and Artifact Registry cannot exempt `latest` from that rule.
   keeping it out of `images/` keeps our builds apart from copies. In Artifact
   Registry the remote repository name takes the place of both segments, so
   the same image is `mirrors-docker-hub/library/postgres:16`.
+- You **MUST** keep a mirrored third-party Helm chart under
+  `mirrors/<upstream>/<path>` in the same way, with its upstream version tag
+  unchanged, and a cluster **MUST** pull it from the mirror and never from the
+  upstream. You **MUST** pin it to an exact version, never a range.
 - A mirror is exempt from the [Tags](#tags) rules. It has no build commit of
   ours, and its tags follow the upstream, so a refresh can move a mirrored
   tag when the upstream moves it
