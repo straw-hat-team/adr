@@ -153,10 +153,30 @@ can take advantage of the explicitness and static nature of the names.
 
 - You **MUST** use named-exports over default-exports unless some limitation
   is imposed.
-- You **MUST** provide named-export and default-export for any case that
-  requires default-export due a limitation, for example, React lazy
-  loadable components.
+- You **MUST** provide named-export and default-export when an importer of
+  the module requires the default-export, for example, React lazy loadable
+  components. A framework file convention follows the next rule.
+- When a framework convention requires a default export, you **MUST** use
+  the default export directly and **MUST NOT** add a duplicate named export
+  alongside it. Examples include Next.js App Router `page.tsx`, `layout.tsx`,
+  `template.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, and
+  `default.tsx`; route handlers' metadata files; `opengraph-image`,
+  `sitemap.ts`, and `robots.ts`; Storybook CSF default meta; and config
+  files such as `next.config` and `vite.config`. Next.js `proxy.ts` and
+  `middleware.ts` stay outside this exception: the function is the named
+  export `proxy` or `middleware`, and `config` stays a named export.
+
+```ts
+// app/page.tsx
+export default async function Page() {}
+```
 
 ## Links
 
 - <https://esbuild.github.io/content-types/#default-interop>
+
+## Changelog
+
+- 2026-11-22: Amended in place. Status remains Approved. A framework convention
+  that requires a default export is satisfied by that default export alone.
+  The named-export rule still governs every other module.
