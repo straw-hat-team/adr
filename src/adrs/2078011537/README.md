@@ -50,6 +50,11 @@ artifact, a compose service directory holds run-time input mounted over it.
   from the repository root, and **MUST** then use the repository root as the
   context. The build task **MUST** derive the context from that mount, so no
   list of images has to be kept.
+- You **MUST** build an image for third-party software that publishes none,
+  in the same layout. Its `Dockerfile` **MUST** fetch the source at a pinned
+  commit, or as an archive it verifies against a checksum, so the directory
+  holds only what we add. A cluster **MUST NOT** build that software when a
+  pod starts ([ADR#6028263456](../6028263456/README.md)).
 - You **MUST** keep ignore rules beside the `Dockerfile` as
   `Dockerfile.dockerignore`, and **MUST NOT** keep a `.dockerignore` at the
   repository root.
@@ -109,6 +114,7 @@ artifact, a compose service directory holds run-time input mounted over it.
 
 - [ADR#9316364013](../9316364013/README.md): Reserved repository directories
 - [ADR#6561361204](../6561361204/README.md): Live infrastructure
+- [ADR#6028263456](../6028263456/README.md): GitOps cluster layout
 - [Compose file reference](https://docs.docker.com/reference/compose-file/)
 - [Helm chart file structure](https://helm.sh/docs/topics/charts/#the-chart-file-structure)
 - [chart-testing lint](https://github.com/helm/chart-testing/blob/main/doc/ct_lint.md)

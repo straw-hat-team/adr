@@ -28,6 +28,13 @@ Pruning is the other risk. A Flux `Kustomization` with `prune: true` deletes
 whatever leaves the tree, which is how a namespace, a CustomResourceDefinition
 or a volume disappears with a careless commit.
 
+A unit can also carry code. A script in a ConfigMap, or a command that
+fetches source and compiles it when a pod starts, runs in the cluster without
+a build, a scan or a pin. The image digest then no longer says what runs. A
+restart depends on a package registry that may be down or may serve something
+else, and the pod needs egress and build tools that the workload itself never
+uses.
+
 ## Resolution
 
 ### Clusters and kinds
@@ -78,6 +85,30 @@ or a volume disappears with a careless commit.
   `<name>`; leading with the kind keeps a unit named `cert-manager-crds` in
   one kind from colliding with `cert-manager` in another. You **MUST** keep
   Flux objects in `flux-system`.
+
+### Payload
+
+A unit declares what runs. An image is what runs.
+
+- You **MUST** keep in a unit only manifests and the configuration that a
+  program reads, such as a settings file in a ConfigMap.
+- You **MUST NOT** keep in a unit a program that a container executes: a
+  script, a module or an entrypoint, as a file beside the manifests or inline
+  in one. It belongs in the image, under `devops/docker/images/<name>/`
+  ([ADR#2078011537](../2078011537/README.md)), so the image digest identifies
+  everything that runs.
+- A manifest **MAY** set `command` and `args` to choose a program that the
+  image holds and to pass it arguments. They **MUST NOT** carry logic of their
+  own. A shell script passed to `sh -c` is a program kept in the unit.
+- You **MUST NOT** fetch source, install packages or compile when a pod
+  starts, in an init container or in an entrypoint. This holds for
+  third-party software that publishes no image, and for a trial. Build the
+  image ahead of time and deploy it by tag and digest
+  ([ADR#6497710059](../6497710059/README.md)).
+- An init container or a Job **MAY** run a step that needs the live cluster,
+  such as a schema migration, with a program that the image holds.
+- These rules cover the files a unit holds. What an upstream chart renders
+  belongs to the upstream.
 
 ### Ordering
 
@@ -145,6 +176,7 @@ or a volume disappears with a careless commit.
 ## Links
 
 - [ADR#6561361204](../6561361204/README.md): Live infrastructure
+- [ADR#2078011537](../2078011537/README.md): Operational assets
 - [ADR#6497710059](../6497710059/README.md): OCI artifact paths and tags
 - [Flux repository structure](https://fluxcd.io/flux/guides/repository-structure/)
 - [Flux Kustomization](https://fluxcd.io/flux/components/kustomize/kustomizations/)
