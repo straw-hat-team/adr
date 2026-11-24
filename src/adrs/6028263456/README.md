@@ -35,6 +35,10 @@ restart depends on a package registry that may be down or may serve something
 else, and the pod needs egress and build tools that the workload itself never
 uses.
 
+The tree also collects files that no controller reads, such as a check tool
+and its schemas. A change under the tree then no longer means a change to a
+cluster.
+
 ## Resolution
 
 ### Clusters and kinds
@@ -88,15 +92,29 @@ uses.
 
 ### Payload
 
-A unit declares what runs. An image is what runs.
+The GitOps tree is the input of the controller and nothing else. A unit
+declares what runs. An image is what runs.
 
-- You **MUST** keep in a unit only manifests and the configuration that a
-  program reads, such as a settings file in a ConfigMap.
+- You **MUST** keep under `devops/infra/gitops/` only the files that the
+  controller reads, or that kustomize reads for it: Kubernetes manifests,
+  `kustomization.yaml`, `ks.yaml` and chart values. A `README.md` **MAY**
+  describe a directory.
+- You **MUST NOT** keep any other file there: a script, a module, a
+  `Dockerfile`, a test, or a tool that checks or renders the tree, with the
+  schemas and policies that the tool reads. Each has its own place outside
+  the tree.
+- A unit **MAY** hold configuration that a program reads, such as a settings
+  file or a certificate bundle that kustomize puts in a ConfigMap.
+  Configuration is data. Nothing executes it.
 - You **MUST NOT** keep in a unit a program that a container executes: a
-  script, a module or an entrypoint, as a file beside the manifests or inline
-  in one. It belongs in the image, under `devops/docker/images/<name>/`
+  script, a module, an entrypoint or SQL that a Job runs, as a file beside
+  the manifests or inline in one. It belongs in the image, under
+  `devops/docker/images/<name>/`
   ([ADR#2078011537](../2078011537/README.md)), so the image digest identifies
   everything that runs.
+- You **SHOULD** declare a database object, such as a role or a grant, with
+  the custom resource of a controller. SQL that no resource can express
+  belongs in the image.
 - A manifest **MAY** set `command` and `args` to choose a program that the
   image holds and to pass it arguments. They **MUST NOT** carry logic of their
   own. A shell script passed to `sh -c` is a program kept in the unit.
