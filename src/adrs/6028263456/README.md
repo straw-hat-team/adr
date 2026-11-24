@@ -28,6 +28,16 @@ Pruning is the other risk. A Flux `Kustomization` with `prune: true` deletes
 whatever leaves the tree, which is how a namespace, a CustomResourceDefinition
 or a volume disappears with a careless commit.
 
+A unit can also build code. A command that fetches source or a program when
+a pod starts runs it in the cluster without a build, a scan or a pin. The
+image digest then no longer says what runs. A restart depends on a package
+registry that may be down or may serve something else, and the pod needs
+egress and build tools that the workload itself never uses.
+
+The tree also collects files that no controller reads, such as a check tool
+and its schemas. A change under the tree then no longer means a change to a
+cluster.
+
 ## Resolution
 
 ### Clusters and kinds
@@ -78,6 +88,38 @@ or a volume disappears with a careless commit.
   `<name>`; leading with the kind keeps a unit named `cert-manager-crds` in
   one kind from colliding with `cert-manager` in another. You **MUST** keep
   Flux objects in `flux-system`.
+
+### Payload
+
+The GitOps tree is the input of the controller and nothing else. A unit
+declares what runs. An image is what runs.
+
+- You **MUST** keep under `devops/infra/gitops/` only the files that the
+  controller reads, or that kustomize reads for it. The reader decides, not
+  the file type: a Kubernetes manifest, `kustomization.yaml`, `ks.yaml`,
+  chart values, and a file that kustomize puts in a ConfigMap, such as a
+  settings file, a certificate bundle, JSON or SQL. A `README.md` **MAY**
+  describe a directory.
+- You **MUST NOT** keep there a file that neither of them reads: a
+  `Dockerfile`, a build script, a test, or a tool that checks or renders the
+  tree, with the schemas and policies that the tool reads. Each has its own
+  place outside the tree.
+- You **MUST NOT** fetch source, install packages, compile or download a
+  program when a pod starts, in an init container or in an entrypoint. This
+  holds for third-party software that publishes no image, and for a trial.
+  Build the image ahead of time, from `devops/docker/images/<name>/`
+  ([ADR#2078011537](../2078011537/README.md)), and deploy it by tag and
+  digest ([ADR#6497710059](../6497710059/README.md)). A pod **MAY** download
+  data.
+- A program that a container executes **SHOULD** live in the image, so the
+  image digest identifies everything that runs. A unit **MAY** carry a short
+  one in a ConfigMap, or in `command` and `args`, when it only starts or
+  configures what the image holds.
+- An init container or a Job **MAY** run a step that needs the live cluster,
+  such as a schema migration.
+- These rules cover the files a unit holds, and the values it passes to a
+  chart are among them. What an upstream chart renders from its own
+  templates belongs to the upstream.
 
 ### Ordering
 
@@ -145,6 +187,7 @@ or a volume disappears with a careless commit.
 ## Links
 
 - [ADR#6561361204](../6561361204/README.md): Live infrastructure
+- [ADR#2078011537](../2078011537/README.md): Operational assets
 - [ADR#6497710059](../6497710059/README.md): OCI artifact paths and tags
 - [Flux repository structure](https://fluxcd.io/flux/guides/repository-structure/)
 - [Flux Kustomization](https://fluxcd.io/flux/components/kustomize/kustomizations/)
