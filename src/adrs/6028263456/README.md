@@ -28,12 +28,11 @@ Pruning is the other risk. A Flux `Kustomization` with `prune: true` deletes
 whatever leaves the tree, which is how a namespace, a CustomResourceDefinition
 or a volume disappears with a careless commit.
 
-A unit can also carry code. A script in a ConfigMap, or a command that
-fetches source or a program when a pod starts, runs in the cluster without a
-build, a scan or a pin. The image digest then no longer says what runs. A
-restart depends on a package registry that may be down or may serve something
-else, and the pod needs egress and build tools that the workload itself never
-uses.
+A unit can also build code. A command that fetches source or a program when
+a pod starts runs it in the cluster without a build, a scan or a pin. The
+image digest then no longer says what runs. A restart depends on a package
+registry that may be down or may serve something else, and the pod needs
+egress and build tools that the workload itself never uses.
 
 The tree also collects files that no controller reads, such as a check tool
 and its schemas. A change under the tree then no longer means a change to a
@@ -96,35 +95,28 @@ The GitOps tree is the input of the controller and nothing else. A unit
 declares what runs. An image is what runs.
 
 - You **MUST** keep under `devops/infra/gitops/` only the files that the
-  controller reads, or that kustomize reads for it: Kubernetes manifests,
-  `kustomization.yaml`, `ks.yaml` and chart values. A `README.md` **MAY**
+  controller reads, or that kustomize reads for it. The reader decides, not
+  the file type: a Kubernetes manifest, `kustomization.yaml`, `ks.yaml`,
+  chart values, and a file that kustomize puts in a ConfigMap, such as a
+  settings file, a certificate bundle, JSON or SQL. A `README.md` **MAY**
   describe a directory.
-- You **MUST NOT** keep any other file there: a script, a module, a
-  `Dockerfile`, a test, or a tool that checks or renders the tree, with the
-  schemas and policies that the tool reads. Each has its own place outside
-  the tree.
-- A unit **MAY** hold configuration that a program reads, such as a settings
-  file or a certificate bundle that kustomize puts in a ConfigMap.
-  Configuration is data. Nothing executes it.
-- You **MUST NOT** keep in a unit a program that a container executes: a
-  script, a module, an entrypoint or SQL that a Job runs, as a file beside
-  the manifests or inline in one. It belongs in the image, under
-  `devops/docker/images/<name>/`
-  ([ADR#2078011537](../2078011537/README.md)), so the image digest identifies
-  everything that runs.
-- You **SHOULD** declare a database object, such as a role or a grant, with
-  the custom resource of a controller. SQL that no resource can express
-  belongs in the image.
-- A manifest **MAY** set `command` and `args` to choose a program that the
-  image holds and to pass it arguments. They **MUST NOT** carry logic of their
-  own. A shell script passed to `sh -c` is a program kept in the unit.
+- You **MUST NOT** keep there a file that neither of them reads: a
+  `Dockerfile`, a build script, a test, or a tool that checks or renders the
+  tree, with the schemas and policies that the tool reads. Each has its own
+  place outside the tree.
 - You **MUST NOT** fetch source, install packages, compile or download a
   program when a pod starts, in an init container or in an entrypoint. This
   holds for third-party software that publishes no image, and for a trial.
-  Build the image ahead of time and deploy it by tag and digest
-  ([ADR#6497710059](../6497710059/README.md)). A pod **MAY** download data.
+  Build the image ahead of time, from `devops/docker/images/<name>/`
+  ([ADR#2078011537](../2078011537/README.md)), and deploy it by tag and
+  digest ([ADR#6497710059](../6497710059/README.md)). A pod **MAY** download
+  data.
+- A program that a container executes **SHOULD** live in the image, so the
+  image digest identifies everything that runs. A unit **MAY** carry a short
+  one in a ConfigMap, or in `command` and `args`, when it only starts or
+  configures what the image holds.
 - An init container or a Job **MAY** run a step that needs the live cluster,
-  such as a schema migration, with a program that the image holds.
+  such as a schema migration.
 - These rules cover the files a unit holds, and the values it passes to a
   chart are among them. What an upstream chart renders from its own
   templates belongs to the upstream.
