@@ -52,9 +52,10 @@ artifact, a compose service directory holds run-time input mounted over it.
   list of images has to be kept.
 - You **MUST** build an image for third-party software that publishes none,
   in the same layout. Its `Dockerfile` **MUST** fetch the source at a pinned
-  commit, or as an archive it verifies against a checksum, so the directory
-  holds only what we add. A cluster **MUST NOT** build that software when a
-  pod starts ([ADR#6028263456](../6028263456/README.md)).
+  commit, or a release archive that it verifies against a checksum, so the
+  directory holds only what we add. The archive **MAY** hold binaries when
+  the software publishes no source. A cluster **MUST NOT** build that
+  software when a pod starts ([ADR#6028263456](../6028263456/README.md)).
 - You **MUST** keep ignore rules beside the `Dockerfile` as
   `Dockerfile.dockerignore`, and **MUST NOT** keep a `.dockerignore` at the
   repository root.
