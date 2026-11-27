@@ -83,4 +83,3 @@ can reach General Availability for the capabilities it supports.
 ## Links
 
 - [NATS ecosystem and client tiers](https://docs.nats.io/concepts/ecosystem#clients)
-- [Worked example with TrogonAI sandbox adapters](./references/sandbox-adapters.md)
