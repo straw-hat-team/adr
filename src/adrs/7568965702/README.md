@@ -9,71 +9,78 @@ category: General
 
 # Define maintenance tiers for clients, adapters and integrations
 
-## Context
+## Context and problem statement
 
 When a product changes its API, which clients and adapters have to be ready on
-release day? Calling an integration "official" tells users little about when
-it will gain a feature or who will fix it if an upgrade breaks it.
+release day? An integration labeled "official" can have a team that fixes bugs
+without a commitment to ship every new feature on the day it launches.
 
-NATS gives its users a way to choose. Synadia maintains both Tier 1 and Tier 2
-clients. Tier 1 clients track new server features at release, Tier 2 clients
-can adopt them later, and community clients have independent maintainers.
-We adopt that distinction for implementations of a shared product contract.
+## Decision drivers
 
-## Resolution
+- Users need to know who fixes a regression and which product versions they can rely on.
+- Release owners need to know which implementations can hold up a product release.
+- Maintainers need to support existing users even when they cannot take on a new feature immediately.
 
-For each client, adapter or integration it lists, the product team **MUST**
-publish a maintenance tier or mark the implementation unmaintained if nobody
-owns it. Assign the tier to the individual implementation.
-Two adapters for the same product can have different owners and release
-commitments.
+## Considered options
 
-| Tier          | Maintainer             | When does a new in-scope feature ship?                             |
-| ------------- | ---------------------- | ------------------------------------------------------------------ |
-| **Tier 1**    | Our team               | With the product release that introduces it.                       |
-| **Tier 2**    | Our team               | On the implementation's own schedule. Feature gaps are documented. |
-| **Community** | Independent maintainer | On the maintainer's schedule.                                      |
+- **Official or community.** Users can identify the owner. They still have to
+  ask whether a new feature will ship with the product.
+- **A single release date for all team-maintained implementations.** Users get
+  new features together. One delayed adapter holds up users of every other one.
+- **Maintenance tiers.** Users can see both ownership and release commitments.
+  Owners have to keep each implementation's scope and coverage current.
 
-The maintainer owns bug reports, security updates and releases for the
-implementation. If a product change would break a documented capability on a
-supported version of a Tier 1 or Tier 2 implementation, the team **MUST**
-preserve compatibility, ship a fix, or complete the published deprecation
-process before releasing the change.
+## Decision outcome
 
-### Assigning and changing a tier
+Adopt the NATS client model. Its tiers answer both who maintains an
+implementation and when it gains new features. The product team **MUST**
+publish the applicable tier for each maintained client, adapter or integration
+it lists.
 
-Record the tier where users choose an implementation, alongside its maintainer,
-issue-reporting route, supported versions and capabilities. For a community
-implementation, link to the maintainer's own documentation for those details.
-Record the launch stage separately. A Tier 2 adapter can be GA for the
-capabilities it supports. The launch stage governs production support and any
-applicable SLA. [ADR#1121224116](../1121224116/README.md)
+| Tier          | Maintainer             | Commitment for new features within the documented scope          |
+| ------------- | ---------------------- | ---------------------------------------------------------------- |
+| **Tier 1**    | Product team           | Ships with the product release that introduces the feature.      |
+| **Tier 2**    | Product team           | Ships on its own schedule and documents gaps until then.         |
+| **Community** | Independent maintainer | The maintainer decides what to implement and when to release it. |
 
-Before assigning a team-maintained tier, the owning team **MUST** accept the
-maintenance work and show passing compatibility checks for the advertised
-scope. Tier 1 also requires those checks to run as part of the product release
-decision. Choose Tier 2 when the team can maintain existing behavior but needs
-an independent feature schedule.
+### Assigning a tier
 
-When ownership or release coverage changes, update the listing. Announce a
-reduction in commitment in the release notes, with the affected versions,
-effective date and any migration path. If maintenance ends, mark the
-implementation unmaintained. Assign Community only when an independent
-maintainer takes ownership.
+The listing **MUST** identify the maintainer, where to report issues,
+supported versions and capabilities. A Community listing **MAY** link to the
+maintainer's documentation for these details. If nobody owns maintenance, the
+team **MUST** mark the implementation **Unmaintained**.
 
-### TrogonAI sandbox adapter example
+Before assigning Tier 1 or Tier 2, the owning team **MUST** accept
+responsibility for bug reports, security updates and releases, and show passing
+compatibility checks for the scope it advertises. For Tier 1, those checks
+**MUST** also gate the product release. Tier 2 **MAY** defer new in-scope
+features and **MUST** document the gaps.
 
-Suppose TrogonAI adds a sandbox operation for pausing and resuming a lease.
-If the Daytona adapter is Tier 1 and the operation falls within its scope, the
-release waits until a conformance check pauses and resumes a Daytona sandbox.
-If the E2B adapter is Tier 2, the team can list pause and resume as pending
-and ship. If the same release also breaks command execution on a supported
-version of the E2B adapter, that regression blocks the release.
-For a community adapter, users check its maintainer's release notes to see
-when pause and resume become available.
+### Releasing a change
 
-The tier assignments in this example are hypothetical.
+For both team-maintained tiers, if a change would break documented behavior on
+a supported version, the team **MUST** preserve compatibility, ship a fix, or
+complete the published deprecation process before releasing the change.
+
+When ownership or release coverage changes, the team **MUST** update the
+listing. A reduction in commitment **MUST** be announced in the release notes
+with the affected versions, effective date and any migration path. The team
+**MUST** confirm that an independent maintainer accepts ownership before
+assigning Community.
+
+### Consequences
+
+Users can choose a Tier 2 adapter for the capabilities it already supports.
+The team takes on the cost of testing that behavior across supported versions.
+Each Tier 1 assignment also adds a release dependency. If its checks fail, an
+otherwise ready product release waits.
+
+A maintenance tier alone cannot tell users whether a feature is ready for
+production. Teams **MUST** document launch stage separately. A Tier 2 adapter
+can reach General Availability for the capabilities it supports.
+[ADR#1121224116](../1121224116/README.md)
 
 ## Links
 
 - [NATS ecosystem and client tiers](https://docs.nats.io/concepts/ecosystem#clients)
+- [Worked example with TrogonAI sandbox adapters](./references/sandbox-adapters.md)
