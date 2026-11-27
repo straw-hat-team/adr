@@ -23,49 +23,51 @@ across our products.
 
 ## Resolution
 
-Use **Preview** and **General Availability (GA)** as our customer-facing launch
-stages. Apply the stage to the product or feature being described in product
-documentation and release notes. A GA product can contain Preview features.
+Teams **MUST** use **Preview** or **General Availability (GA)** to describe a
+launch in product documentation and release notes. The label **MUST** identify
+the product or feature it covers. A GA product can contain Preview features.
 
 ### Preview
 
-A feature qualifies for Preview when a customer can complete its documented
-workflow end to end in a test environment. Publish access instructions, known
-limitations, and a way to give feedback. The feature may change or be
-withdrawn. Preview carries no default service-level agreement (SLA) or
-technical support commitment. Document any exceptions alongside the feature.
+Before labeling a feature Preview, the team **MUST** make its documented
+workflow usable end to end by a customer in a test environment. The team
+**MUST** publish access instructions and known limitations. It **SHOULD**
+provide a way for customers to give feedback.
 
-Use **Private Preview** when participation requires an invitation or approval.
-Use **Public Preview** when any eligible customer can try the feature directly.
-Opening access to more customers changes who can participate. The production
-commitment stays the same.
+Teams **MUST** use **Private Preview** when participation requires an invitation
+or approval and **Public Preview** when any eligible customer can try the
+feature directly. Both labels carry the same commitment. The feature can
+change or be withdrawn. Preview carries no default service-level agreement
+(SLA) or technical support commitment. The team **MUST** document any
+exceptions alongside the feature.
 
 ### General Availability
 
-A feature qualifies for GA when all eligible customers can use it and the team
-supports its documented behavior in production. Publish the applicable support
-terms and any SLA. A feature can launch directly at GA. For a feature already
-in Preview, announce GA when the team takes on that production commitment.
+Before announcing GA, the team **MUST** make the feature available to all
+eligible customers and support its documented behavior in production. The team
+**MUST** publish the applicable support terms and any SLA. A team that meets
+these requirements **MAY** launch directly at GA.
 
 ### Deprecation
 
-Mark a feature **Deprecated** when the team has decided to remove it and
-customers can still use it. The notice identifies what is affected, the
-shutdown date if known, and the migration path if one exists.
+When a team decides to remove a feature that customers can still use, it
+**MUST** mark the feature **Deprecated**. The notice **MUST** identify what
+is affected, give the shutdown date if known, and describe the migration path
+if one exists.
 
 ## Applying the decision
 
-Keep **Planned** and **In progress** for roadmap work. For example, a storage
-service can be GA while its new export API is In progress. The API qualifies
-for Private Preview once an invited customer can export data end to end. It
-qualifies for GA when all eligible customers can run exports with production
-support.
+Teams **MUST** reserve **Planned** and **In progress** for roadmap work. For
+example, a storage service can be GA while its new export API is In progress.
+The API qualifies for Private Preview once an invited customer can export
+data end to end. It qualifies for GA when all eligible customers can run
+exports with production support.
 
-For an existing Alpha, Beta, or Available label, check who can use the feature
-and which commitments already apply. A public beta offered for evaluation
-maps to Public Preview. A feature labeled Available maps to GA only if the
-team already supports its documented use in production. Preserve any existing
-customer commitments when changing the label.
+Before changing an existing Alpha, Beta, or Available label, the team **MUST**
+verify who can use the feature and preserve existing customer commitments. A
+public beta offered for evaluation maps to Public Preview. A feature labeled
+Available qualifies for GA only when all eligible customers can use it with
+production support.
 
 ## Links
 
